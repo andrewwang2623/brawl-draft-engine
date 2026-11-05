@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 
 from data import Matches, load_matches, time_split
-from model import DraftModel, sigmoid
+from model import DraftModel, load_patch_config, sigmoid
 
 ROOT = Path(__file__).resolve().parent
 EPS = 1e-6
@@ -80,6 +80,9 @@ def run(params: dict | None = None, matches: Matches | None = None, test_frac: f
     hmt = model.params.get("bracket_min_tier", 0) if holdout_min_tier is None else holdout_min_tier
     if hmt and test.tier_min is not None:
         test = test.subset(np.flatnonzero(test.tier_min >= hmt))
+    # Holdout = post-patch games only.
+    patch_ts = load_patch_config()["patch_ts"] if model.params.get("use_patch", True) else 0
+    test = test.subset(np.flatnonzero(test.ts >= patch_ts))
     t0 = time.time()
     model.fit(train)
     fit_s = time.time() - t0
@@ -87,7 +90,7 @@ def run(params: dict | None = None, matches: Matches | None = None, test_frac: f
     base_train = train.subset(np.flatnonzero(train.tier_min >= hmt)) if hmt else train
     res = {
         "n_matches": len(m), "n_train": len(train), "n_test": len(test),
-        "holdout_min_tier": hmt,
+        "holdout_min_tier": hmt, "holdout_post_patch_from": patch_ts,
         "n_maps": len(set(zip(m.mode, m.map))),
         "test_start": int(test.ts.min()) if len(test) else None,
         "params": model.params, "fit_seconds": round(fit_s, 1),

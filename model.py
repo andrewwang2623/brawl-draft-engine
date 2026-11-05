@@ -19,7 +19,9 @@ can be decomposed exactly (see MapModel).
 """
 from __future__ import annotations
 
+import json
 import pickle
+from datetime import datetime
 from dataclasses import dataclass, field
 from itertools import combinations
 from pathlib import Path
@@ -34,8 +36,26 @@ ROOT = Path(__file__).resolve().parent
 MODEL_PATH = ROOT / "models" / "model_legendary.pkl"
 
 
+PATCH_CONFIG = ROOT / "patch.json"
+
+
 def model_path(bracket: str = "legendary") -> Path:
     return ROOT / "models" / f"model_{bracket}.pkl"
+
+
+def load_patch_config(path: Path = PATCH_CONFIG) -> dict:
+    """Current balance patch: {'patch_ts': unix seconds, 'changed_ids': [...], ...}.
+    Change patch_time_utc in patch.json when a new patch lands (one line)."""
+    if not path.exists():
+        return {"patch_ts": 0, "changed_ids": [], "name": None}
+    cfg = json.loads(path.read_text())
+    ts = int(datetime.strptime(cfg["patch_time_utc"], "%Y-%m-%dT%H:%M:%SZ")
+             .replace(tzinfo=__import__("datetime").timezone.utc).timestamp())
+    meta = load_brawler_meta()
+    by_name = {v["name"].upper(): k for k, v in meta.items()}
+    changed = [by_name[n.upper()] for n in cfg.get("changed_brawlers", []) if n.upper() in by_name]
+    return {"patch_ts": ts, "changed_ids": sorted(changed), "name": cfg.get("name"),
+            "patch_time_utc": cfg["patch_time_utc"]}
 
 DEFAULT_PARAMS = {
     # L2 precision per parameter group (larger = stronger shrinkage toward the parent level)
@@ -56,6 +76,17 @@ DEFAULT_PARAMS = {
     "bracket_min_tier": 16,     # 16 = Legendary I; 0 = plain all-ranks model
     "low_tier_weight": 0.25,
     "lam_dev_scale": 1.0,       # penalty on bracket deviations relative to the shared group
+    # Balance patch (time + changed brawlers come from patch.json). The model's *target*
+    # population is in-bracket AND post-patch games: only they fit the deviation terms.
+    # Pre-patch games inform only the shared terms, at pre_patch_weight, so they act as
+    # a prior. For terms involving a brawler changed in the patch, the same *total* prior
+    # variance V = (1 + 1/lam_dev_scale)/lam is split differently: only changed_prior_share
+    # of it sits on the shared (pre-patch-informed) term and the rest on the post-patch
+    # deviation. So stale pre-patch stats barely pull on changed brawlers, while having no
+    # pre-patch data at all doesn't loosen their regularization.
+    "use_patch": True,
+    "pre_patch_weight": 0.3,
+    "changed_prior_share": 0.1,
 }
 
 
@@ -118,6 +149,7 @@ class DraftModel:
             self.params.update(params)
         self.meta = load_brawler_meta()
         self.theta = None
+        self.patch = {"patch_ts": 0, "changed_ids": []}
 
     # ------------------------------------------------------------------ features
     def _cls(self, bid: int) -> str:
@@ -153,12 +185,22 @@ class DraftModel:
             return np.ones(len(m), dtype=bool)
         return m.tier_min >= bt
 
+    def post_patch(self, m: Matches) -> np.ndarray:
+        return m.ts >= self.patch.get("patch_ts", 0)
+
+    def in_target(self, m: Matches) -> np.ndarray:
+        """Games the model is *for*: in bracket and after the current patch."""
+        return self.in_bracket(m) & self.post_patch(m)
+
+    def _deviating(self) -> bool:
+        return bool(self.params.get("bracket_min_tier")) or bool(self.patch.get("patch_ts"))
+
     def _design(self, m: Matches, grow: bool, rank_zero: bool = False, as_bracket=None):
         """Sparse design matrix. as_bracket=True forces bracket deviations on for every
         row (used at prediction time: we predict for bracket games)."""
-        bracketed = bool(self.params.get("bracket_min_tier"))
+        bracketed = self._deviating()
         if as_bracket is None:
-            inb = self.in_bracket(m)
+            inb = self.in_target(m)
         else:
             inb = np.full(len(m), bool(as_bracket))
         rows, cols, vals = [], [], []
@@ -182,11 +224,23 @@ class DraftModel:
                         "cm": p["lam_cmode"], "cs": p["lam_cmap"], "syn": p["lam_syn"],
                         "cnt": p["lam_cnt"], "rank": p["lam_rank"]}
         lam = np.empty(len(self.index))
+        changed = set(self.patch.get("changed_ids", []))
+        dev_scale = p.get("lam_dev_scale", 1.0)
+        share = p.get("changed_prior_share", 0.1)
+
+        def is_changed(base):
+            return base[0] in ("g", "m", "s", "syn", "cnt") and any(
+                isinstance(x, int) and x in changed for x in base[1:])
+
         for key, j in self.index.items():
-            if key[0] == "d":
-                lam[j] = lam_by_group[key[1]] * p.get("lam_dev_scale", 1.0)
+            dev = key[0] == "d"
+            base = key[1:] if dev else key
+            lam0 = lam_by_group[base[0]]
+            if self._deviating() and changed and is_changed(base):
+                total_var = (1.0 + 1.0 / dev_scale) / lam0
+                lam[j] = 1.0 / ((1 - share) * total_var) if dev else 1.0 / (share * total_var)
             else:
-                lam[j] = lam_by_group[key[0]]
+                lam[j] = lam0 * dev_scale if dev else lam0
         return lam
 
     def sample_weights(self, ts: np.ndarray, t_ref: float | None = None) -> np.ndarray:
@@ -199,12 +253,14 @@ class DraftModel:
 
     # ------------------------------------------------------------------ fit / predict
     def fit(self, m: Matches, verbose: bool = False) -> "DraftModel":
+        self.patch = load_patch_config() if self.params.get("use_patch", True) else {"patch_ts": 0, "changed_ids": []}
         self.index = {}
         X = self._design(m, grow=True)
         y = m.y
         w = self.sample_weights(m.ts)
         if self.params.get("bracket_min_tier"):
             w = np.where(self.in_bracket(m), w, w * self.params["low_tier_weight"])
+        w = np.where(self.post_patch(m), w, w * self.params["pre_patch_weight"])
         lam = self._penalties()
         Xt = X.T.tocsr()
 
@@ -222,10 +278,10 @@ class DraftModel:
                   f"iters={res.nit}")
         self.theta = res.x
         # Pick-rate priors describe what opponents in the bracket actually pick.
-        inb = self.in_bracket(m)
+        inb = self.in_target(m)
         self._fit_priors(m.subset(np.flatnonzero(inb)) if inb.any() else m, w[inb] if inb.any() else w)
         self.n_train = len(m)
-        self.n_in_bracket = int(inb.sum())
+        self.n_in_bracket = int(inb.sum())       # target games: in bracket and post-patch
         self.t_max = int(m.ts.max())
         self._map_cache = {}
         return self
@@ -336,4 +392,5 @@ class DraftModel:
         obj = cls.__new__(cls)
         obj.__dict__.update(state)
         obj._map_cache = {}
+        obj.__dict__.setdefault("patch", {"patch_ts": 0, "changed_ids": []})
         return obj

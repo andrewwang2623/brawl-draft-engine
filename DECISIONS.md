@@ -67,3 +67,28 @@ Judgment calls made while building autonomously. Newest at the bottom of each se
   the same machinery found bracket-specific estimates *worse* than pooling (see EXPERIMENTS.md), so
   the deviation penalty defaults to ×10 (mostly shared).
 - Pick-rate priors (the opponent model) use only in-bracket games.
+
+## Balance patch (user request)
+
+- **Patch time = 2026-11-03 09:00 UTC** (`patch.json`; change `patch_time_utc` for future patches,
+  it's one line). Evidence:
+  - The official [Release Notes November 2026](https://supercell.com/en/games/brawlstars/blog/game-updates/release-notes-november-2026/)
+    are dated 3 Nov 2026 (no go-live hour given). The user confirmed the update has been live since Nov 3.
+  - Battlelogs were evidently **reset at the update**. Across ~40k games and 25k players, nothing is
+    older than 2026-11-03 09:36 UTC, and many low-activity players' logs hold fewer than 25 games,
+    none earlier than 09:55. So maintenance ended at ~09:30 UTC. 09:00 is a safe boundary just before it.
+  - A Nov 2 date (the user's first estimate) couldn't be confirmed; there are no Nov 2 notes.
+  - Caveat: our map pool is the same 26 maps throughout, and none of the notes' 19 new ranked maps or 3
+    new brawlers appear yet (probably arriving with the new season; a leak says Nov 6).
+- **Every game we have is post-patch (52,326 Legendary+ games at the time), and pre-patch data
+  can't be obtained from the API at all** (logs were reset; they hold only 25 games). So the
+  pre-patch prior machinery exists, but has nothing to shrink toward this patch. It becomes active for
+  the *next* patch: games already in the DB will then be "pre-patch".
+- **Changed brawlers**: all 34 brawlers with global balance changes, reworks or new
+  Buffies/Hypercharges in the notes (`patch.json`). Brawl Arena-only changes are excluded.
+  For terms involving them, the total prior variance stays the same, but only 10% of it is on the
+  shared (pre-patch-informed) term (`changed_prior_share`). Their stale pre-patch stats therefore
+  carry little weight. A first version just made their deviation penalty cheaper; with no pre-patch
+  data that loosened regularization and overfit (EXPERIMENTS.md), so it was replaced.
+- Pre-patch games get weight 0.3 (`pre_patch_weight`), on top of recency weighting.
+- Holdout = post-patch (and Legendary+) games only.

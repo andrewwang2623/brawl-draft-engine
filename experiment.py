@@ -16,7 +16,7 @@ import numpy as np
 
 from data import load_matches, time_split
 from evaluate import baseline_map_wr, metrics, parse_sets
-from model import DraftModel
+from model import DraftModel, load_patch_config
 
 ROOT = Path(__file__).resolve().parent
 
@@ -44,6 +44,7 @@ def main():
     bt = DraftModel(base).params["bracket_min_tier"]
     if bt:
         test = test.subset(np.flatnonzero(test.tier_min >= bt))
+    test = test.subset(np.flatnonzero(test.ts >= load_patch_config()["patch_ts"]))   # post-patch holdout
     base_train = train.subset(np.flatnonzero(train.tier_min >= bt)) if bt else train
     wr = metrics(baseline_map_wr(base_train, test), test.y)
 

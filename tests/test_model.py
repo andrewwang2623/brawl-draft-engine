@@ -32,7 +32,8 @@ def synth(n=4000, strong=16000000, counter=(16000001, 16000002), maps=("M1", "M2
 
 
 PARAMS = {"lam_g": 2.0, "lam_mode": 8.0, "lam_map": 20.0, "lam_cmode": 4.0, "lam_cmap": 10.0,
-          "lam_syn": 30.0, "lam_cnt": 30.0, "half_life_days": 0, "bracket_min_tier": 0}
+          "lam_syn": 30.0, "lam_cnt": 30.0, "half_life_days": 0, "bracket_min_tier": 0,
+          "use_patch": False}
 
 
 @pytest.fixture(scope="module")
@@ -156,3 +157,34 @@ def test_me_factor_is_heavily_shrunk():
     for _ in range(200):                    # lots of evidence -> larger, but capped
         st.w_resid += 0.2; st.w_info += 0.25
     assert st.me == pytest.approx(ME_CAP)
+
+
+def test_patch_changed_brawler_adapts_faster(monkeypatch):
+    """Pre-patch: brawlers 5 and 6 both strong. Post-patch: both nerfed to neutral, but only 5
+    is listed as changed. The changed brawler should move further toward its post-patch stats."""
+    import model as model_mod
+    rng = np.random.default_rng(7)
+    A, B, y, ts = [], [], [], []
+    patch_ts = 1_000_000
+    for i in range(6000):
+        post = i >= 5000
+        picks = rng.choice(IDS, 6, replace=False)
+        a, b = picks[:3], picks[3:]
+        z = 0.0 if post else 0.8 * (((16000005 in a) - (16000005 in b)) + ((16000006 in a) - (16000006 in b)))
+        A.append(a); B.append(b); y.append(float(rng.random() < sigmoid(z)))
+        ts.append(patch_ts + (i - 5000) * 60)
+    n = len(y)
+    m = Matches(ts=np.array(ts), map=["M"] * n, mode=["gemGrab"] * n, team_a=np.array(A),
+                team_b=np.array(B), y=np.array(y), rank_a=np.full(n, 18.0), rank_b=np.full(n, 18.0),
+                tier_min=np.full(n, 18))
+    monkeypatch.setattr(model_mod, "load_patch_config",
+                        lambda: {"patch_ts": patch_ts, "changed_ids": [16000005]})
+    from model import DEFAULT_PARAMS
+    p = dict(DEFAULT_PARAMS, half_life_days=0, use_rank=False, use_patch=True,
+             bracket_min_tier=16, lam_dev_scale=10.0, changed_prior_share=0.1, pre_patch_weight=0.3)
+    md = DraftModel(p).fit(m)
+    mm = md.map_model("M", "gemGrab")
+    s5, s6 = mm.S[mm.id_to_idx[16000005]], mm.S[mm.id_to_idx[16000006]]
+    assert s5 < s6 - 0.04         # changed brawler sheds its stale pre-patch strength
+    assert abs(s5) < 0.05
+    assert md.n_in_bracket == 1000

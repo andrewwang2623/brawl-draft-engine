@@ -1,9 +1,11 @@
 {
- "n_matches": 11993,
- "n_train": 10194,
- "n_test": 1799,
+ "n_matches": 52477,
+ "n_train": 44605,
+ "n_test": 7859,
+ "holdout_min_tier": 16,
+ "holdout_post_patch_from": 1793696400,
  "n_maps": 26,
- "test_start": 1793834816,
+ "test_start": 1793833125,
  "params": {
   "lam_g": 20.0,
   "lam_mode": 80.0,
@@ -15,27 +17,33 @@
   "lam_rank": 0.1,
   "half_life_days": 14.0,
   "use_rank": true,
-  "prior_smooth": 30.0
+  "prior_smooth": 30.0,
+  "bracket_min_tier": 16,
+  "low_tier_weight": 0.25,
+  "lam_dev_scale": 10.0,
+  "use_patch": true,
+  "pre_patch_weight": 0.3,
+  "changed_dev_scale": 0.3
  },
- "fit_seconds": 0.2,
+ "fit_seconds": 2.1,
  "coin_flip": {
   "log_loss": 0.6931471805599453,
   "brier": 0.25,
-  "accuracy": 0.48804891606448025
+  "accuracy": 0.49497391525639395
  },
  "map_winrate": {
-  "log_loss": 0.6884562129822017,
-  "brier": 0.2476760751566236,
-  "accuracy": 0.537520844913841
+  "log_loss": 0.6800183615620334,
+  "brier": 0.24352168370134245,
+  "accuracy": 0.5686474106120372
  },
  "model_draft_only": {
-  "log_loss": 0.6852118290193847,
-  "brier": 0.24598429477569256,
-  "accuracy": 0.565869927737632
+  "log_loss": 0.6770112715837363,
+  "brier": 0.24203338632642518,
+  "accuracy": 0.568774653263774
  },
  "model_with_rank": {
-  "log_loss": 0.675310427651422,
-  "brier": 0.2409816653380423,
-  "accuracy": 0.5764313507504168
+  "log_loss": 0.6654354605217203,
+  "brier": 0.23640960909547773,
+  "accuracy": 0.592823514442041
  }
 }
