@@ -56,23 +56,38 @@ class DraftState:
     opp: list = field(default_factory=list)
     bans: list = field(default_factory=list)
     we_first: bool = True
+    # Order of the REMAINING picks (True = us). None = standard 1-2-2-1 continuing from
+    # `step`. Set it when picks were entered out of order (e.g. the UI's free slot entry):
+    # then it's the teams of the still-empty slots, in draft order.
+    seq: tuple | None = None
 
     @property
     def step(self) -> int:
         return len(self.our) + len(self.opp)
 
+    def remaining(self) -> tuple:
+        if self.seq is not None:
+            return tuple(bool(t) for t in self.seq)
+        return tuple((PICK_ORDER[s] == 0) == self.we_first for s in range(self.step, 6))
+
     def team_to_move(self) -> int | None:
         """0 = us, 1 = opponent, None = draft over."""
-        if self.step >= 6:
+        r = self.remaining()
+        if not r:
             return None
-        side = PICK_ORDER[self.step]          # 0 = first-pick team
-        return 0 if (side == 0) == self.we_first else 1
+        return 0 if r[0] else 1
 
     def validate(self):
-        exp_ours = sum(1 for s in range(self.step) if (PICK_ORDER[s] == 0) == self.we_first)
-        if len(self.our) != exp_ours:
-            raise ValueError(f"after {self.step} picks we should have {exp_ours} picks "
-                             f"(1-2-2-1 order), got {len(self.our)}")
+        if self.seq is None:
+            exp_ours = sum(1 for s in range(self.step) if (PICK_ORDER[s] == 0) == self.we_first)
+            if len(self.our) != exp_ours:
+                raise ValueError(f"after {self.step} picks we should have {exp_ours} picks "
+                                 f"(1-2-2-1 order), got {len(self.our)}")
+        else:
+            if len(self.our) > 3 or len(self.opp) > 3:
+                raise ValueError("a team can't have more than 3 picks")
+            if len(self.seq) != 6 - self.step or sum(map(bool, self.seq)) != 3 - len(self.our):
+                raise ValueError("remaining pick order doesn't match the picks made")
         used = self.our + self.opp + self.bans
         if len(set(self.our + self.opp)) != len(self.our + self.opp):
             raise ValueError("a brawler was picked twice")
@@ -133,7 +148,7 @@ class DraftEngine:
         memo = widths["memo"]
         if key in memo:
             return memo[key]
-        ours_turn = (PICK_ORDER[step] == 0) == we_first
+        ours_turn = widths["seq"][step - widths["root"]]
         avail = self._avail(used)
         mm = self.mm
         last = step == 5
@@ -197,7 +212,7 @@ class DraftEngine:
         for c in cands:
             c = int(c)
             bonus = float(bonus_vec[c]) if bonus_vec is not None else 0.0
-            widths = dict(widths_cfg, memo={})
+            widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step)
             ctx = (c, our, opp, bonus)
             out[c] = self._value(our + (c,), opp, z0 + gain[c], used | {c}, st.we_first,
                                  widths, ctx)
@@ -268,7 +283,7 @@ class DraftEngine:
         """Expected P(we win) of the remaining draft (no candidate tracking)."""
         used = set(st.validate())
         z0 = self.mm.team_logit(st.our, st.opp)
-        widths = dict(widths_cfg, memo={})
+        widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step)
         return self._value(tuple(st.our), tuple(st.opp), z0, used, st.we_first, widths,
                            (None, (), (), 0.0))[0]
 
@@ -294,7 +309,7 @@ class DraftEngine:
         p_open = self.opponent_dist(st.opp, st.our, avail)
         out = []
         for c in cands:
-            st2 = DraftState(list(st.our), list(st.opp), list(st.bans) + [c], st.we_first)
+            st2 = DraftState(list(st.our), list(st.opp), list(st.bans) + [c], st.we_first, st.seq)
             v = self.draft_value(st2, widths)
             out.append((v - base, c))
         out.sort(reverse=True)
@@ -327,8 +342,7 @@ def explain_pick(rec: dict, st: DraftState, eng: DraftEngine) -> str:
         parts.append(f"synergy {_sgn(b['synergy'])}")
     if st.opp:
         parts.append(f"vs current enemies {_sgn(b['counters'])}")
-    remaining_enemy = sum(1 for s in range(step + 1, 6)
-                          if (PICK_ORDER[s] == 0) != st.we_first)
+    remaining_enemy = sum(1 for t in st.remaining()[1:] if not t)
     if remaining_enemy:
         parts.append(f"vs likely future enemy picks {_sgn(b['risk_countered'])} "
                      f"({remaining_enemy} enemy pick{'s' if remaining_enemy > 1 else ''} left)")

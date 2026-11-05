@@ -3,903 +3,515 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Brawl Draft Assistant</title>
+<title>Draft Helper</title>
 <style>
 :root{
-  --bg:#0e1117; --panel:#161b25; --panel2:#1c2230; --line:#272f40; --text:#e7eaf0; --muted:#8a93a6;
-  --us:#4ea1ff; --them:#ff6b73; --good:#4ade80; --bad:#f87171; --warn:#fbbf24; --accent:#a78bfa;
-  --font: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --bg:#0f1117; --panel:#171a23; --panel2:#1e2230; --line:#2a2f3f; --text:#e9ecf3; --muted:#8a91a6;
+  --us:#4d9bff; --us-soft:rgba(77,155,255,.14); --them:#ff6b6b; --them-soft:rgba(255,107,107,.14);
+  --good:#3ddc97; --bad:#ff7a7a; --gold:#ffd166; --radius:14px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font:13px/1.4 var(--font)}
-button,select,input{font:inherit;color:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:1280px;margin:0 auto;padding:16px 20px 40px}
 
 /* top bar */
-#topbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
-#topbar .brand{font-weight:700;letter-spacing:.3px;color:var(--accent)}
-.ctl{display:flex;align-items:center;gap:6px}
-.ctl label.lbl{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
-select,input[type=search]{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 8px;outline:none}
-select:focus,input[type=search]:focus{border-color:var(--us)}
-select{max-width:260px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.seg button{background:var(--panel2);border:0;padding:5px 10px;color:var(--muted)}
-.seg button+button{border-left:1px solid var(--line)}
-.seg button.on{background:var(--us);color:#04101f;font-weight:600}
-.switch{display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
-.switch input{display:none}
-.switch .track{width:30px;height:16px;border-radius:9px;background:#313a4e;position:relative;transition:background .15s}
-.switch .track::after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#cfd5e2;transition:left .15s}
-.switch input:checked + .track{background:var(--accent)}
-.switch input:checked + .track::after{left:16px}
-.switch.disabled{opacity:.45;cursor:not-allowed}
-#modelinfo{margin-left:auto;color:var(--muted);font-size:12px}
-
-/* page */
-#page{padding:10px 12px;max-width:1500px;margin:0 auto}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px}
-#banner{margin-bottom:8px}
-.err{background:#3a1519;border:1px solid #7a2a31;color:#ffb4b9;border-radius:8px;padding:8px 10px;margin-bottom:8px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.brand{font-weight:700;font-size:17px;letter-spacing:.2px;margin-right:6px}
+.brand span{color:var(--gold)}
+select,.seg button,.btn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+select{color:var(--text);min-width:220px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:var(--panel);color:var(--muted)}
+.seg button.on{background:var(--panel2);color:var(--text);box-shadow:inset 0 -2px 0 var(--gold)}
+.chip{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.spacer{flex:1}
+.btn:hover,.seg button:hover{border-color:#3a4155}
+.btn.ghost{background:transparent}
+.toggle{display:inline-flex;align-items:center;gap:8px;color:var(--muted);user-select:none;cursor:pointer}
+.toggle input{display:none}
+.toggle .knob{width:34px;height:20px;border-radius:999px;background:#333a4d;position:relative;transition:.15s}
+.toggle .knob::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#cfd5e3;transition:.15s}
+.toggle input:checked + .knob{background:var(--us)}
+.toggle input:checked + .knob::after{left:17px;background:#fff}
+.toggle.disabled{opacity:.4;pointer-events:none}
 
 /* board */
-#board{display:grid;grid-template-columns:1fr minmax(250px,1.05fr) 1fr;gap:10px;padding:10px;align-items:stretch}
-.team h3{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.6px}
-.team.us h3{color:var(--us)} .team.opp h3{color:var(--them)}
-.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.slot{position:relative;height:112px;border-radius:8px;border:2px dashed var(--line);background:var(--panel2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:3px;overflow:hidden;min-width:0}
-.slot .num{color:var(--muted);font-size:11px}
-.slot .big{font-size:20px;color:#3a4358;font-weight:700}
+.board{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center}
+.team h3{margin:0 0 10px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.team.us h3{color:var(--us)} .team.them h3{color:var(--them);text-align:right}
+.slots{display:flex;gap:10px}
+.team.them .slots{justify-content:flex-end}
+.slot{width:78px;height:78px;border-radius:16px;border:2px dashed #343a4d;display:flex;align-items:center;justify-content:center;position:relative;color:#4b5268;font-size:12px;background:#141720;transition:.15s}
+.slot img{width:100%;height:100%;object-fit:cover;border-radius:14px}
 .slot.filled{border-style:solid;cursor:pointer}
-.team.us .slot.filled{border-color:var(--us)} .team.opp .slot.filled{border-color:var(--them)}
-.slot.filled:hover::after,.bslot.filled:hover::after{content:"\00d7";position:absolute;top:1px;right:4px;color:#fff;font-size:16px;font-weight:700;text-shadow:0 0 4px #000}
-.slot.current{border-color:var(--warn);box-shadow:0 0 0 2px rgba(251,191,36,.25)}
-.slot img{height:70px;max-width:90%;object-fit:contain}
-.slot .nm{font-size:11px;font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.imgfb{display:inline-flex;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:700;color:var(--muted);background:#232b3c;border-radius:6px;padding:2px;word-break:break-word;line-height:1.1}
+.team.us .slot.filled{border-color:var(--us)} .team.them .slot.filled{border-color:var(--them)}
+.slot.next{border-color:var(--gold);border-style:solid;box-shadow:0 0 0 4px rgba(255,209,102,.12);color:var(--gold)}
+.slot .x{position:absolute;inset:0;border-radius:14px;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:20px;color:#fff}
+.slot.filled:hover .x{display:flex}
+.slot .lbl{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mid{text-align:center;min-width:300px}
+.odds{font-size:13px;color:var(--muted);margin-bottom:6px}
+.odds b{font-size:22px;color:var(--text)}
+.bar{height:8px;border-radius:999px;background:var(--them);overflow:hidden;margin:0 auto 14px;max-width:280px}
+.bar div{height:100%;background:var(--us);transition:width .3s}
+.bans{display:flex;gap:6px;justify-content:center}
+.ban{width:40px;height:40px;border-radius:10px;border:1.5px dashed #343a4d;background:#141720;position:relative;overflow:hidden}
+.ban img{width:100%;height:100%;object-fit:cover;filter:grayscale(.7) brightness(.8)}
+.ban.filled{border-style:solid;border-color:#555d74;cursor:pointer}
+.ban.filled::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:2px;background:var(--bad);transform:rotate(-35deg)}
+.ban.next{border-color:var(--gold)}
+.bans-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:6px 0 0}
 
-#center{display:flex;flex-direction:column;gap:8px;justify-content:center}
-.winwrap .row{display:flex;justify-content:space-between;font-weight:700;font-size:15px}
-.winwrap .row .u{color:var(--us)} .winwrap .row .o{color:var(--them)}
-.winwrap .cap{text-align:center;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
-.winbar{height:12px;border-radius:7px;background:var(--them);overflow:hidden;position:relative;margin:3px 0}
-.winbar i{display:block;height:100%;background:var(--us);transition:width .2s}
-.winbar b{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:#fff8;}
-.bans h4{margin:0 0 4px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between}
-.banrow{display:grid;grid-template-columns:repeat(6,minmax(0,54px));justify-content:center;gap:6px}
-.bslot{position:relative;aspect-ratio:1;border-radius:7px;border:2px dashed var(--line);background:var(--panel2);display:flex;align-items:center;justify-content:center;overflow:hidden;min-width:0}
-.bslot.filled{border:2px solid #7c8499;cursor:pointer}
-.bslot.filled img{filter:grayscale(.6);opacity:.85}
-.bslot img{width:88%;height:88%;object-fit:contain}
-.bslot.current{border-color:var(--warn)}
-.order{display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--muted)}
-.order .d{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;border:2px solid transparent;color:#04101f}
-.order .d.us{background:var(--us)} .order .d.opp{background:var(--them)}
-.order .d.done{opacity:.35}
-.order .d.now{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
-.turnline{text-align:center;font-weight:600}
-.turnline .us{color:var(--us)} .turnline .opp{color:var(--them)}
-
-/* main two columns */
-#main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:10px;margin-top:10px;align-items:start}
-#recs{padding:10px;min-height:200px}
-#recs h2{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:flex;justify-content:space-between;align-items:baseline}
-#recs h2 small{text-transform:none;letter-spacing:0;font-weight:400}
-.section{margin-bottom:12px}
-.card{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:6px;cursor:pointer;transition:border-color .1s, background .1s}
-.card:hover{border-color:var(--us);background:#212a3b}
-.card.lowdata{border-style:dashed;opacity:.82}
-.card .hd{display:flex;align-items:center;gap:10px}
-.card .rank{color:var(--muted);font-weight:700;width:12px;text-align:center}
-.card .pic{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center}
-.card .pic img{width:44px;height:44px;object-fit:contain}
-.card .pic .imgfb{width:44px;height:44px}
-.card .nm{font-weight:700;font-size:15px}
-.card .sub{color:var(--muted);font-size:11px}
-.card .grow{flex:1;min-width:0}
-.card .wp{text-align:right}
-.card .wp .v{font-size:19px;font-weight:800}
-.card .wp .d{font-size:12px;font-weight:700}
-.pos{color:var(--good)} .neg{color:var(--bad)} .zero{color:var(--muted)}
-.badge{display:inline-block;font-size:10px;padding:0 6px;border-radius:8px;border:1px solid var(--warn);color:var(--warn);margin-left:6px;vertical-align:middle}
-.bd{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:5px;margin:7px 0 4px}
-.chip{background:#141926;border:1px solid var(--line);border-radius:6px;padding:3px 6px}
-.chip .l{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chip .n{font-size:12px;font-weight:700}
-.chip .bar{position:relative;height:4px;background:#252d3f;border-radius:2px;margin-top:2px}
-.chip .bar i{position:absolute;top:0;bottom:0;border-radius:2px}
-.chip .bar i.p{left:50%;background:var(--good)} .chip .bar i.m{right:50%;background:var(--bad)}
-.chip.you{border-color:var(--accent)}
-.expl{color:var(--muted);font-size:11.5px}
-.youinfo{color:var(--accent);font-size:11px;margin-top:2px}
-.bancard .stats{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:3px}
-.bancard .stats b{color:var(--text)}
-.probrow{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:7px;cursor:pointer}
-.probrow:hover{background:var(--panel2)}
-.probrow .pic{width:30px;height:30px;display:flex}
-.probrow .pic img,.probrow .pic .imgfb{width:30px;height:30px;object-fit:contain}
-.probrow .nm{width:90px;font-weight:600}
-.probrow .pb{flex:1;height:10px;background:#252d3b;border-radius:5px;overflow:hidden}
-.probrow .pb i{display:block;height:100%;background:var(--them)}
-.probrow .pv{width:48px;text-align:right;font-weight:700}
-.final .big{font-size:30px;font-weight:800;margin-bottom:6px}
-table.t{border-collapse:collapse;width:100%;margin-bottom:10px}
-table.t th{color:var(--muted);font-weight:500;font-size:11px;text-align:right;padding:3px 6px;border-bottom:1px solid var(--line)}
-table.t th:first-child{text-align:left}
-table.t td{padding:4px 6px;text-align:right;border-bottom:1px solid #1d2331}
-table.t td:first-child{text-align:left}
-table.t td .who{display:flex;align-items:center;gap:8px}
-table.t td img,table.t td .imgfb{width:26px;height:26px;object-fit:contain}
-table.t tr.tot td{font-weight:700;border-top:1px solid var(--line)}
-.muted{color:var(--muted)}
-.loading{opacity:.55}
+/* main */
+.main{display:grid;grid-template-columns:minmax(380px,5fr) 6fr;gap:16px;margin-top:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.headline{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.headline h2{margin:0;font-size:20px}
+.headline .who{font-size:12px;padding:3px 9px;border-radius:999px;font-weight:600;white-space:nowrap}
+.who.us{background:var(--us-soft);color:var(--us)} .who.them{background:var(--them-soft);color:var(--them)} .who.ban{background:rgba(255,209,102,.13);color:var(--gold)}
+.sub{color:var(--muted);margin:0 0 14px}
+.rec{display:flex;gap:14px;align-items:center;padding:12px;border-radius:12px;background:var(--panel2);border:1px solid transparent;cursor:pointer;margin-bottom:10px;transition:.12s}
+.rec:hover{border-color:#3a4155;transform:translateY(-1px)}
+.rec img{width:58px;height:58px;border-radius:12px;object-fit:cover;flex:none}
+.rec .body{flex:1;min-width:0}
+.rec .name{font-weight:650;font-size:16px}
+.rec .why{color:#c4c9d6;font-size:13px;margin-top:2px}
+.rec .score{text-align:right;flex:none}
+.rec .score b{font-size:22px;display:block;line-height:1.1}
+.rec .score small{color:var(--muted);font-size:12px}
+.rec.top{border-color:rgba(255,209,102,.35);background:linear-gradient(180deg,rgba(255,209,102,.06),var(--panel2))}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.also{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.also button{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 4px}
+.also img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.also small{color:var(--muted)}
+.details{margin-top:8px;display:none}
+.rec.open .details{display:block}
+.drow{display:grid;grid-template-columns:150px 1fr 56px;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:3px 0}
+.dbar{height:6px;background:#2a2f3f;border-radius:999px;position:relative}
+.dbar i{position:absolute;top:0;bottom:0;border-radius:999px}
+.dbar::before{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:#454c62}
+.more{font-size:12px;color:var(--muted);background:none;border:0;padding:0;margin-top:4px;text-decoration:underline dotted}
+.section-title{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.empty{color:var(--muted);padding:20px 0;text-align:center}
+.err{background:rgba(255,122,122,.1);border:1px solid rgba(255,122,122,.35);color:#ffc2c2;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.final-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.final-row img{width:34px;height:34px;border-radius:8px}
+.final-row .v{margin-left:auto;font-variant-numeric:tabular-nums}
 
 /* picker */
-#picker{padding:10px;position:sticky;top:56px}
-.pk-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
-.pk-top .seg button{padding:4px 8px;font-size:12px}
-.seg button[data-t=ban].on{background:#9aa3b8}
-.seg button[data-t=our].on{background:var(--us)}
-.seg button[data-t=opp].on{background:var(--them)}
-.seg button[data-t=auto].on{background:var(--warn)}
-.btn{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
-.btn:hover{border-color:var(--us)}
-.btn.danger:hover{border-color:var(--bad);color:var(--bad)}
-#search{width:100%;margin:2px 0 6px}
-#chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
-#chips button{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-size:11px;color:var(--muted)}
-#chips button.on{background:var(--accent);border-color:var(--accent);color:#120a2a;font-weight:600}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:5px;max-height:calc(100vh - 250px);min-height:300px;overflow-y:auto;padding:2px}
-.cell{position:relative;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:3px 2px 2px;text-align:center;cursor:pointer;min-width:0}
-.cell:hover{border-color:var(--us);background:#222b3d}
-.cell img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
-.cell .imgfb{width:100%;aspect-ratio:1}
-.cell .cn{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cell.used{opacity:.28;filter:grayscale(1);pointer-events:none}
-.cell.first{border-color:var(--warn);box-shadow:0 0 0 1px var(--warn)}
-.cell.nomatch{display:none}
-.hint{color:var(--muted);font-size:11px;margin-top:6px}
-kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:10px}
+.search{width:100%;padding:12px 14px 12px 40px;border-radius:12px;border:1px solid var(--line);background:var(--panel2) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="%238a91a6" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="m13 13 4 4"/></svg>') no-repeat 13px center;color:var(--text);font-size:15px;outline:none}
+.search:focus{border-color:var(--gold)}
+.pick-hint{font-size:12px;color:var(--muted);margin:8px 2px 10px;display:flex;gap:8px;align-items:center}
+.pick-hint .dot{width:8px;height:8px;border-radius:50%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px;max-height:calc(100vh - 330px);min-height:260px;overflow:auto;padding:2px}
+.b{background:var(--panel2);border:1px solid transparent;border-radius:12px;padding:5px 4px 6px;text-align:center;cursor:pointer;transition:.1s}
+.b:hover{border-color:#3a4155}
+.b img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;display:block;background:#11141c}
+.b span{display:block;font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#cbd0dc}
+.b.used{opacity:.22;pointer-events:none}
+.b.first{border-color:var(--gold)}
+.b.sug{box-shadow:inset 0 0 0 1px rgba(61,220,151,.5)}
 
-/* my stats */
-#mystats{margin-top:10px;padding:8px 10px}
-#mystats summary{cursor:pointer;font-weight:700;color:var(--accent)}
-#mystats .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
-#mystats h4{margin:0 0 4px;font-size:12px;color:var(--muted);text-transform:uppercase}
-
-@media (max-width:1100px){
-  #main{grid-template-columns:minmax(0,1fr) 330px}
-}
-@media (max-width:860px){
-  #main{grid-template-columns:1fr}
-  #picker{position:static}
-  #grid{max-height:420px}
-  #board{grid-template-columns:1fr 1fr}
-  #center{grid-column:1/-1;order:-1}
-  #mystats .cols{grid-template-columns:1fr}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,92vw);background:var(--panel);border-left:1px solid var(--line);padding:20px;overflow:auto;transform:translateX(100%);transition:.2s;z-index:10}
+.drawer.open{transform:none;box-shadow:-20px 0 40px rgba(0,0,0,.4)}
+.drawer h3{margin:0 0 4px}
+.drawer table{width:100%;border-collapse:collapse;font-size:13px}
+.drawer td,.drawer th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:left}
+.drawer th{color:var(--muted);font-weight:500;font-size:12px}
+.drawer textarea{width:100%;min-height:170px;background:#11141c;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;font:13px ui-monospace,Menlo,monospace}
+.foot{margin-top:18px;color:#5d6479;font-size:12px;text-align:center}
+@media (max-width:980px){
+  .main{grid-template-columns:1fr}
+  .board{grid-template-columns:1fr;text-align:center}
+  .team.them h3{text-align:left} .team.them .slots{justify-content:flex-start}
+  .grid{max-height:none}
 }
 </style>
 </head>
 <body>
-
-<div id="topbar">
-  <span class="brand">Brawl Draft</span>
-  <div class="ctl"><label class="lbl" for="mapSel">Map</label><select id="mapSel"></select></div>
-  <div class="ctl seg" id="sideSeg">
-    <button data-first="1" class="on">We pick first</button>
-    <button data-first="0">They pick first</button>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">Draft <span>Helper</span></div>
+    <select id="map" title="Map"></select>
+    <div class="seg" id="side">
+      <button data-v="1">We pick first</button><button data-v="0">They pick first</button>
+    </div>
+    <span class="chip" id="bracket">Legendary+</span>
+    <div class="spacer"></div>
+    <label class="toggle" id="personalWrap" title="Only suggest brawlers you own, and account for your buffies and history">
+      <input type="checkbox" id="personal"><span class="knob"></span>Use my brawlers
+    </label>
+    <button class="btn ghost" id="youBtn" hidden>You</button>
+    <button class="btn ghost" id="undo" title="Undo (Backspace)">Undo</button>
+    <button class="btn" id="reset">New draft</button>
   </div>
-  <div class="ctl"><label class="lbl" for="brSel">Rank</label><select id="brSel"></select></div>
-  <label class="switch disabled" id="persSw" title="Personal data not available">
-    <input type="checkbox" id="persChk" disabled><span class="track"></span><span>Personal mode</span>
-  </label>
-  <div id="modelinfo">Loading...</div>
+
+  <div class="board">
+    <div class="team us"><h3>Your team</h3><div class="slots" id="usSlots"></div></div>
+    <div class="mid">
+      <div class="odds" id="odds"></div>
+      <div class="bar" id="bar" hidden><div></div></div>
+      <div class="bans" id="bans"></div>
+      <div class="bans-label">Bans</div>
+    </div>
+    <div class="team them"><h3>Enemy team</h3><div class="slots" id="themSlots"></div></div>
+  </div>
+
+  <div class="main">
+    <div class="card" id="advice"></div>
+    <div class="card">
+      <input class="search" id="q" placeholder="Search brawlers… (e.g. primo, mrp)" autocomplete="off" spellcheck="false">
+      <div class="pick-hint" id="hint"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+  <div class="foot" id="foot"></div>
 </div>
 
-<div id="page">
-  <div id="banner"></div>
-
-  <div class="panel" id="board">
-    <div class="team us">
-      <h3>Our team</h3>
-      <div class="slots" id="slotsUs"></div>
-    </div>
-    <div id="center">
-      <div class="winwrap">
-        <div class="cap">Win probability (current comps)</div>
-        <div class="row"><span class="u" id="wpUs">50.0%</span><span class="o" id="wpOpp">50.0%</span></div>
-        <div class="winbar"><i id="wpBar" style="width:50%"></i><b></b></div>
-      </div>
-      <div class="bans">
-        <h4><span>Bans</span><span id="banCount">0/6</span></h4>
-        <div class="banrow" id="banRow"></div>
-      </div>
-      <div class="turnline" id="turnline"></div>
-      <div class="order" id="order"></div>
-    </div>
-    <div class="team opp">
-      <h3>Their team</h3>
-      <div class="slots" id="slotsOpp"></div>
-    </div>
-  </div>
-
-  <div id="main">
-    <div class="panel" id="recs"></div>
-    <div class="panel" id="picker">
-      <div class="pk-top">
-        <div class="seg" id="tgtSeg">
-          <button data-t="auto">Auto</button>
-          <button data-t="ban">Ban</button>
-          <button data-t="our">Our pick</button>
-          <button data-t="opp">Their pick</button>
-        </div>
-        <span style="flex:1"></span>
-        <button class="btn" id="undoBtn" title="Undo (Backspace on empty search, Ctrl/Cmd+Z)">Undo</button>
-        <button class="btn danger" id="resetBtn">Reset</button>
-      </div>
-      <input type="search" id="search" placeholder="Type to search brawlers, Enter to add first match" autocomplete="off" spellcheck="false">
-      <div id="chips"></div>
-      <div id="grid"></div>
-      <div class="hint">Adding to: <b id="tgtLabel"></b> &middot; <kbd>Enter</kbd> add first match &middot; <kbd>Backspace</kbd> on empty search = undo &middot; <kbd>Esc</kbd> clear</div>
-    </div>
-  </div>
-
-  <details class="panel hidden" id="mystats">
-    <summary>My stats</summary>
-    <div id="mystatsBody" class="muted" style="margin-top:6px">Open to load.</div>
-    <div id="buffiesEdit" style="margin-top:10px">
-      <h4>Brawlers I'm missing buffies on <span class="muted" id="buffiesPath"></span></h4>
-      <div class="muted" style="margin-bottom:4px">One per line ('#' = comment). Every other brawler with buffies counts as fully built. Used only for your own picks in personal mode.</div>
-      <textarea id="buffiesText" rows="8" spellcheck="false" style="width:100%;max-width:420px;background:#111;color:inherit;border:1px solid #444;border-radius:6px;padding:6px;font:12px ui-monospace,monospace"></textarea>
-      <div><button id="buffiesSave">Save</button> <span id="buffiesMsg" class="muted"></span></div>
-    </div>
-  </details>
+<div class="drawer" id="drawer">
+  <div style="display:flex;align-items:center"><h3>You</h3><div class="spacer"></div><button class="btn ghost" id="closeDrawer">Close</button></div>
+  <p class="sub" id="youSummary"></p>
+  <div class="section-title">Your best brawlers (vs. what the model expected)</div>
+  <div id="youTop"></div>
+  <div class="section-title">Missing buffies</div>
+  <p class="sub" style="margin-bottom:8px">One brawler per line. Everything else with buffies counts as fully built. Only affects <em>your</em> picks when "Use my brawlers" is on.</p>
+  <textarea id="buffies" spellcheck="false"></textarea>
+  <div style="margin-top:8px;display:flex;gap:10px;align-items:center"><button class="btn" id="saveBuffies">Save</button><span id="buffiesMsg" class="sub" style="margin:0"></span></div>
 </div>
 
 <script>
 (function(){
 "use strict";
-
-const LS_KEY = "bsdraft.v1";
-const PICK_ORDER = [0,1,1,0,0,1];   // 0 = first-pick team
-const MAX_BANS = 6, MAX_TEAM = 3;
-const BD_KEYS = [
-  ["map_strength","Map"],
-  ["synergy","Synergy"],
-  ["counters","Counters"],
-  ["risk_countered","vs future"],
-  ["you","You"]
-];
-
-const $ = (s, r) => (r||document).querySelector(s);
+const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const num = (v, d=1) => (typeof v === "number" && isFinite(v)) ? v.toFixed(d) : "-";
-const sgn = (v, d=1) => (typeof v === "number" && isFinite(v)) ? (v > 0 ? "+" : "") + v.toFixed(d) : "-";
-const cls = v => (typeof v !== "number" || Math.abs(v) < 0.005) ? "zero" : v > 0 ? "pos" : "neg";
-const fmtInt = n => (typeof n === "number") ? n.toLocaleString() : "-";
-const titleCase = s => String(s||"").replace(/[_-]+/g," ").replace(/\b\w/g, c => c.toUpperCase());
+const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+const MODE = {brawlBall:"Brawl Ball", gemGrab:"Gem Grab", knockout:"Knockout", bounty:"Bounty", heist:"Heist", hotZone:"Hot Zone"};
+const ORDER = [0,1,1,0,0,1];          // 0 = first-pick team
 
 // ---------------------------------------------------------------- state
 const S = {
-  brawlers: [], byId: new Map(), maps: [], brackets: [], model: null, personalAvail: false,
-  cfg: { mapKey: null, weFirst: true, bracket: "legendary", personal: false, override: null },
-  bans: [], our: [], opp: [], hist: [],
-  query: "", cls: "All",
-  rec: null, err: null, loading: false,
-  statsOpen: false, statsCache: {}
+  meta: null, byId: {}, brawlers: [], maps: [], bracket: "legendary", personalAvail: false,
+  d: load() || fresh(), resp: null, err: null, open: {}, ctl: null, timer: null
 };
+function fresh(){ return {mapKey: null, weFirst: true, personal: false, bans: [], picks: [], phase: "bans", hist: []}; }
+function load(){ try{ return JSON.parse(localStorage.getItem("draft-v2")); }catch(e){ return null; } }
+function save(){ localStorage.setItem("draft-v2", JSON.stringify(S.d)); }
+const D = () => S.d;
+const ours = () => D().picks.filter(p => p.us).map(p => p.id);
+const theirs = () => D().picks.filter(p => !p.us).map(p => p.id);
+const used = () => new Set([...D().bans, ...D().picks.map(p => p.id)]);
+function teamAt(step){ return (ORDER[step] === 0) === D().weFirst; }      // true = us
+function phase(){ return D().picks.length >= 6 ? "done" : (D().phase === "bans" && D().picks.length === 0 ? "bans" : "picks"); }
+const img = id => (S.byId[id] && S.byId[id].image) || "";
+const nm = id => (S.byId[id] && S.byId[id].name) || ("#" + id);
+const pct = (v, d=0) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d) + "%";
 
-function mapKeyOf(m){ return m.mode + "\t" + m.map; }
-function curMap(){ return S.maps.find(m => mapKeyOf(m) === S.cfg.mapKey) || null; }
-
-function save(){
-  try{
-    localStorage.setItem(LS_KEY, JSON.stringify({
-      cfg: S.cfg, bans: S.bans, our: S.our, opp: S.opp, hist: S.hist, statsOpen: S.statsOpen
-    }));
-  }catch(e){}
-}
-function load(){
-  try{
-    const o = JSON.parse(localStorage.getItem(LS_KEY) || "null");
-    if(!o) return;
-    if(o.cfg) Object.assign(S.cfg, o.cfg);
-    for(const k of ["bans","our","opp","hist"]) if(Array.isArray(o[k])) S[k] = o[k];
-    S.statsOpen = !!o.statsOpen;
-  }catch(e){}
-}
-
-// ---------------------------------------------------------------- draft logic
-const step = () => S.our.length + S.opp.length;
-function sideAt(st){ return ((PICK_ORDER[st] === 0) === S.cfg.weFirst) ? "us" : "opp"; }
-function turnNow(){ const st = step(); return st >= 6 ? "done" : sideAt(st); }
-function autoTarget(){
-  const st = step();
-  if(st >= 6) return null;
-  if(st === 0 && S.bans.length < MAX_BANS) return "ban";
-  return sideAt(st) === "us" ? "our" : "opp";
-}
-function target(){ return S.cfg.override || autoTarget(); }
-function usedSet(){ return new Set([].concat(S.bans, S.our, S.opp)); }
-const listOf = k => k === "ban" ? S.bans : k === "our" ? S.our : S.opp;
-const capOf = k => k === "ban" ? MAX_BANS : MAX_TEAM;
-const kindName = k => k === "ban" ? "Ban" : k === "our" ? "Our pick" : "Their pick";
-
-function toast(msg){
-  const b = $("#banner");
-  b.innerHTML = '<div class="err">' + esc(msg) + '</div>';
-  clearTimeout(toast.t);
-  toast.t = setTimeout(() => { if(!S.metaErr) b.innerHTML = ""; }, 2500);
-}
-
-function add(kind, id){
-  if(usedSet().has(id)) return false;
-  const lst = listOf(kind);
-  if(lst.length >= capOf(kind)){ toast(kindName(kind) + " slots are full."); return false; }
-  const stBefore = step();
-  lst.push(id);
-  S.hist.push({k: kind, id});
-  // manual override that matches the draft order hands control back to auto
-  if(S.cfg.override){
-    if(S.cfg.override === "ban"){ if(S.bans.length >= MAX_BANS) S.cfg.override = null; }
-    else if(kind === S.cfg.override && stBefore < 6 && (sideAt(stBefore) === "us") === (kind === "our")) S.cfg.override = null;
+// ---------------------------------------------------------------- actions
+function snapshot(){ D().hist.push(JSON.stringify({bans: D().bans, picks: D().picks, phase: D().phase})); if(D().hist.length > 60) D().hist.shift(); }
+function choose(id){
+  if(used().has(id)) return;
+  const ph = phase();
+  if(ph === "done") return;
+  snapshot();
+  if(ph === "bans"){
+    D().bans.push(id);
+    if(D().bans.length >= 6) D().phase = "picks";
+  } else {
+    D().picks.push({id, us: teamAt(D().picks.length)});
   }
-  changed();
-  return true;
+  $("#q").value = ""; changed();
 }
-function removeItem(kind, id){
-  const lst = listOf(kind);
-  const i = lst.indexOf(id);
+function removeBan(id){ snapshot(); D().bans = D().bans.filter(b => b !== id); if(!D().picks.length) D().phase = "bans"; changed(); }
+function removePick(id){
+  const i = D().picks.findIndex(p => p.id === id);
   if(i < 0) return;
-  lst.splice(i, 1);
-  for(let j = S.hist.length - 1; j >= 0; j--) if(S.hist[j].k === kind && S.hist[j].id === id){ S.hist.splice(j,1); break; }
+  snapshot(); D().picks = D().picks.slice(0, i);      // later picks depend on this one
   changed();
 }
-function undo(){
-  const a = S.hist.pop();
-  if(!a) return;
-  const lst = listOf(a.k), i = lst.lastIndexOf(a.id);
-  if(i >= 0) lst.splice(i,1);
-  changed();
+function undo(){ const h = D().hist.pop(); if(!h) return; Object.assign(D(), JSON.parse(h)); changed(); }
+function reset(){ const keep = {mapKey: D().mapKey, weFirst: D().weFirst, personal: D().personal}; S.d = Object.assign(fresh(), keep); changed(); }
+function changed(){ save(); renderBoard(); renderGrid(); schedule(); }
+
+// ---------------------------------------------------------------- data
+async function init(){
+  const r = await fetch("/api/meta?bracket=" + S.bracket);
+  if(!r.ok){ $("#advice").innerHTML = '<div class="err">The model isn\'t ready. Run <code>.venv/bin/python train.py</code>, then reload.</div>'; return; }
+  S.meta = await r.json();
+  S.brawlers = S.meta.brawlers; S.byId = {}; S.brawlers.forEach(b => S.byId[b.id] = b);
+  S.maps = S.meta.maps; S.personalAvail = !!S.meta.personal_available;
+  // map select grouped by mode
+  const byMode = {};
+  S.maps.forEach(m => (byMode[m.mode] = byMode[m.mode] || []).push(m));
+  $("#map").innerHTML = Object.keys(byMode).sort((a,b) => (MODE[a]||a).localeCompare(MODE[b]||b)).map(mo =>
+    '<optgroup label="' + esc(MODE[mo] || mo) + '">' + byMode[mo].sort((a,b) => a.map.localeCompare(b.map)).map(m =>
+      '<option value="' + esc(mo + "|" + m.map) + '">' + esc(m.map) + '</option>').join("") + '</optgroup>').join("");
+  const keys = S.maps.map(m => m.mode + "|" + m.map);
+  if(!keys.includes(D().mapKey)){ const best = S.maps.slice().sort((a,b) => b.games - a.games)[0]; D().mapKey = best.mode + "|" + best.map; }
+  $("#map").value = D().mapKey;
+  const lab = (S.meta.brackets.find(b => b.id === S.bracket) || {}).label || "Legendary+";
+  $("#bracket").textContent = lab;
+  $("#personalWrap").classList.toggle("disabled", !S.personalAvail);
+  if(!S.personalAvail) D().personal = false;
+  $("#personal").checked = D().personal;
+  $("#youBtn").hidden = !S.personalAvail;
+  const dt = new Date(S.meta.model.trained_through * 1000);
+  $("#foot").textContent = `${lab} games since the Nov 3 patch · ${S.meta.model.n_in_bracket.toLocaleString()} games · data through ${dt.toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"})}. Win chances assume equal skill.`;
+  renderSide(); renderBoard(); renderGrid(); schedule();
 }
-function reset(){
-  S.bans = []; S.our = []; S.opp = []; S.hist = []; S.cfg.override = null;
-  changed();
-}
-function changed(){
-  save();
-  renderBoard();
-  renderGrid();
-  renderTarget();
-  scheduleFetch();
-}
-
-// ---------------------------------------------------------------- images
-function imgHtml(id, cssClass){
-  const b = S.byId.get(id);
-  const name = b ? b.name : String(id);
-  if(b && b.image) return '<img src="' + esc(b.image) + '" alt="' + esc(name) + '" loading="lazy" data-fb="' + esc(name) + '"' + (cssClass ? ' class="'+cssClass+'"' : '') + '>';
-  return '<span class="imgfb">' + esc(name) + '</span>';
-}
-// image error fallback (capture phase, since error does not bubble)
-document.addEventListener("error", e => {
-  const t = e.target;
-  if(t && t.tagName === "IMG" && t.dataset.fb != null){
-    const sp = document.createElement("span");
-    sp.className = "imgfb";
-    sp.textContent = t.dataset.fb;
-    t.replaceWith(sp);
-  }
-}, true);
-const nameOf = (id, fallback) => (S.byId.get(id) || {}).name || fallback || String(id);
-
-// ---------------------------------------------------------------- topbar
-function renderTopbar(){
-  // map select
-  const sel = $("#mapSel");
-  const byMode = new Map();
-  for(const m of S.maps){ if(!byMode.has(m.mode)) byMode.set(m.mode, []); byMode.get(m.mode).push(m); }
-  let html = "";
-  for(const [mode, arr] of byMode){
-    html += '<optgroup label="' + esc(titleCase(mode)) + '">';
-    for(const m of arr) html += '<option value="' + esc(mapKeyOf(m)) + '">' + esc(m.map) + ' (' + fmtInt(m.games) + ')</option>';
-    html += '</optgroup>';
-  }
-  sel.innerHTML = html;
-  sel.value = S.cfg.mapKey || "";
-
-  const br = $("#brSel");
-  br.innerHTML = S.brackets.map(b => '<option value="' + esc(b.id) + '">' + esc(b.label) + '</option>').join("");
-  br.value = S.cfg.bracket;
-
-  for(const b of document.querySelectorAll("#sideSeg button")) b.classList.toggle("on", (b.dataset.first === "1") === S.cfg.weFirst);
-
-  const pc = $("#persChk"), sw = $("#persSw");
-  pc.disabled = !S.personalAvail;
-  sw.classList.toggle("disabled", !S.personalAvail);
-  sw.title = S.personalAvail ? "Adds a personal 'you' term to pick scores" : "Personal data not available";
-  pc.checked = S.personalAvail && !!S.cfg.personal;
-  $("#mystats").classList.toggle("hidden", !S.personalAvail);
-  $("#mystats").open = S.personalAvail && S.statsOpen;
-
-  const m = S.model;
-  if(m){
-    const label = (S.brackets.find(b => b.id === S.cfg.bracket) || {label: S.cfg.bracket}).label;
-    const d = m.trained_through ? new Date(m.trained_through * 1000).toLocaleDateString(undefined, {year:"numeric", month:"short", day:"numeric"}) : "?";
-    const games = (typeof m.n_in_bracket === "number") ? m.n_in_bracket : m.n_train;
-    $("#modelinfo").textContent = label + " model · " + fmtInt(games) + " games · data through " + d;
-  }
+function schedule(){ clearTimeout(S.timer); S.timer = setTimeout(fetchRecs, 60); }
+async function fetchRecs(){
+  if(!S.meta) return;
+  if(S.ctl) S.ctl.abort();
+  S.ctl = new AbortController();
+  const [mode, map] = D().mapKey.split("|");
+  const body = {map, mode, we_first: D().weFirst, bans: D().bans, our: ours(), opp: theirs(),
+                personal: D().personal && S.personalAvail, bracket: S.bracket, top: 5};
+  try{
+    const r = await fetch("/api/recommend", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body), signal: S.ctl.signal});
+    const d = await r.json();
+    if(!r.ok){ S.err = d.detail || ("Error " + r.status); S.resp = null; }
+    else { S.err = null; S.resp = d; }
+  }catch(e){ if(e.name === "AbortError") return; S.err = "Can't reach the server. Is server.py running?"; S.resp = null; }
+  renderAdvice(); renderOdds(); renderGrid();
 }
 
 // ---------------------------------------------------------------- board
-function slotNumbers(side){   // overall pick numbers (1-based) belonging to side
-  const out = [];
-  for(let s = 0; s < 6; s++) if(sideAt(s) === side) out.push(s + 1);
-  return out;
+function renderSide(){ document.querySelectorAll("#side button").forEach(b => b.classList.toggle("on", (b.dataset.v === "1") === D().weFirst)); }
+function slotsFor(us){
+  const steps = [0,1,2,3,4,5].filter(s => teamAt(s) === us);
+  const picks = D().picks.map((p, i) => ({...p, step: i})).filter(p => p.us === us);
+  const nextStep = phase() === "picks" ? D().picks.length : -1;
+  return steps.map((s, k) => {
+    const p = picks[k];
+    if(p) return `<div class="slot filled" data-pick="${p.id}" title="Remove ${esc(nm(p.id))}"><img src="${esc(img(p.id))}" alt=""><div class="x">✕</div><div class="lbl">${esc(nm(p.id))}</div></div>`;
+    return `<div class="slot ${s === nextStep ? "next" : ""}">${s === nextStep ? "now" : "pick " + (s + 1)}</div>`;
+  }).join("");
 }
 function renderBoard(){
-  const st = step(), turn = turnNow();
-  for(const [side, lst, elId] of [["us", S.our, "slotsUs"], ["opp", S.opp, "slotsOpp"]]){
-    const nums = slotNumbers(side);
-    let html = "";
-    for(let i = 0; i < MAX_TEAM; i++){
-      const id = lst[i];
-      if(id != null){
-        html += '<div class="slot filled" data-act="rm" data-kind="' + (side === "us" ? "our" : "opp") + '" data-id="' + id + '" title="Click to remove">' +
-                imgHtml(id) + '<span class="nm">' + esc(nameOf(id)) + '</span></div>';
-      }else{
-        const cur = (i === lst.length) && turn === side && !S.cfg.override;
-        html += '<div class="slot' + (cur ? ' current' : '') + '"><span class="big">' + (i+1) + '</span><span class="num">pick ' + nums[i] + '</span></div>';
-      }
-    }
-    $("#" + elId).innerHTML = html;
+  $("#usSlots").innerHTML = slotsFor(true);
+  $("#themSlots").innerHTML = slotsFor(false);
+  const bans = D().bans, ph = phase();
+  let h = "";
+  for(let i = 0; i < 6; i++){
+    const id = bans[i];
+    h += id ? `<div class="ban filled" data-ban="${id}" title="Unban ${esc(nm(id))}"><img src="${esc(img(id))}" alt=""></div>`
+            : `<div class="ban ${ph === "bans" && i === bans.length ? "next" : ""}"></div>`;
   }
-  // bans
-  let bh = "";
-  for(let i = 0; i < MAX_BANS; i++){
-    const id = S.bans[i];
-    bh += id != null
-      ? '<div class="bslot filled" data-act="rm" data-kind="ban" data-id="' + id + '" title="' + esc(nameOf(id)) + ' (click to remove)">' + imgHtml(id) + '</div>'
-      : '<div class="bslot' + (i === S.bans.length && st === 0 && target() === "ban" ? ' current' : '') + '"></div>';
-  }
-  $("#banRow").innerHTML = bh;
-  $("#banCount").textContent = S.bans.length + "/" + MAX_BANS;
-
-  // order strip
-  let oh = "";
-  for(let s = 0; s < 6; s++){
-    const side = sideAt(s);
-    oh += '<span class="d ' + side + (s < st ? ' done' : '') + (s === st ? ' now' : '') + '" title="Pick ' + (s+1) + ': ' + (side === "us" ? "us" : "them") + '">' + (s+1) + '</span>';
-  }
-  $("#order").innerHTML = '<span>order</span>' + oh;
-
-  // turn line
-  let tl;
-  if(turn === "done") tl = '<span class="muted">Draft complete</span>';
-  else if(st === 0 && S.bans.length < MAX_BANS && !S.cfg.override) tl = 'Bans, then <span class="' + turn + '">' + (turn === "us" ? "we" : "they") + '</span> pick first';
-  else{
-    const n = (turn === "us" ? S.our.length : S.opp.length) + 1;
-    tl = '<span class="' + turn + '">' + (turn === "us" ? "Our" : "Their") + ' pick ' + n + '</span> <span class="muted">(pick ' + (st+1) + ' of 6)</span>';
-  }
-  $("#turnline").innerHTML = tl;
-  renderWin();
+  $("#bans").innerHTML = h;
+  renderOdds(); renderHint();
 }
-function renderWin(){
-  const w = S.rec && typeof S.rec.current_win_prob === "number" ? S.rec.current_win_prob : 50;
-  $("#wpUs").textContent = w.toFixed(1) + "%";
-  $("#wpOpp").textContent = (100 - w).toFixed(1) + "%";
-  $("#wpBar").style.width = Math.max(0, Math.min(100, w)) + "%";
+function renderOdds(){
+  const n = D().picks.length, r = S.resp;
+  if(!n || !r){ $("#odds").innerHTML = ph_text(); $("#bar").hidden = true; return; }
+  const p = r.final ? r.final.win_prob : r.current_win_prob;
+  $("#odds").innerHTML = `<b>${Math.round(p)}%</b> chance to win ${r.final ? "" : "with the picks so far"}`;
+  $("#bar").hidden = false; $("#bar div").style.width = p + "%";
+}
+function ph_text(){ return phase() === "bans" ? "Enter bans, then picks. Suggestions update as you go." : ""; }
+function renderHint(){
+  const ph = phase();
+  let t;
+  if(ph === "bans") t = `<span class="dot" style="background:var(--gold)"></span>Clicking a brawler <b>bans</b> it. <button class="btn" id="startPicks" style="padding:3px 10px;margin-left:auto">Start picks →</button>`;
+  else if(ph === "done") t = `Draft complete. Click a pick to change it, or start a new draft.`;
+  else { const us = teamAt(D().picks.length);
+    t = `<span class="dot" style="background:var(${us ? "--us" : "--them"})"></span>Clicking a brawler adds it to <b style="color:var(${us ? "--us" : "--them"})">${us ? "your team" : "the enemy team"}</b> (pick ${D().picks.length + 1} of 6)`; }
+  $("#hint").innerHTML = t;
+  const sp = $("#startPicks"); if(sp) sp.onclick = () => { snapshot(); D().phase = "picks"; changed(); };
 }
 
-// ---------------------------------------------------------------- picker
-function buildChips(){
-  const classes = ["All"].concat([...new Set(S.brawlers.map(b => b.class).filter(Boolean))].sort());
-  $("#chips").innerHTML = classes.map(c => '<button data-cls="' + esc(c) + '"' + (c === S.cls ? ' class="on"' : '') + '>' + esc(c) + '</button>').join("");
-}
-function buildGrid(){
-  $("#grid").innerHTML = S.brawlers.map(b =>
-    '<div class="cell" data-id="' + b.id + '" title="' + esc(b.name + (b.class ? " - " + b.class : "")) + '">' +
-    imgHtml(b.id) + '<div class="cn">' + esc(b.name) + '</div></div>').join("");
-  S.cells = new Map();
-  for(const el of $("#grid").children) S.cells.set(+el.dataset.id, el);
-  renderGrid();
+// ---------------------------------------------------------------- picker + search
+function score(b, q){
+  if(!q) return 1;
+  const n = norm(b.name);
+  if(n === q) return 100;
+  if(n.startsWith(q)) return 80;
+  const words = b.name.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  if(words.some(w => w.startsWith(q))) return 60;
+  if(n.includes(q)) return 40;
+  // letters in order (e.g. "ltr" -> "Larry & Lawrie"), only for 3+ chars
+  if(q.length >= 3){ let i = 0; for(const c of n){ if(c === q[i]) i++; if(i === q.length) return 10; } }
+  return 0;
 }
 function filtered(){
-  const q = S.query.trim().toLowerCase();
-  const used = usedSet();
-  let arr = S.brawlers.filter(b => (S.cls === "All" || b.class === S.cls) && (!q || b.name.toLowerCase().includes(q)));
-  if(q) arr = arr.slice().sort((a,b) => (b.name.toLowerCase().startsWith(q) - a.name.toLowerCase().startsWith(q)));
-  return {arr, used};
+  const q = norm($("#q").value);
+  const arr = S.brawlers.map(b => ({b, s: score(b, q)})).filter(x => x.s > 0);
+  if(q) arr.sort((a, b) => b.s - a.s || a.b.name.localeCompare(b.b.name));
+  return arr.map(x => x.b);
+}
+function suggestedIds(){
+  const r = S.resp; if(!r) return new Set();
+  const list = phase() === "bans" ? ((r.ban_recs && r.ban_recs.bans) || [])
+             : (r.pick_recs && r.pick_recs.picks) || r.opponent_prediction || [];
+  return new Set(list.slice(0, 3).map(x => x.brawler_id));
 }
 function renderGrid(){
-  if(!S.cells) return;
-  const {arr, used} = filtered();
-  const show = new Set(arr.map(b => b.id));
-  const grid = $("#grid");
-  let first = null;
-  // reorder only when searching (keeps DOM stable otherwise)
-  if(S.query.trim()){
-    for(const b of arr) grid.appendChild(S.cells.get(b.id));
-  }else if(S.reordered){
-    for(const b of S.brawlers) grid.appendChild(S.cells.get(b.id));
-  }
-  S.reordered = !!S.query.trim();
-  for(const b of S.brawlers){
-    const el = S.cells.get(b.id);
-    el.classList.toggle("nomatch", !show.has(b.id));
-    el.classList.toggle("used", used.has(b.id));
-    el.classList.remove("first");
-  }
-  for(const b of arr) if(!used.has(b.id)){ first = S.cells.get(b.id); break; }
-  if(first && S.query.trim()) first.classList.add("first");
-  S.firstId = first ? +first.dataset.id : null;
-}
-function renderTarget(){
-  const t = target(), auto = !S.cfg.override;
-  for(const b of document.querySelectorAll("#tgtSeg button")){
-    const k = b.dataset.t;
-    b.classList.toggle("on", k === "auto" ? auto : k === t);
-  }
-  $("#tgtLabel").textContent = t ? kindName(t) + (auto ? " (auto)" : "") : "draft complete";
+  if(!S.meta) return;
+  const u = used(), sug = suggestedIds(), list = filtered(), q = $("#q").value.trim();
+  const firstFree = list.find(b => !u.has(b.id));
+  $("#grid").innerHTML = list.length ? list.map(b =>
+    `<div class="b ${u.has(b.id) ? "used" : ""} ${q && firstFree && b.id === firstFree.id ? "first" : ""} ${sug.has(b.id) ? "sug" : ""}" data-id="${b.id}" title="${esc(b.name)}">
+       <img loading="lazy" src="${esc(b.image || "")}" alt="" onerror="this.style.visibility='hidden'"><span>${esc(b.name)}</span></div>`).join("")
+    : `<div class="empty" style="grid-column:1/-1">No brawler matches "${esc(q)}"</div>`;
 }
 
-// ---------------------------------------------------------------- recommendations
-let fetchTimer = null, inflight = null, seq = 0;
-function scheduleFetch(){
-  clearTimeout(fetchTimer);
-  fetchTimer = setTimeout(doFetch, 80);
+// ---------------------------------------------------------------- advice (plain-English)
+function reasonsFor(r, last){
+  const b = r.breakdown_pct || {}, y = r.you_info || {}, out = [];
+  if(b.map_strength >= 3) out.push("strong on this map");
+  else if(b.map_strength <= -2) out.push("weak on this map");
+  if(b.counters >= 1) out.push("good into their picks");
+  else if(b.counters <= -1) out.push("struggles into their picks");
+  if(b.synergy >= 1) out.push("fits your team well");
+  else if(b.synergy <= -1) out.push("awkward with your team");
+  if(last) out.push("nothing left to counter it");
+  else if(b.risk_countered >= 0.5) out.push("hard to counter");
+  else if(b.risk_countered <= -1) out.push("easy to counter, so risky this early");
+  if(y.games >= 3 && y.me_pct >= 0.5) out.push(`you do well on it (${y.games} games, ${Math.round(y.wr)}%)`);
+  if(y.games >= 3 && y.me_pct <= -0.5) out.push(`you've struggled on it (${y.games} games, ${Math.round(y.wr)}%)`);
+  if(y.buffie_pct) out.push(`you're missing buffies (${pct(y.buffie_pct, 0)})`);
+  if(y.power_pct) out.push(`only power ${y.power}`);
+  if(r.games_on_map < 30) out.push("not much data here yet");
+  if(!out.length) out.push("solid all-round option");
+  const s = out.join(", ");
+  return s.charAt(0).toUpperCase() + s.slice(1) + ".";
 }
-async function doFetch(){
-  const m = curMap();
-  if(!m) return;
-  if(inflight) inflight.abort();
-  const ctrl = inflight = new AbortController();
-  const my = ++seq;
-  S.loading = true;
-  $("#recs").classList.add("loading");
-  const body = {
-    map: m.map, mode: m.mode, we_first: S.cfg.weFirst,
-    bans: S.bans, our: S.our, opp: S.opp,
-    personal: !!(S.cfg.personal && S.personalAvail),
-    bracket: S.cfg.bracket, top: 5
-  };
-  try{
-    const r = await fetch("/api/recommend", {
-      method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(body), signal: ctrl.signal
-    });
-    let data = null;
-    try{ data = await r.json(); }catch(e){}
-    if(my !== seq) return;
-    if(!r.ok){
-      let d = data && data.detail;
-      if(Array.isArray(d)) d = d.map(x => x.msg || JSON.stringify(x)).join("; ");
-      S.err = d || ("HTTP " + r.status);
-      S.rec = null;
-    }else{
-      S.rec = data; S.err = null;
-    }
-  }catch(e){
-    if(e && e.name === "AbortError") return;
-    if(my !== seq) return;
-    S.err = "Cannot reach server (" + (e && e.message || e) + ")";
-    S.rec = null;
-  }
-  S.loading = false;
-  $("#recs").classList.remove("loading");
-  renderWin();
-  renderRecs();
+function detailRows(r){
+  const b = r.breakdown_pct || {};
+  const rows = [["On this map", b.map_strength], ["With your team", b.synergy], ["Vs. their picks", b.counters], ["Vs. their next picks", b.risk_countered]];
+  if(b.you !== undefined) rows.push(["You", b.you]);
+  return rows.map(([k, v]) => {
+    v = v || 0; const w = Math.min(50, Math.abs(v) * 5);
+    return `<div class="drow"><span>${k}</span><div class="dbar"><i style="${v >= 0 ? `left:50%;width:${w}%;background:var(--good)` : `right:50%;width:${w}%;background:var(--bad)`}"></i></div><span class="${v >= 0.05 ? "pos" : v <= -0.05 ? "neg" : ""}" style="text-align:right">${pct(v, 1)}</span></div>`;
+  }).join("") + `<div class="drow"><span>Picked here</span><span>${Math.round(r.pick_rate)}% of games · ${r.games_on_map.toLocaleString()} games on this map</span><span></span></div>`;
 }
-
-function barPct(v){ return Math.min(50, Math.sqrt(Math.min(Math.abs(v), 10) / 10) * 50); }
-function chip(label, v, extra){
-  const has = typeof v === "number";
-  return '<div class="chip' + (extra ? " " + extra : "") + '"><div class="l">' + esc(label) + '</div>' +
-    '<div class="n ' + (has ? cls(v) : "zero") + '">' + (has ? sgn(v) + "%" : "-") + '</div>' +
-    '<div class="bar">' + (has && Math.abs(v) >= 0.005 ? '<i class="' + (v > 0 ? "p" : "m") + '" style="width:' + barPct(v).toFixed(1) + '%"></i>' : '') + '</div></div>';
+function recCard(r, i, last){
+  const key = "p" + r.brawler_id;
+  return `<div class="rec ${i === 0 ? "top" : ""} ${S.open[key] ? "open" : ""}" data-choose="${r.brawler_id}">
+    <img src="${esc(img(r.brawler_id))}" alt="">
+    <div class="body"><div class="name">${esc(r.name)}</div><div class="why">${esc(reasonsFor(r, last))}</div>
+      <button class="more" data-toggle="${key}">${S.open[key] ? "Hide details" : "Why?"}</button>
+      <div class="details">${detailRows(r)}</div></div>
+    <div class="score"><b>${Math.round(r.win_prob)}%</b><small class="${r.delta_vs_typical >= 0 ? "pos" : "neg"}">${pct(r.delta_vs_typical, 1)} vs usual pick</small></div>
+  </div>`;
 }
-function fmtYouInfo(x){
-  if(x == null) return "";
-  if(typeof x === "string") return x;
-  if(typeof x === "number") return String(x);
-  if(typeof x === "object" && typeof x.games === "number"){
-    const parts = [x.games + " games"];
-    if(x.games > 0 && typeof x.wr === "number") parts.push(x.wr.toFixed(0) + "% wr");
-    if(typeof x.me_pct === "number") parts.push("me " + sgn(x.me_pct, 2) + "%");
-    if(typeof x.comfort_pct === "number") parts.push("comfort " + x.comfort_pct.toFixed(2));
-    if(x.power != null) parts.push("power " + x.power);
-    return parts.join(" \u00b7 ");
-  }
-  if(typeof x === "object") return Object.entries(x).map(([k,v]) => titleCase(k) + ": " + (typeof v === "number" ? +v.toFixed(2) : v)).join(", ");
-  return String(x);
+function banCard(r, i){
+  const bits = [];
+  if(r.pick_rate >= 15) bits.push(`picked in ${Math.round(r.pick_rate)}% of games here`);
+  if(r.map_strength_pct >= 2) bits.push("strong on this map");
+  if(r.opp_first_choice_prob >= 6) bits.push("a likely first choice for them");
+  if(!bits.length) bits.push("takes away a good option for them");
+  const s = bits.join(", ");
+  return `<div class="rec ${i === 0 ? "top" : ""}" data-choose="${r.brawler_id}">
+    <img src="${esc(img(r.brawler_id))}" alt="">
+    <div class="body"><div class="name">${esc(r.name)}</div><div class="why">${esc(s.charAt(0).toUpperCase() + s.slice(1))}.</div></div>
+    <div class="score"><b class="pos">${pct(r.delta_win_prob, 1)}</b><small>your win chance</small></div></div>`;
 }
-function sp(parts){
-  if(!parts) return "";
-  return Object.entries(parts).map(([k,v]) => k + " " + sgn(v) + "%").join(", ");
+function also(list, fmt){
+  if(!list.length) return "";
+  return `<div class="section-title">Also good</div><div class="also">` + list.map(r =>
+    `<button data-choose="${r.brawler_id}"><img src="${esc(img(r.brawler_id))}" alt="">${esc(r.name)} <small>${fmt(r)}</small></button>`).join("") + `</div>`;
 }
-
-function pickCard(p, i){
-  const low = typeof p.games_on_map === "number" && p.games_on_map < 30;
-  const bd = p.breakdown_pct || {};
-  let chips = "";
-  for(const [k, label] of BD_KEYS){
-    if(k === "you" && !(k in bd)) continue;
-    chips += chip(label, bd[k], k === "you" ? "you" : "");
-  }
-  const tip = p.strength_parts_pct ? 'title="Strength parts: ' + esc(sp(p.strength_parts_pct)) + '"' : "";
-  return '<button class="card' + (low ? " lowdata" : "") + '" data-act="apply" data-kind="our" data-id="' + p.brawler_id + '" ' + tip + '>' +
-    '<div class="hd"><span class="rank">' + (i+1) + '</span><span class="pic">' + imgHtml(p.brawler_id) + '</span>' +
-    '<div class="grow"><div class="nm">' + esc(p.name || nameOf(p.brawler_id)) +
-      (low ? '<span class="badge">low data</span>' : '') + '</div>' +
-    '<div class="sub">' + fmtInt(p.games_on_map) + ' games on map &middot; ' + num(p.pick_rate) + '% pick rate</div></div>' +
-    '<div class="wp"><div class="v">' + num(p.win_prob) + '%</div><div class="d ' + cls(p.delta_vs_typical) + '">' + sgn(p.delta_vs_typical, 2) + ' vs typical</div></div></div>' +
-    '<div class="bd">' + chips + '</div>' +
-    (p.you_info != null ? '<div class="youinfo">You: ' + esc(fmtYouInfo(p.you_info)) + '</div>' : '') +
-    '<div class="expl">' + esc(p.explanation) + '</div></button>';
-}
-function banCard(b, i){
-  const low = typeof b.games_on_map === "number" && b.games_on_map < 30;
-  return '<button class="card bancard' + (low ? " lowdata" : "") + '" data-act="apply" data-kind="ban" data-id="' + b.brawler_id + '">' +
-    '<div class="hd"><span class="rank">' + (i+1) + '</span><span class="pic">' + imgHtml(b.brawler_id) + '</span>' +
-    '<div class="grow"><div class="nm">' + esc(b.name || nameOf(b.brawler_id)) + (low ? '<span class="badge">low data</span>' : '') + '</div>' +
-    '<div class="stats"><span>Map strength <b class="' + cls(b.map_strength_pct) + '">' + sgn(b.map_strength_pct) + '%</b></span>' +
-    '<span>Pick rate <b>' + num(b.pick_rate) + '%</b></span>' +
-    '<span>Enemy first choice <b>' + num(b.opp_first_choice_prob) + '%</b></span>' +
-    '<span>' + fmtInt(b.games_on_map) + ' games</span></div></div>' +
-    '<div class="wp"><div class="v ' + cls(b.delta_win_prob) + '">' + sgn(b.delta_win_prob, 2) + '%</div><div class="sub">win prob if banned</div></div></div>' +
-    '<div class="expl" style="margin-top:4px">' + esc(b.explanation) + '</div></button>';
-}
-function oppRow(o){
-  return '<div class="probrow" data-act="apply" data-kind="opp" data-id="' + o.brawler_id + '" title="Click to add as their pick">' +
-    '<span class="pic">' + imgHtml(o.brawler_id) + '</span><span class="nm">' + esc(o.name || nameOf(o.brawler_id)) + '</span>' +
-    '<span class="pb"><i style="width:' + Math.max(1, Math.min(100, o.prob * (100 / (S.maxProb || 100)))).toFixed(1) + '%"></i></span>' +
-    '<span class="pv">' + num(o.prob) + '%</span></div>';
-}
-function finalTable(title, rows, side){
-  let sS = 0, sY = 0, sC = 0;
-  let h = '<table class="t"><tr><th>' + esc(title) + '</th><th>Strength</th><th>Synergy</th><th>Counters</th><th>Total</th></tr>';
-  for(const r of rows || []){
-    const t = (r.strength||0) + (r.synergy||0) + (r.counters||0);
-    sS += r.strength||0; sY += r.synergy||0; sC += r.counters||0;
-    h += '<tr><td><span class="who">' + imgHtml(r.brawler_id) + esc(nameOf(r.brawler_id)) + '</span></td>' +
-      [r.strength, r.synergy, r.counters, t].map(v => '<td class="' + cls(v) + '">' + sgn(v, 2) + '%</td>').join("") + '</tr>';
-  }
-  const T = sS + sY + sC;
-  h += '<tr class="tot"><td>Team</td>' + [sS, sY, sC, T].map(v => '<td class="' + cls(v) + '">' + sgn(v, 2) + '%</td>').join("") + '</tr></table>';
-  return h;
-}
-
-function renderRecs(){
-  const el = $("#recs"), r = S.rec;
-  if(S.err){
-    el.innerHTML = '<div class="err"><b>Invalid draft state or server error:</b> ' + esc(S.err) + '</div>' +
-      '<div class="muted">Fix the draft (remove or undo an entry) and recommendations will refresh.</div>';
-    return;
-  }
-  if(!r){ el.innerHTML = '<div class="muted">Loading recommendations...</div>'; return; }
+function renderAdvice(){
+  const el = $("#advice"), r = S.resp, ph = phase();
+  if(S.err){ el.innerHTML = `<div class="err">${esc(S.err)}</div>`; return; }
+  if(!r){ el.innerHTML = `<div class="empty">Thinking…</div>`; return; }
+  const [mode, map] = D().mapKey.split("|");
   let h = "";
-  const personalOn = r.personal;
-  if(r.ban_recs && r.ban_recs.bans && S.bans.length < MAX_BANS){
-    h += '<div class="section"><h2><span>Ban suggestions</span><small>baseline win prob ' + num(r.ban_recs.baseline_win_prob) + '% &middot; click to ban</small></h2>' +
-      r.ban_recs.bans.map(banCard).join("") + '</div>';
-  }
-  if(r.pick_recs && r.pick_recs.picks){
-    h += '<div class="section"><h2><span>Best picks for us' + (personalOn ? ' <span class="badge" style="border-color:var(--accent);color:var(--accent)">personal</span>' : '') + '</span>' +
-      '<small>typical pick ' + num(r.pick_recs.baseline_win_prob) + '% &middot; ' + fmtInt(r.games_on_map) + ' games on map &middot; click to pick</small></h2>' +
-      r.pick_recs.picks.map(pickCard).join("") + '</div>';
-  }
-  if(r.opponent_prediction){
-    S.maxProb = Math.max(1, ...r.opponent_prediction.map(o => o.prob));
-    h += '<div class="section"><h2><span>Likely enemy picks</span><small>click to add as their pick</small></h2>' +
-      r.opponent_prediction.map(oppRow).join("") + '</div>';
-  }
-  if(r.final){
+  if(ph === "bans"){
+    const yourPickFirst = D().weFirst ? "You pick first, so you can also just take the best brawler yourself." : "They pick first, so ban what they'd grab.";
+    h += `<div class="headline"><h2>Who to ban</h2><span class="who ban">Ban phase</span></div><p class="sub">${esc(map)} · ${esc(MODE[mode] || mode)}. ${yourPickFirst}</p>`;
+    const bans = (r.ban_recs && r.ban_recs.bans) || [];
+    h += bans.slice(0, 3).map(banCard).join("") || `<div class="empty">No ban suggestions.</div>`;
+    h += also(bans.slice(3), x => pct(x.delta_win_prob, 1));
+    if(r.pick_recs){
+      const p = r.pick_recs.picks.slice(0, 3);
+      h += `<div class="section-title">Best first picks if they're open</div><div class="also">` + p.map(x =>
+        `<span class="chip" style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 3px"><img src="${esc(img(x.brawler_id))}" style="width:24px;height:24px;border-radius:50%">${esc(x.name)} ${Math.round(x.win_prob)}%</span>`).join("") + `</div>`;
+    }
+  } else if(ph === "done"){
     const f = r.final;
-    h += '<div class="section final"><h2><span>Final composition</span></h2>' +
-      '<div class="big ' + (f.win_prob >= 50 ? "pos" : "neg") + '">' + num(f.win_prob) + '% <span class="muted" style="font-size:13px;font-weight:400">our win probability (equal skill)</span></div>' +
-      finalTable("Our team", f.ours, "us") + finalTable("Their team", f.theirs, "opp") + '</div>';
+    h += `<div class="headline"><h2>Draft done</h2></div><p class="sub">Your comp's chance to win: <b style="color:var(--text);font-size:18px">${Math.round(f.win_prob)}%</b> (equal skill)</p>`;
+    const row = x => { const t = x.strength + x.synergy + x.counters;
+      return `<div class="final-row"><img src="${esc(img(x.brawler_id))}" alt=""><span>${esc(nm(x.brawler_id))}</span><span class="v ${t >= 0 ? "pos" : "neg"}">${pct(t, 1)}</span></div>`; };
+    h += `<div class="section-title">Your team's impact</div>` + f.ours.map(row).join("");
+    h += `<div class="section-title">Their team's impact</div>` + f.theirs.map(row).join("");
+  } else if(r.turn === "us"){
+    const n = D().picks.length, last = n === 5;
+    const title = n === 0 ? "Your first pick" : last ? "Your last pick" : "Your pick";
+    const sub = n === 0 ? "Blind pick: these hold up well whatever they pick next." : last ? "Nothing left to answer this pick, so go for the best counter." : "Balances map strength, your team, and what they can still pick.";
+    h += `<div class="headline"><h2>${title}</h2><span class="who us">You're up</span></div><p class="sub">${sub}${D().personal ? " Showing brawlers you own." : ""}</p>`;
+    const p = r.pick_recs.picks;
+    h += p.slice(0, 3).map((x, i) => recCard(x, i, last)).join("");
+    h += also(p.slice(3), x => Math.round(x.win_prob) + "%");
+  } else {
+    h += `<div class="headline"><h2>They're picking</h2><span class="who them">Enemy turn</span></div><p class="sub">Click what they picked. Most likely:</p>`;
+    h += (r.opponent_prediction || []).map(x =>
+      `<div class="rec" data-choose="${x.brawler_id}" style="padding:8px 12px"><img src="${esc(img(x.brawler_id))}" style="width:40px;height:40px" alt=""><div class="body"><div class="name" style="font-size:14px">${esc(x.name)}</div>
+       <div class="dbar" style="margin-top:6px;max-width:220px"><i style="left:0;width:${Math.min(100, x.prob * 3)}%;background:var(--them)"></i></div></div><div class="score"><b style="font-size:16px">${Math.round(x.prob)}%</b></div></div>`).join("");
   }
-  if(!h) h = '<div class="muted">No recommendations.</div>';
   el.innerHTML = h;
 }
 
-// ---------------------------------------------------------------- my stats
-async function loadStats(){
-  loadBuffies();
-  const body = $("#mystatsBody");
-  const key = S.cfg.bracket;
-  if(S.statsCache[key]){ renderStats(S.statsCache[key]); return; }
-  body.textContent = "Loading...";
+// ---------------------------------------------------------------- "You" drawer
+async function openDrawer(){
+  $("#drawer").classList.add("open");
   try{
-    const r = await fetch("/api/my_stats?bracket=" + encodeURIComponent(key));
-    const d = await r.json();
-    S.statsCache[key] = d;
-    renderStats(d);
-  }catch(e){ body.textContent = "Could not load stats: " + (e && e.message || e); }
+    const [st, bf] = await Promise.all([fetch("/api/my_stats?bracket=" + S.bracket).then(r => r.json()), fetch("/api/my_buffies").then(r => r.json())]);
+    $("#buffies").value = bf.text || "";
+    if(!st.available){ $("#youSummary").textContent = "No personal data yet."; return; }
+    $("#youSummary").textContent = `${(st.rank || "").replace(/\b\w/g, c => c.toUpperCase()).replace(/\B\w/g, c => c.toLowerCase())} · ${st.n_games} recent games tracked (${st.n_ranked} ranked). Your history grows as the crawler saves your battles.`;
+    const rows = (st.top || []).concat(st.bottom || []).filter(x => x.games >= 1);
+    $("#youTop").innerHTML = rows.length ? `<table><tr><th>Brawler</th><th>Games</th><th>Win rate</th><th>Expected</th><th>You</th></tr>` +
+      rows.map(x => `<tr><td>${esc(x.name)}</td><td>${x.games}</td><td>${Math.round(x.wr)}%</td><td style="color:var(--muted)">${Math.round(x.expected_wr)}%</td><td class="${x.me_factor_pct >= 0 ? "pos" : "neg"}">${pct(x.me_factor_pct, 1)}</td></tr>`).join("") + `</table>`
+      : `<p class="sub">Not enough games yet.</p>`;
+  }catch(e){ $("#youSummary").textContent = "Couldn't load your stats."; }
 }
-function statTable(rows){
-  if(!Array.isArray(rows) || !rows.length) return '<div class="muted">none</div>';
-  let h = '<table class="t"><tr><th>Brawler</th><th>Games</th><th>Win rate</th><th>Expected</th><th>Me factor</th></tr>';
-  for(const r of rows){
-    const wr = r.wr;   // already a percent in the API
-    const mf = r.me_factor_pct;
-    h += '<tr><td>' + esc(r.name || r.brawler || r.brawler_id) + '</td><td>' + fmtInt(r.games) + '</td><td>' +
-      (typeof wr === "number" ? wr.toFixed(0) + "%" : "-") + '</td><td class="muted">' + (typeof r.expected_wr === "number" ? r.expected_wr.toFixed(0) + "%" : "-") + '</td><td class="' + cls(mf) + '">' + (typeof mf === "number" ? sgn(mf) + "%" : "-") + '</td></tr>';
-  }
-  return h + '</table>';
+async function saveBuffies(){
+  const msg = $("#buffiesMsg"); msg.textContent = "Saving…"; msg.className = "sub";
+  const r = await fetch("/api/my_buffies", {method: "PUT", headers: {"Content-Type": "application/json"}, body: JSON.stringify({text: $("#buffies").value})});
+  const d = await r.json();
+  if(!r.ok){ msg.textContent = d.detail || "Couldn't save."; msg.className = "neg"; return; }
+  msg.textContent = "Saved."; msg.className = "pos"; schedule();
 }
-function renderStats(d){
-  const body = $("#mystatsBody");
-  if(!d || !d.available){ body.textContent = "Personal stats not available."; return; }
-  const extras = Object.entries(d).filter(([k,v]) => k !== "available" && k !== "top" && k !== "bottom" && (typeof v === "string" || typeof v === "number"))
-    .map(([k,v]) => titleCase(k) + ": " + v).join(" · ");
-  body.innerHTML = (extras ? '<div class="muted" style="margin-bottom:6px">' + esc(extras) + '</div>' : '') +
-    '<div class="cols"><div><h4>Top (vs expected)</h4>' + statTable(d.top) + '</div><div><h4>Bottom (vs expected)</h4>' + statTable(d.bottom) + '</div></div>' +
-    (Array.isArray(d.most_played) && d.most_played.length ? '<div class="cols"><div><h4>Most played</h4>' + statTable(d.most_played) + '</div><div>' + gapTable(d) + '</div></div>' : '');
-}
-function gapTable(d){
-  const rows = (d.missing_buffies || []).map(g => '<tr><td>' + esc(g.name) + '</td><td class="muted">' + esc((g.missing || []).join(", ")) +
-    '</td><td class="neg">' + sgn(g.penalty_pct) + '%</td><td class="muted">' + esc(g.source) + '</td></tr>');
-  for(const p of (d.low_power || [])) rows.push('<tr><td>' + esc(p.name) + '</td><td class="muted">power ' + p.power + '</td><td></td><td class="muted">api</td></tr>');
-  if(!rows.length) return '';
-  return '<h4>Your penalties (your picks only)</h4><table class="t"><tr><th>Brawler</th><th>Missing</th><th>Penalty</th><th>Source</th></tr>' + rows.join("") + '</table>';
-}
-
-// ---------------------------------------------------------------- meta
-async function loadMeta(bracket){
-  const r = await fetch("/api/meta?bracket=" + encodeURIComponent(bracket));
-  if(!r.ok){
-    let d = ""; try{ d = (await r.json()).detail; }catch(e){}
-    throw new Error(d || ("HTTP " + r.status));
-  }
-  const m = await r.json();
-  S.brawlers = m.brawlers || [];
-  S.byId = new Map(S.brawlers.map(b => [b.id, b]));
-  S.maps = m.maps || [];
-  S.brackets = m.brackets || [];
-  S.model = m.model || null;
-  S.personalAvail = !!m.personal_available;
-  S.cfg.bracket = bracket;
-  if(!S.brackets.some(b => b.id === bracket)) S.brackets.push({id: bracket, label: bracket});
-  if(!curMap() && S.maps.length){
-    const best = S.maps.slice().sort((a,b) => b.games - a.games)[0];
-    S.cfg.mapKey = mapKeyOf(best);
-  }
-  // drop ids unknown to this meta
-  for(const k of ["bans","our","opp"]) S[k] = S[k].filter(id => S.byId.has(id));
-  S.hist = S.hist.filter(a => S.byId.has(a.id) && listOf(a.k).includes(a.id));
-  S.metaErr = false;
-  $("#banner").innerHTML = "";
-}
-async function boot(){
-  load();
-  try{
-    try{
-      await loadMeta(S.cfg.bracket);
-    }catch(e){
-      if(S.cfg.bracket !== "legendary") await loadMeta("legendary"); else throw e;
-    }
-  }catch(e){
-    S.metaErr = true;
-    $("#banner").innerHTML = '<div class="err">Could not load /api/meta: ' + esc(e.message) + '</div>';
-    $("#modelinfo").textContent = "Server error";
-    return;
-  }
-  afterMeta();
-  doFetch();
-}
-function afterMeta(){
-  renderTopbar(); buildChips(); buildGrid(); renderBoard(); renderTarget(); renderRecs();
-  S.statsCache = {};
-  if(S.personalAvail && S.statsOpen) loadStats();
-  save();
-}
-
-// ---------------------------------------------------------------- my buffies (reference/my_buffies.txt)
-async function loadBuffies(){
-  try{
-    const d = await (await fetch("/api/my_buffies")).json();
-    $("#buffiesText").value = d.text || "";
-    $("#buffiesPath").textContent = "(" + (d.path || "") + ")";
-  }catch(e){ $("#buffiesMsg").textContent = "Could not load: " + (e && e.message || e); }
-}
-$("#buffiesSave").addEventListener("click", async () => {
-  const msg = $("#buffiesMsg");
-  msg.textContent = "Saving...";
-  try{
-    const r = await fetch("/api/my_buffies", {method: "PUT", headers: {"Content-Type": "application/json"},
-                                              body: JSON.stringify({text: $("#buffiesText").value})});
-    const d = await r.json();
-    if(!r.ok){ msg.textContent = d.detail || ("HTTP " + r.status); msg.className = "neg"; return; }
-    msg.className = "pos";
-    msg.textContent = "Saved: " + d.resolved.map(x => x.brawler).join(", ");
-    S.statsCache = {}; loadStats(); scheduleFetch();
-  }catch(e){ msg.textContent = "Save failed: " + (e && e.message || e); msg.className = "neg"; }
-});
-$("#buffiesText").addEventListener("keydown", e => e.stopPropagation());   // don't trigger grid shortcuts
 
 // ---------------------------------------------------------------- events
-$("#mapSel").addEventListener("change", e => { S.cfg.mapKey = e.target.value; save(); scheduleFetch(); });
-$("#sideSeg").addEventListener("click", e => {
-  const b = e.target.closest("button"); if(!b) return;
-  S.cfg.weFirst = b.dataset.first === "1";
-  for(const x of document.querySelectorAll("#sideSeg button")) x.classList.toggle("on", x === b);
-  save(); renderBoard(); renderTarget(); scheduleFetch();
-});
-$("#brSel").addEventListener("change", async e => {
-  const prev = S.cfg.bracket;
-  try{
-    await loadMeta(e.target.value);
-    afterMeta(); scheduleFetch();
-  }catch(err){
-    S.cfg.bracket = prev; $("#brSel").value = prev;
-    toast("Could not load bracket: " + err.message);
-  }
-});
-$("#persChk").addEventListener("change", e => { S.cfg.personal = e.target.checked; save(); scheduleFetch(); });
-$("#tgtSeg").addEventListener("click", e => {
-  const b = e.target.closest("button"); if(!b) return;
-  S.cfg.override = b.dataset.t === "auto" ? null : b.dataset.t;
-  save(); renderBoard(); renderTarget();
-});
-$("#undoBtn").addEventListener("click", undo);
-$("#resetBtn").addEventListener("click", reset);
-$("#chips").addEventListener("click", e => {
-  const b = e.target.closest("button"); if(!b) return;
-  S.cls = b.dataset.cls;
-  for(const x of document.querySelectorAll("#chips button")) x.classList.toggle("on", x === b);
-  renderGrid();
-});
-$("#grid").addEventListener("click", e => {
-  const c = e.target.closest(".cell"); if(!c || c.classList.contains("used")) return;
-  placeFromPicker(+c.dataset.id);
-});
-function placeFromPicker(id){
-  const t = target();
-  if(!t){ toast("Draft is complete. Undo or remove something to continue."); return; }
-  if(add(t, id)){
-    S.query = ""; $("#search").value = "";
-    renderGrid();
-    $("#search").focus();
-  }
-}
-document.addEventListener("click", e => {
-  const el = e.target.closest("[data-act]"); if(!el) return;
-  const id = +el.dataset.id, kind = el.dataset.kind;
-  if(el.dataset.act === "rm") removeItem(kind, id);
-  else if(el.dataset.act === "apply") add(kind, id);
-});
-
-const search = $("#search");
-search.addEventListener("input", () => { S.query = search.value; renderGrid(); });
-search.addEventListener("keydown", e => {
-  if(e.key === "Enter"){
-    e.preventDefault();
-    if(S.query.trim() && S.firstId != null) placeFromPicker(S.firstId);
-  }else if(e.key === "Backspace" && search.value === ""){
-    e.preventDefault(); undo();
-  }else if(e.key === "Escape"){
-    search.value = ""; S.query = ""; renderGrid();
-  }
+$("#map").onchange = e => { D().mapKey = e.target.value; save(); schedule(); };
+$("#side").onclick = e => { const b = e.target.closest("button"); if(!b) return;
+  const wf = b.dataset.v === "1"; if(wf === D().weFirst) return;
+  D().weFirst = wf; D().picks = []; D().hist = []; renderSide(); changed(); };
+$("#personal").onchange = e => { D().personal = e.target.checked; save(); schedule(); };
+$("#undo").onclick = undo;
+$("#reset").onclick = reset;
+$("#youBtn").onclick = openDrawer;
+$("#closeDrawer").onclick = () => $("#drawer").classList.remove("open");
+$("#saveBuffies").onclick = saveBuffies;
+$("#buffies").addEventListener("keydown", e => e.stopPropagation());
+$("#q").addEventListener("input", renderGrid);
+$("#q").addEventListener("keydown", e => {
+  if(e.key === "Enter"){ const u = used(); const f = filtered().find(b => !u.has(b.id)); if(f) choose(f.id); e.preventDefault(); }
+  else if(e.key === "Escape"){ e.target.value = ""; renderGrid(); }
+  else if(e.key === "Backspace" && !e.target.value){ undo(); e.preventDefault(); }
 });
 document.addEventListener("keydown", e => {
-  const tag = (e.target.tagName || "").toLowerCase();
-  const typing = tag === "input" || tag === "textarea" || tag === "select";
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && tag !== "textarea"){
-    e.preventDefault(); undo(); return;
-  }
-  if(typing) return;
-  if(e.ctrlKey || e.metaKey || e.altKey) return;
-  if(e.key === "Backspace"){ e.preventDefault(); undo(); return; }
-  if(e.key.length === 1 && /\S/.test(e.key)) search.focus();   // the keystroke lands in the search box
+  if(e.metaKey || e.ctrlKey || e.altKey) { if((e.metaKey || e.ctrlKey) && e.key === "z"){ undo(); e.preventDefault(); } return; }
+  const tag = (document.activeElement || {}).tagName;
+  if(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+  if(e.key.length === 1 && /[\w\- .&]/.test(e.key)){ $("#q").focus(); }
+  else if(e.key === "Backspace"){ undo(); e.preventDefault(); }
+  else if(e.key === "Escape"){ $("#drawer").classList.remove("open"); }
 });
-$("#mystats").addEventListener("toggle", e => {
-  S.statsOpen = e.target.open; save();
-  if(e.target.open) loadStats();
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-toggle]");
+  if(t){ e.stopPropagation(); S.open[t.dataset.toggle] = !S.open[t.dataset.toggle]; renderAdvice(); return; }
+  const c = e.target.closest("[data-choose]"); if(c){ choose(+c.dataset.choose); return; }
+  const g = e.target.closest(".b[data-id]"); if(g){ choose(+g.dataset.id); return; }
+  const p = e.target.closest("[data-pick]"); if(p){ removePick(+p.dataset.pick); return; }
+  const bn = e.target.closest("[data-ban]"); if(bn){ removeBan(+bn.dataset.ban); return; }
 });
-
-boot();
+init();
 })();
 </script>
 </body>

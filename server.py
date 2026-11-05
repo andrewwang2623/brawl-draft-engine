@@ -14,7 +14,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from draft import DraftEngine, DraftState, pct
+from draft import PICK_ORDER, DraftEngine, DraftState, pct
 from data import BRACKETS, tier_name
 from model import DraftModel, model_path
 
@@ -82,6 +82,15 @@ class DraftRequest(BaseModel):
     personal: bool = False
     bracket: str = DEFAULT_BRACKET
     top: int = 5
+    # Optional free-order entry: 6 pick slots in draft order (1-2-2-1), brawler id or null.
+    # When given, it replaces our/opp, and slots may be filled in any order.
+    slots: list[int | None] | None = None
+    # Which slot (0-5, draft order) is the user. Personal mode applies only to that pick.
+    my_slot: int | None = None
+    # Which empty slot to advise on (default: first empty slot in draft order). Earlier
+    # slots that are still empty are treated as unknown picks (searched over), so you get a
+    # usable answer even if you didn't have time to enter everything.
+    target_slot: int | None = None
 
 
 def _name(md, bid):
@@ -121,7 +130,24 @@ def recommend(req: DraftRequest):
     mm = eng.mm
     try:
         to_idx = lambda ids: [mm.id_to_idx[int(b)] for b in ids]
-        st = DraftState(to_idx(req.our), to_idx(req.opp), to_idx(req.bans), req.we_first)
+        bans = to_idx(dict.fromkeys(req.bans))          # both teams may ban the same brawler
+        next_slot = None
+        if req.slots is not None:
+            if len(req.slots) != 6:
+                raise ValueError("slots must have 6 entries (draft order)")
+            is_us = [(PICK_ORDER[i] == 0) == req.we_first for i in range(6)]
+            our = [b for i, b in enumerate(req.slots) if b is not None and is_us[i]]
+            opp = [b for i, b in enumerate(req.slots) if b is not None and not is_us[i]]
+            empty = [i for i in range(6) if req.slots[i] is None]
+            next_slot = empty[0] if empty else None
+            if req.target_slot is not None and req.target_slot in empty:
+                next_slot = req.target_slot
+            order = ([next_slot] + [i for i in empty if i != next_slot]) if empty else []
+            st = DraftState(to_idx(our), to_idx(opp), bans, req.we_first,
+                            seq=tuple(is_us[i] for i in order))
+            unknown_before = sum(1 for i in empty if i < (next_slot if next_slot is not None else 6))
+        else:
+            st = DraftState(to_idx(req.our), to_idx(req.opp), bans, req.we_first)
         st.validate()
     except KeyError as e:
         raise HTTPException(400, f"unknown brawler id {e}")
@@ -134,7 +160,12 @@ def recommend(req: DraftRequest):
     out["turn"] = {0: "us", 1: "opp", None: "done"}[turn]
 
     pool_mask = bonus = info = None
-    if req.personal:
+    # Personal mode only for the user's own slot (teammates are assumed fully built).
+    mine = req.my_slot is None or next_slot is None or req.my_slot == next_slot
+    out["for_my_slot"] = bool(mine and turn == 0)
+    out["next_slot"] = next_slot
+    out["unknown_before"] = unknown_before if req.slots is not None else 0
+    if req.personal and mine:
         prof = get_personal(req.bracket)
         if prof and prof.available:
             pool_mask, bonus, info = prof.vectors(mm)
@@ -166,6 +197,7 @@ def recommend(req: DraftRequest):
                 r["name"] = _name(md, r["brawler_id"])
     for r in out.get("opponent_prediction", []):
         r["name"] = _name(md, r["brawler_id"])
+    out["pick_rates"] = {int(b): round(600 * float(p), 1) for b, p in zip(mm.brawler_ids, mm.prior)}
     out["ms"] = round(1000 * (time.time() - t0))
     return out
 
