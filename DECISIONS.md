@@ -40,3 +40,30 @@ Judgment calls made while building autonomously. Newest at the bottom of each se
   Cold-start "map features" are therefore the **mode**, plus **class × map** terms that are themselves
   shrunk toward **class × mode**. A brawler unseen on a map still gets a sensible prior from its
   class (Brawlify classes: Damage Dealer, Tank, Assassin, Controller, Support, Marksman, Artillery).
+
+## Rank tiers / brackets (user request: focus on Legendary+)
+
+- **Tier mapping verified, not guessed.** In `soloRanked` battles, `brawler.trophies` is the player's
+  ranked tier. Checked against `/players/{tag}` → `rankedRank` / `rankedRankName` for 48 players
+  sampled across every value seen (14…22). The battle value equals the profile `rankedRank` for 42/48;
+  the other 6 differ by exactly ±1 (they played games after the stored battle). Names observed:
+  14 MYTHIC II, 15 MYTHIC III, 16 LEGENDARY I, 17 LEGENDARY II, 18 LEGENDARY III, 19 MASTERS I,
+  20 MASTERS II, 21 MASTERS III, 22 PRO. So the ladder is 1–3 Bronze … 13–15 Mythic, 16–18 Legendary,
+  19–21 Masters, 22 Pro. Within a player's games the value only ever moves ±1 (rarely ±2).
+  Sample profile: `samples/player_profile_tier22.json`. Profiles also expose `rankedElo`, which could
+  serve as a finer skill control later.
+- **Match tier** is stored as `tier_min` (lowest of the 6) and `tier_avg`. A match is "Legendary+"
+  if `tier_min >= 16`, i.e. every player is Legendary or higher. Lowest-of-6 is the strict definition.
+- At the time of the switch, **16,563 of 16,583 games (99.9%) were already Legendary+**, because
+  seeding from top trophy players lands the crawl in high tiers. So restricting to Legendary+ costs
+  almost no data.
+- **Crawler focus**: unpolled players who are Legendary+ themselves, or who appeared in a Legendary+
+  game (`players.seen_tier`), are queued first (higher tiers first), then unpolled seeds. Players
+  known to be below Legendary are polled only if nothing else is queued. Everything is still stored.
+- **Bracket model** (`bracket_min_tier`): shared terms are fit on all games, and bracket games
+  additionally fit deviation terms (same feature groups, penalty × `lam_dev_scale`). Out-of-bracket
+  games are down-weighted (`low_tier_weight` = 0.25), so they act only as a weak prior that bracket
+  estimates shrink toward. With 99.9% Legendary+ data this is ≈ the all-ranks model. A Masters+ test of
+  the same machinery found bracket-specific estimates *worse* than pooling (see EXPERIMENTS.md), so
+  the deviation penalty defaults to ×10 (mostly shared).
+- Pick-rate priors (the opponent model) use only in-bracket games.

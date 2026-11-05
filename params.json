@@ -1,0 +1,5 @@
+{
+ "bracket_min_tier": 16,
+ "low_tier_weight": 0.25,
+ "lam_dev_scale": 10.0
+}

@@ -1,0 +1,54 @@
+{
+ "map": "Hideout",
+ "mode": "bounty",
+ "bracket": "legendary",
+ "games_on_map": 1499,
+ "step": 6,
+ "personal": false,
+ "turn": "done",
+ "final": {
+  "win_prob": 42.1,
+  "ours": [
+   {
+    "brawler_id": 16000015,
+    "strength": 2.39,
+    "synergy": -0.23,
+    "counters": 1.93
+   },
+   {
+    "brawler_id": 16000061,
+    "strength": 0.27,
+    "synergy": -1.16,
+    "counters": -0.49
+   },
+   {
+    "brawler_id": 16000032,
+    "strength": -2.53,
+    "synergy": 1.38,
+    "counters": 1.19
+   }
+  ],
+  "theirs": [
+   {
+    "brawler_id": 16000003,
+    "strength": 2.85,
+    "synergy": -0.21,
+    "counters": -1.08
+   },
+   {
+    "brawler_id": 16000097,
+    "strength": 6.18,
+    "synergy": -1.37,
+    "counters": 0.83
+   },
+   {
+    "brawler_id": 16000065,
+    "strength": 2.21,
+    "synergy": 0.56,
+    "counters": -2.38
+   }
+  ]
+ },
+ "current_win_prob": 42.1,
+ "ms": 0
+}

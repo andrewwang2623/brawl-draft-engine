@@ -40,6 +40,10 @@ SEED_COUNTRIES = ["global", "US", "KR", "BR", "FR", "DE", "ES", "IT", "PL", "TR"
                   "SA", "AE", "EG", "IN", "ID", "PH", "VN", "TH", "MY", "NL",
                   "BE", "PT", "SE", "FI", "CN", "TW", "HK", "AU"]
 RESEED_SECONDS = 6 * 3600
+# Ranked tier ladder, verified against /players rankedRank + rankedRankName (DECISIONS.md):
+# 1-3 Bronze, 4-6 Silver, 7-9 Gold, 10-12 Diamond, 13-15 Mythic, 16-18 Legendary,
+# 19-21 Masters, 22 Pro. The crawl budget focuses on Legendary+ (>= 16).
+FOCUS_TIER = 16
 MY_POLL_SECONDS = 20 * 60
 STOP = False
 
@@ -120,7 +124,28 @@ def connect(path: Path = DB_PATH) -> sqlite3.Connection:
     con.execute("PRAGMA journal_mode=WAL")
     con.execute("PRAGMA synchronous=NORMAL")
     con.executescript(SCHEMA)
+    migrate(con)
     return con
+
+
+def migrate(con: sqlite3.Connection):
+    """Add tier columns to older databases and backfill them."""
+    mcols = {r[1] for r in con.execute("PRAGMA table_info(matches)")}
+    if "tier_min" not in mcols:
+        con.execute("ALTER TABLE matches ADD COLUMN tier_min INTEGER")   # lowest of the 6 tiers
+        con.execute("ALTER TABLE matches ADD COLUMN tier_avg REAL")      # mean of the 6 tiers
+        con.execute("""UPDATE matches SET
+            tier_min = (SELECT MIN(rank) FROM match_players p WHERE p.battle_key = matches.battle_key),
+            tier_avg = (SELECT AVG(rank) FROM match_players p WHERE p.battle_key = matches.battle_key)""")
+    pcols = {r[1] for r in con.execute("PRAGMA table_info(players)")}
+    if "seen_tier" not in pcols:
+        # highest match tier_min of any ranked game the player appeared in
+        con.execute("ALTER TABLE players ADD COLUMN seen_tier INTEGER DEFAULT 0")
+        con.execute("""UPDATE players SET seen_tier = COALESCE((SELECT MAX(m.tier_min)
+            FROM match_players p JOIN matches m ON m.battle_key = p.battle_key
+            WHERE p.player_tag = players.tag), 0)""")
+    con.execute("CREATE INDEX IF NOT EXISTS idx_matches_tier ON matches(tier_min)")
+    con.commit()
 
 
 def parse_time(s: str) -> int:
@@ -189,12 +214,14 @@ def parse_battle(item: dict, owner_tag: str) -> dict | None:
 
 
 def store_match(con: sqlite3.Connection, m: dict, source_tag: str) -> bool:
+    tiers = [p["rank"] or 0 for team in m["teams"] for p in team]
     cur = con.execute(
         "INSERT OR IGNORE INTO matches (battle_key, battle_time, ts, event_id, map, mode, "
-        "battle_type, duration, winner, star_tag, source_tag, inserted_at) "
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        "battle_type, duration, winner, star_tag, source_tag, inserted_at, tier_min, tier_avg) "
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (m["battle_key"], m["battle_time"], m["ts"], m["event_id"], m["map"], m["mode"],
-         m["battle_type"], m["duration"], m["winner"], m["star_tag"], source_tag, int(time.time())))
+         m["battle_type"], m["duration"], m["winner"], m["star_tag"], source_tag, int(time.time()),
+         min(tiers), sum(tiers) / len(tiers)))
     if cur.rowcount == 0:
         return False
     rows = []
@@ -206,13 +233,14 @@ def store_match(con: sqlite3.Connection, m: dict, source_tag: str) -> bool:
     return True
 
 
-def upsert_player(con, tag, name=None, rank=0, source="snowball"):
+def upsert_player(con, tag, name=None, rank=0, source="snowball", seen_tier=0):
     now = int(time.time())
     con.execute(
-        "INSERT INTO players (tag, name, max_rank, source, first_seen) VALUES (?,?,?,?,?) "
+        "INSERT INTO players (tag, name, max_rank, source, first_seen, seen_tier) VALUES (?,?,?,?,?,?) "
         "ON CONFLICT(tag) DO UPDATE SET max_rank = MAX(COALESCE(max_rank,0), excluded.max_rank), "
+        "seen_tier = MAX(COALESCE(seen_tier,0), excluded.seen_tier), "
         "name = COALESCE(excluded.name, name)",
-        (tag, name, rank or 0, source, now))
+        (tag, name, rank or 0, source, now, seen_tier or 0))
 
 
 def seed(con, client, log):
@@ -239,23 +267,35 @@ def seed(con, client, log):
 def next_players(con, n=50) -> list[str]:
     """Pick the next batch of players to poll.
 
-    Mix of (a) never-polled players, highest known rank first, and (b) re-polls of
-    players due according to how active they were in ranked last time. Battle logs
-    only hold the last 25 games, so active high-rank players are re-polled every
-    ~2h, moderately active every ~8h, and inactive ones only daily.
+    Mix of (a) never-polled players and (b) re-polls of players due according to how
+    active they were in ranked last time. Battle logs only hold the last 25 games, so
+    active high-rank players are re-polled every ~2h, others every 6h/12h/48h.
+
+    Crawl budget is focused on Legendary+ (tier >= FOCUS_TIER): players who are
+    Legendary+ themselves or appeared in a Legendary+ game come first (Masters/Pro
+    before Legendary). Unpolled seeds (tier unknown) come next. Players known to be
+    below Legendary are only polled when nothing else is queued. Their games are
+    still stored when they show up in someone else's log.
     """
     now = int(time.time())
+    focus = FOCUS_TIER
     fresh = [r[0] for r in con.execute(
-        "SELECT tag FROM players WHERE dead=0 AND last_polled IS NULL "
-        "ORDER BY max_rank DESC, first_seen ASC LIMIT ?", (n,))]
+        """SELECT tag FROM players WHERE dead=0 AND last_polled IS NULL
+             AND (max_rank >= ? OR seen_tier >= ? OR (max_rank = 0 AND source LIKE 'seed%'))
+           ORDER BY MAX(max_rank, seen_tier) DESC, first_seen ASC LIMIT ?""", (focus, focus, n))]
     due = [r[0] for r in con.execute(
-        """SELECT tag FROM players WHERE dead=0 AND last_polled IS NOT NULL AND
+        """SELECT tag FROM players WHERE dead=0 AND last_polled IS NOT NULL
+             AND (max_rank >= ? OR seen_tier >= ? OR max_rank = 0) AND
            last_polled < ? - CASE
-               WHEN last_new_n >= 5 AND max_rank >= 13 THEN 2*3600
+               WHEN last_new_n >= 5 AND max_rank >= 19 THEN 2*3600
                WHEN last_new_n >= 2 THEN 6*3600
                WHEN last_ranked_n >= 1 THEN 12*3600
                ELSE 48*3600 END
-           ORDER BY (last_new_n * 3 + max_rank) DESC LIMIT ?""", (now, n))]
+           ORDER BY (last_new_n * 3 + max_rank) DESC LIMIT ?""", (focus, focus, now, n))]
+    if not fresh and not due:   # fallback: low-tier players, only when idle
+        fresh = [r[0] for r in con.execute(
+            "SELECT tag FROM players WHERE dead=0 AND last_polled IS NULL "
+            "ORDER BY max_rank DESC LIMIT ?", (n,))]
     # ~65% fresh, ~35% re-poll when both are available
     k_due = min(len(due), max(n - len(fresh), int(n * 0.35)))
     batch = due[:k_due] + fresh[: n - k_due]
@@ -291,7 +331,8 @@ def poll_player(con, client, tag, log) -> tuple[int, int]:
             new += 1
         for team in m["teams"]:
             for p in team:
-                upsert_player(con, p["tag"], p["name"], p["rank"] or 0)
+                upsert_player(con, p["tag"], p["name"], p["rank"] or 0,
+                              seen_tier=min(q["rank"] or 0 for t in m["teams"] for q in t))
     con.execute("UPDATE players SET last_polled=?, times_polled=times_polled+1, last_ranked_n=?, "
                 "last_new_n=?, fail_count=0 WHERE tag=?", (now, ranked, new, tag))
     return ranked, new

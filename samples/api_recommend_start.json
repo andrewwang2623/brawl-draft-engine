@@ -1,0 +1,176 @@
+{
+ "map": "Hideout",
+ "mode": "bounty",
+ "bracket": "legendary",
+ "games_on_map": 1499,
+ "step": 0,
+ "personal": false,
+ "turn": "us",
+ "ban_recs": {
+  "baseline_win_prob": 65.2,
+  "bans": [
+   {
+    "brawler_id": 16000097,
+    "delta_win_prob": 1.69,
+    "map_strength_pct": 6.18,
+    "pick_rate": 33.3,
+    "opp_first_choice_prob": 10.0,
+    "games_on_map": 501,
+    "explanation": "Banning raises your expected win chance by +1.69% (you pick first). Map strength +6.2%, picked in 33% of games here; 10% chance it's the opponent's top choice if left open.",
+    "name": "Mina"
+   },
+   {
+    "brawler_id": 16000103,
+    "delta_win_prob": 0.82,
+    "map_strength_pct": 6.37,
+    "pick_rate": 26.5,
+    "opp_first_choice_prob": 8.2,
+    "games_on_map": 397,
+    "explanation": "Banning raises your expected win chance by +0.82% (you pick first). Map strength +6.4%, picked in 26% of games here; 8% chance it's the opponent's top choice if left open.",
+    "name": "Najia"
+   },
+   {
+    "brawler_id": 16000065,
+    "delta_win_prob": 0.14,
+    "map_strength_pct": 2.21,
+    "pick_rate": 25.4,
+    "opp_first_choice_prob": 4.0,
+    "games_on_map": 379,
+    "explanation": "Banning raises your expected win chance by +0.14% (you pick first). Map strength +2.2%, picked in 25% of games here; 4% chance it's the opponent's top choice if left open.",
+    "name": "Mandy"
+   },
+   {
+    "brawler_id": 16000064,
+    "delta_win_prob": 0.04,
+    "map_strength_pct": 2.9,
+    "pick_rate": 15.4,
+    "opp_first_choice_prob": 2.7,
+    "games_on_map": 229,
+    "explanation": "Banning raises your expected win chance by +0.04% (you pick first). Map strength +2.9%, picked in 15% of games here; 3% chance it's the opponent's top choice if left open.",
+    "name": "Gray"
+   },
+   {
+    "brawler_id": 16000031,
+    "delta_win_prob": 0.01,
+    "map_strength_pct": 6.91,
+    "pick_rate": 18.0,
+    "opp_first_choice_prob": 6.1,
+    "games_on_map": 269,
+    "explanation": "Banning raises your expected win chance by +0.01% (you pick first). Map strength +6.9%, picked in 18% of games here; 6% chance it's the opponent's top choice if left open.",
+    "name": "Mr. P"
+   }
+  ]
+ },
+ "pick_recs": {
+  "baseline_win_prob": 62.3,
+  "picks": [
+   {
+    "brawler_id": 16000043,
+    "win_prob": 65.2,
+    "delta_vs_typical": 2.96,
+    "breakdown_pct": {
+     "map_strength": 8.76,
+     "synergy": -0.47,
+     "counters": 0.0,
+     "risk_countered": 1.17
+    },
+    "strength_parts_pct": {
+     "global": 4.5,
+     "mode": 2.27,
+     "map": 0.04,
+     "class": 1.95
+    },
+    "games_on_map": 73,
+    "pick_rate": 4.9,
+    "explanation": "Safe blind pick. map strength +8.8%, synergy -0.5%, vs likely future enemy picks +1.2% (3 enemy picks left).",
+    "name": "Edgar"
+   },
+   {
+    "brawler_id": 16000031,
+    "win_prob": 65.1,
+    "delta_vs_typical": 2.81,
+    "breakdown_pct": {
+     "map_strength": 6.91,
+     "synergy": -0.53,
+     "counters": 0.0,
+     "risk_countered": 0.61
+    },
+    "strength_parts_pct": {
+     "global": 5.66,
+     "mode": 2.48,
+     "map": -0.95,
+     "class": -0.28
+    },
+    "games_on_map": 269,
+    "pick_rate": 18.0,
+    "explanation": "Safe blind pick. map strength +6.9%, synergy -0.5%, vs likely future enemy picks +0.6% (3 enemy picks left).",
+    "name": "Mr. P"
+   },
+   {
+    "brawler_id": 16000097,
+    "win_prob": 64.8,
+    "delta_vs_typical": 2.54,
+    "breakdown_pct": {
+     "map_strength": 6.18,
+     "synergy": 0.17,
+     "counters": 0.0,
+     "risk_countered": -0.18
+    },
+    "strength_parts_pct": {
+     "global": 0.36,
+     "mode": 1.16,
+     "map": 2.01,
+     "class": 2.65
+    },
+    "games_on_map": 501,
+    "pick_rate": 33.3,
+    "explanation": "Safe blind pick. map strength +6.2%, synergy +0.2%, vs likely future enemy picks -0.2% (3 enemy picks left).",
+    "name": "Mina"
+   },
+   {
+    "brawler_id": 16000023,
+    "win_prob": 64.8,
+    "delta_vs_typical": 2.5,
+    "breakdown_pct": {
+     "map_strength": 9.22,
+     "synergy": -0.14,
+     "counters": 0.0,
+     "risk_countered": 0.31
+    },
+    "strength_parts_pct": {
+     "global": 6.06,
+     "mode": 0.75,
+     "map": 0.46,
+     "class": 1.95
+    },
+    "games_on_map": 102,
+    "pick_rate": 6.8,
+    "explanation": "Safe blind pick. map strength +9.2%, synergy -0.1%, vs likely future enemy picks +0.3% (3 enemy picks left).",
+    "name": "Leon"
+   },
+   {
+    "brawler_id": 16000083,
+    "win_prob": 64.8,
+    "delta_vs_typical": 2.49,
+    "breakdown_pct": {
+     "map_strength": 7.7,
+     "synergy": 0.0,
+     "counters": 0.0,
+     "risk_countered": 0.0
+    },
+    "strength_parts_pct": {
+     "global": 5.05,
+     "mode": 0.0,
+     "map": 0.0,
+     "class": 2.65
+    },
+    "games_on_map": 0,
+    "pick_rate": 0.0,
+    "explanation": "Safe blind pick. map strength +7.7%, vs likely future enemy picks +0.0% (3 enemy picks left). Low data on this map; leaning on mode/class priors.",
+    "name": "Clancy"
+   }
+  ]
+ },
+ "current_win_prob": 50.0,
+ "ms": 177
+}

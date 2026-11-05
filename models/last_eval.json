@@ -1,0 +1,41 @@
+{
+ "n_matches": 11993,
+ "n_train": 10194,
+ "n_test": 1799,
+ "n_maps": 26,
+ "test_start": 1793834816,
+ "params": {
+  "lam_g": 20.0,
+  "lam_mode": 80.0,
+  "lam_map": 200.0,
+  "lam_cmode": 40.0,
+  "lam_cmap": 100.0,
+  "lam_syn": 300.0,
+  "lam_cnt": 300.0,
+  "lam_rank": 0.1,
+  "half_life_days": 14.0,
+  "use_rank": true,
+  "prior_smooth": 30.0
+ },
+ "fit_seconds": 0.2,
+ "coin_flip": {
+  "log_loss": 0.6931471805599453,
+  "brier": 0.25,
+  "accuracy": 0.48804891606448025
+ },
+ "map_winrate": {
+  "log_loss": 0.6884562129822017,
+  "brier": 0.2476760751566236,
+  "accuracy": 0.537520844913841
+ },
+ "model_draft_only": {
+  "log_loss": 0.6852118290193847,
+  "brier": 0.24598429477569256,
+  "accuracy": 0.565869927737632
+ },
+ "model_with_rank": {
+  "log_loss": 0.675310427651422,
+  "brier": 0.2409816653380423,
+  "accuracy": 0.5764313507504168
+ }
+}

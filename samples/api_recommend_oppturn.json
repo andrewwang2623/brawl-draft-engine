@@ -1,0 +1,38 @@
+{
+ "map": "Hideout",
+ "mode": "bounty",
+ "bracket": "legendary",
+ "games_on_map": 1499,
+ "step": 2,
+ "personal": false,
+ "turn": "opp",
+ "opponent_prediction": [
+  {
+   "brawler_id": 16000097,
+   "prob": 11.2,
+   "name": "Mina"
+  },
+  {
+   "brawler_id": 16000103,
+   "prob": 10.5,
+   "name": "Najia"
+  },
+  {
+   "brawler_id": 16000031,
+   "prob": 8.3,
+   "name": "Mr. P"
+  },
+  {
+   "brawler_id": 16000011,
+   "prob": 7.2,
+   "name": "Mortis"
+  },
+  {
+   "brawler_id": 16000061,
+   "prob": 4.1,
+   "name": "Gus"
+  }
+ ],
+ "current_win_prob": 50.3,
+ "ms": 0
+}

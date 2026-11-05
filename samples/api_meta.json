@@ -1,0 +1,54 @@
+{
+ "brawlers": [
+  {
+   "id": 16000027,
+   "name": "8-Bit",
+   "class": "Damage Dealer",
+   "image": "https://cdn.brawlify.com/brawlers/borderless/16000027.png"
+  },
+  {
+   "id": 16000095,
+   "name": "Alli",
+   "class": "Assassin",
+   "image": "https://cdn.brawlify.com/brawlers/borderless/16000095.png"
+  },
+  {
+   "id": 16000040,
+   "name": "Amber",
+   "class": "Controller",
+   "image": "https://cdn.brawlify.com/brawlers/borderless/16000040.png"
+  }
+ ],
+ "maps": [
+  {
+   "mode": "bounty",
+   "map": "Hideout",
+   "games": 1499
+  },
+  {
+   "mode": "bounty",
+   "map": "Dry Season",
+   "games": 1397
+  },
+  {
+   "mode": "bounty",
+   "map": "Shooting Star",
+   "games": 1336
+  }
+ ],
+ "brackets": [
+  {
+   "id": "legendary",
+   "label": "Legendary+"
+  }
+ ],
+ "bracket": "legendary",
+ "model": {
+  "n_train": 34511,
+  "trained_through": 1793841266,
+  "bracket_min_tier": 16,
+  "bracket_tier_name": "Legendary I",
+  "n_in_bracket": 34483
+ },
+ "personal_available": false
+}
