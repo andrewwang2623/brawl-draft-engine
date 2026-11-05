@@ -14,3 +14,4 @@ data/*.stdout.log
 .DS_Store
 data/server.stdout.log
 reference/.icons/
+data/profiles.stdout.log
