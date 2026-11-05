@@ -11,3 +11,4 @@ data/*.log
 data/*.pid
 models/*.pkl
 data/*.stdout.log
+.DS_Store
