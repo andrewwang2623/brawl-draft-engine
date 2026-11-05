@@ -12,10 +12,6 @@ Doug: tank, support · Cosmo: controller · Finx: controller · Meeple: controll
 Sirius: controller · Ziggy: controller · Glowy: support · Wendy: support · Eve: mid_dps ·
 Lumi: mid_dps · Mina: mid_dps · Moe: mid_dps · Najia: mid_dps · R-T: mid_dps · Vince: mid_dps
 
-## ⚠️ Web server needs a restart
-The server on :8000 is still running pre-fix code and returns HTTP 500 since the new model
-format landed. Restart it: `pkill -f "server.py --port 8000"; nohup .venv/bin/python server.py --port 8000 > data/server.stdout.log 2>&1 &`
-
 ## Data
 - **280,036 decisive ranked games** (269,623 Legendary+, all post-patch), 26 maps, 109,712 players
   known. The crawler runs continuously (~130k new games/hour), resume-safe (`./run_crawler.sh`,
