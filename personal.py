@@ -35,6 +35,7 @@ ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "data" / "matches.db"
 PLAYER_CACHE = ROOT / "data" / "my_player.json"
 MY_BRAWLERS = ROOT / "my_brawlers.yaml"
+MY_BUFFIES = ROOT / "reference" / "my_buffies.txt"   # user-edited list of brawlers MISSING buffies
 BUFFIES_AVAILABLE = ROOT / "meta" / "buffies_available.json"
 BUFFIE_TYPES = ("gadget", "starPower", "hyperCharge")
 
@@ -83,27 +84,71 @@ def load_my_brawlers(path: Path = MY_BRAWLERS) -> dict:
     return cfg
 
 
-def buffie_gaps(prof: dict | None, cfg: dict, name_to_id: dict) -> dict:
-    """brawler_id -> (fraction missing, [missing buffie types], source)."""
+def read_buffies_file(path: Path = MY_BUFFIES) -> list[str] | None:
+    """Names from my_buffies.txt (one per line, '#' comments). None if the file doesn't exist."""
+    if not path.exists():
+        return None
+    out = []
+    for line in path.read_text().splitlines():
+        line = line.split("#", 1)[0].strip()
+        if line:
+            out.append(line)
+    return out
+
+
+def resolve_name(n: str, name_to_id: dict) -> int | None:
+    """Loose name match: 'mr p' -> Mr. P, 'el primo' / 'primo' -> El Primo, '8bit' -> 8-Bit."""
+    import re
+    norm = lambda x: re.sub(r"[^a-z0-9]", "", x.lower())
+    table = {norm(k): v for k, v in name_to_id.items()}
+    aliases = {"primo": "elprimo", "colonelruffs": "ruffs", "larrylawrie": "larrylawrie", "allie": "alli"}
+    k = norm(n)
+    return table.get(k) or table.get(aliases.get(k, ""))
+
+
+def buffie_gaps(prof: dict | None, cfg: dict, name_to_id: dict,
+                missing_file: list[str] | None = None) -> dict:
+    """brawler_id -> (fraction missing, [missing buffie types], source).
+
+    If my_buffies.txt exists it is authoritative: listed brawlers are missing buffies (which
+    types: from the API when it shows them, else all), every other brawler is fully built.
+    Otherwise: API detection + my_brawlers.yaml overrides."""
+    api_gaps = _api_gaps(prof, name_to_id) if prof else {}
+    if missing_file is not None:
+        gaps = {}
+        for n in missing_file:
+            bid = resolve_name(n, name_to_id)
+            if bid is None:
+                continue
+            if bid in api_gaps:
+                frac, types, _ = api_gaps[bid]
+                gaps[bid] = (frac, types, "my_buffies.txt (types from API)")
+            else:
+                gaps[bid] = (1.0, list(BUFFIE_TYPES), "my_buffies.txt")
+        return gaps
+    gaps = dict(api_gaps) if cfg.get("use_api_buffies", True) else {}
+    for n in cfg.get("missing_buffies") or []:
+        bid = resolve_name(str(n), name_to_id)
+        if bid:
+            gaps[bid] = (1.0, list(BUFFIE_TYPES), "my_brawlers.yaml")
+    for n in cfg.get("assume_full") or []:
+        gaps.pop(resolve_name(str(n), name_to_id), None)
+    return gaps
+
+
+def _api_gaps(prof: dict, name_to_id: dict) -> dict:
     avail = {}
     if BUFFIES_AVAILABLE.exists():
         avail = {k.upper(): set(v) for k, v in json.loads(BUFFIES_AVAILABLE.read_text()).items()}
     gaps = {}
-    if prof and cfg.get("use_api_buffies", True):
-        for b in prof.get("brawlers", []):
-            have = {k for k, v in (b.get("buffies") or {}).items() if v}
-            exists = avail.get(b["name"].upper(), set()) | have
-            if not exists:
-                continue            # brawler has no buffies in the game
-            miss = sorted(exists - have)
-            if miss:
-                gaps[int(b["id"])] = (len(miss) / len(exists), miss, "api")
-    for n in cfg.get("missing_buffies") or []:
-        bid = name_to_id.get(str(n).upper())
-        if bid:
-            gaps[bid] = (1.0, list(BUFFIE_TYPES), "my_brawlers.yaml")
-    for n in cfg.get("assume_full") or []:
-        gaps.pop(name_to_id.get(str(n).upper()), None)
+    for b in prof.get("brawlers", []):
+        have = {k for k, v in (b.get("buffies") or {}).items() if v}
+        exists = avail.get(b["name"].upper(), set()) | have
+        if not exists:
+            continue            # brawler has no buffies in the game
+        miss = sorted(exists - have)
+        if miss:
+            gaps[int(b["id"])] = (len(miss) / len(exists), miss, "api")
     return gaps
 
 
@@ -270,7 +315,7 @@ def build_profile(md, db_path: Path = DB_PATH, refresh_api: bool = True) -> Prof
         n_scored += 1
         n_ranked += int(ranked)
     cfg = load_my_brawlers()
-    gaps = buffie_gaps(prof, cfg, name_to_id)
+    gaps = buffie_gaps(prof, cfg, name_to_id, missing_file=read_buffies_file())
     return Profile(available=True, tag=tag, owned=owned, stats_by=stats, names=names,
                    n_games=len(rows), n_scored=n_scored, n_ranked=n_ranked, rank_name=rank_name,
                    buffies=gaps, buffie_penalty=float(cfg["buffie_penalty_pct"]) / 25.0)

@@ -1,0 +1,110 @@
+brawler,tier,arrow,source_confidence,name_as_typed
+Thunder Frogs,S,,unreleased (user: not in game yet); name inferred from 'new brawler frog',new brawler frog
+Chester,S,rainbow,icon_match_weak,chester
+Gale,S,rainbow,icon_match,gale
+Lou,S,rainbow,icon_match,lou
+Amber,S,,icon_match,amber
+Wendy,S,,icon_match,wendy
+Rico,S,,icon_match,rico
+Emz,S,,icon_match,emz
+Mandy,A,rainbow,position_in_image (no clean icon match; same slot/order as transcription),mandy
+Berry,A,rainbow,icon_match_weak,berry
+Mr. P,A,rainbow,icon_match,mr p
+Shade,A,red,icon_match_weak,shade
+Max,A,red,icon_match,max
+Brock,A,red,icon_match_weak,brock
+Colette,A,red,position_in_image (no clean icon match; same slot/order as transcription),collette
+Sirius,A,,position_in_image (no clean icon match; same slot/order as transcription),sirius
+Stu,A,,icon_match,stu
+Edgar,A,,icon_match,edgar
+Griff,A,,icon_match,griff
+Lumi,A,,icon_match,lumi
+Gray,A,,icon_match,gray
+Pierce,A,,icon_match_weak,pierce
+Piper,A,,icon_match,piper
+Mina,A,,icon_match_weak,mina
+Belle,A,,icon_match,belle
+Najia,A,,icon_match_weak,najia
+Pearl,A,,icon_match,pearl
+8-Bit,A,,icon_match,8bit
+Angelo,A,green,icon_match,angelo
+Ruffs,A,green,icon_match,ruffs
+Meeple,A,green,icon_match,meeple
+Penny,A,green,icon_match,penny
+Squeak,A,rainbow,icon_match,squeak
+Chuck,A,rainbow,position_in_image (no clean icon match; same slot/order as transcription),chuck
+Melodie,A,rainbow,position_in_image (no clean icon match; same slot/order as transcription),melodie
+Vince,A,rainbow,position_in_image (no emoji icon to match; medium confidence),vince
+Gus,B,red,icon_match,gus
+Ash,B,red,icon_match_weak,ash
+El Primo,B,red,icon_match,primo
+Colt,B,red,icon_match,colt
+Mortis,B,red,icon_match,mortis
+Maisie,B,red,icon_match,maisie
+Kaze,B,red,position_in_image (no clean icon match; same slot/order as transcription),kaze
+Nori,B,red,icon_match_weak,nori
+Byron,B,,icon_match_weak,byron
+Nita,B,,icon_match,nita
+Kenji,B,,icon_match,kenji
+Jae-Yong,B,,icon_match,jaeyong
+Finx,B,,position_in_image (no clean icon match; same slot/order as transcription),finx
+Starr Nova,B,,position_in_image (no clean icon match; same slot/order as transcription),starrnova
+Charlie,B,,icon_match,charlie
+Juju,B,,position_in_image (no clean icon match; same slot/order as transcription),juju
+Willow,B,,icon_match,willow
+Poco,B,,icon_match,poco
+Barley,B,,icon_match_weak,barley
+Spike,B,,icon_match,spike
+Moe,B,,position_in_image (no clean icon match; same slot/order as transcription),moe
+Surge,B,,position_in_image (no clean icon match; same slot/order as transcription),surge
+Gene,B,,icon_match,gene
+Carl,B,,icon_match,carl
+Otis,B,,icon_match,otis
+Bo,B,green,icon_match,bo
+Larry & Lawrie,B,green,icon_match,larry lawrie
+Shelly,B,rainbow,icon_match,shelly
+Draco,B,rainbow,icon_match,draco
+Damian,B,green,icon_match,damian
+Hank,B,rainbow,icon_match,hank
+Janet,B,green,"added_from_image (missing from transcription; icon match 0.49, visually confirmed)",
+R-T,B,green,added_from_image (missing from transcription; icon match 0.93),
+Sprout,C,,icon_match,sprout
+Bea,C,,icon_match,bea
+Buster,C,,icon_match,buster
+Eve,C,,icon_match,eve
+Leon,C,,icon_match,leon
+Kit,C,,icon_match,kit
+Meg,C,,icon_match,meg
+Glowy,C,,icon_match_weak,glowy
+Alli,C,,icon_match,allie
+Nani,C,,icon_match_weak,nani
+Bibi,C,,icon_match,bibi
+Pam,C,,icon_match,pam
+Ollie,C,,icon_match,ollie
+Cosmo,C,,position_in_image (no clean icon match; same slot/order as transcription),cosmo
+Lola,C,,icon_match,lola
+Tara,C,,icon_match_weak,tara
+Bull,C,,icon_match,bull
+Buzz,C,red,icon_match,buzz
+Cordelius,C,,icon_match,cordelius
+Gigi,C,red,icon_match_weak,gigi
+Crow,C,green,icon_match,crow
+Ziggy,C,green,icon_match_weak,ziggy
+Darryl,C,green,icon_match_weak,darryl
+Mico,D,,icon_match,mico
+Sandy,D,,icon_match,sandy
+Doug,D,,icon_match,doug
+Clancy,D,,icon_match_weak,clancy
+Jessie,D,,position_in_image (no clean icon match; same slot/order as transcription),jessie
+Bonnie,D,,icon_match,bonnie
+Lily,D,,icon_match_weak,lily
+Fang,D,,icon_match,fang
+Trunk,D,red,position_in_image (no clean icon match; same slot/order as transcription),trunk
+Frank,D,red,icon_match,frank
+Bolt,F,red,icon_match,bolt
+Dynamike,F,,icon_match,dynamike
+Tick,F,,icon_match,tick
+Grom,F,,icon_match,grom
+Sam,F,,icon_match,sam
+Jacky,F,,icon_match,jacky
+Rosa,F,red,icon_match_weak,rosa

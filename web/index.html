@@ -248,6 +248,12 @@ kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padd
   <details class="panel hidden" id="mystats">
     <summary>My stats</summary>
     <div id="mystatsBody" class="muted" style="margin-top:6px">Open to load.</div>
+    <div id="buffiesEdit" style="margin-top:10px">
+      <h4>Brawlers I'm missing buffies on <span class="muted" id="buffiesPath"></span></h4>
+      <div class="muted" style="margin-bottom:4px">One per line ('#' = comment). Every other brawler with buffies counts as fully built. Used only for your own picks in personal mode.</div>
+      <textarea id="buffiesText" rows="8" spellcheck="false" style="width:100%;max-width:420px;background:#111;color:inherit;border:1px solid #444;border-radius:6px;padding:6px;font:12px ui-monospace,monospace"></textarea>
+      <div><button id="buffiesSave">Save</button> <span id="buffiesMsg" class="muted"></span></div>
+    </div>
   </details>
 </div>
 
@@ -700,6 +706,7 @@ function renderRecs(){
 
 // ---------------------------------------------------------------- my stats
 async function loadStats(){
+  loadBuffies();
   const body = $("#mystatsBody");
   const key = S.cfg.bracket;
   if(S.statsCache[key]){ renderStats(S.statsCache[key]); return; }
@@ -788,6 +795,29 @@ function afterMeta(){
   if(S.personalAvail && S.statsOpen) loadStats();
   save();
 }
+
+// ---------------------------------------------------------------- my buffies (reference/my_buffies.txt)
+async function loadBuffies(){
+  try{
+    const d = await (await fetch("/api/my_buffies")).json();
+    $("#buffiesText").value = d.text || "";
+    $("#buffiesPath").textContent = "(" + (d.path || "") + ")";
+  }catch(e){ $("#buffiesMsg").textContent = "Could not load: " + (e && e.message || e); }
+}
+$("#buffiesSave").addEventListener("click", async () => {
+  const msg = $("#buffiesMsg");
+  msg.textContent = "Saving...";
+  try{
+    const r = await fetch("/api/my_buffies", {method: "PUT", headers: {"Content-Type": "application/json"},
+                                              body: JSON.stringify({text: $("#buffiesText").value})});
+    const d = await r.json();
+    if(!r.ok){ msg.textContent = d.detail || ("HTTP " + r.status); msg.className = "neg"; return; }
+    msg.className = "pos";
+    msg.textContent = "Saved: " + d.resolved.map(x => x.brawler).join(", ");
+    S.statsCache = {}; loadStats(); scheduleFetch();
+  }catch(e){ msg.textContent = "Save failed: " + (e && e.message || e); msg.className = "neg"; }
+});
+$("#buffiesText").addEventListener("keydown", e => e.stopPropagation());   // don't trigger grid shortcuts
 
 // ---------------------------------------------------------------- events
 $("#mapSel").addEventListener("change", e => { S.cfg.mapKey = e.target.value; save(); scheduleFetch(); });

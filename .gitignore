@@ -13,3 +13,4 @@ models/*.pkl
 data/*.stdout.log
 .DS_Store
 data/server.stdout.log
+reference/.icons/

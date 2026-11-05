@@ -215,3 +215,25 @@ def test_buffie_gaps_api_and_overrides(tmp_path, monkeypatch):
     p = personal.Profile(available=True, buffies=g, buffie_penalty=3 / 25)
     assert 25 * p.parts(4)["buffies"] == pytest.approx(-3.0)
     assert 25 * p.parts(1)["buffies"] == pytest.approx(-2.0)
+
+
+def test_buffies_file_is_authoritative(tmp_path, monkeypatch):
+    import json as _json
+    import personal
+    avail = tmp_path / "avail.json"
+    avail.write_text(_json.dumps({"SHELLY": ["gadget", "hyperCharge", "starPower"],
+                                  "COLT": ["gadget", "hyperCharge", "starPower"]}))
+    monkeypatch.setattr(personal, "BUFFIES_AVAILABLE", avail)
+    f = tmp_path / "my_buffies.txt"
+    f.write_text("# comment\nmr p\nShelly  # partial per API\n")
+    names = personal.read_buffies_file(f)
+    assert names == ["mr p", "Shelly"]
+    prof = {"brawlers": [
+        {"id": 1, "name": "SHELLY", "buffies": {"gadget": True, "starPower": False, "hyperCharge": False}},
+        {"id": 2, "name": "COLT", "buffies": {"gadget": False, "starPower": False, "hyperCharge": False}},
+    ]}
+    ids = {"Shelly": 1, "Colt": 2, "Mr. P": 31}
+    g = personal.buffie_gaps(prof, {}, ids, missing_file=names)
+    assert set(g) == {1, 31}                 # Colt: API says missing, but file is authoritative
+    assert g[1][0] == pytest.approx(2 / 3)   # which types: from the API
+    assert g[31][0] == 1.0

@@ -113,3 +113,23 @@ Judgment calls made while building autonomously. Newest at the bottom of each se
 - Ranked requires power 11 (confirmed by the Nov 2026 release notes; every observed ranked brawler is
   power 11). The owner's two power-9 brawlers (Ziggy, Vince) get −3%/level in personal mode. In
   practice they're probably not even eligible.
+- **Update (user):** `reference/my_buffies.txt` is now the authoritative list of brawlers the user is
+  missing buffies on. Every other brawler that has buffies counts as fully built. Which buffie types
+  are missing (and so the penalty fraction) comes from the API flags when available, else all three. The
+  server reloads the file when it changes, and the UI's "My stats" panel can edit it (`PUT /api/my_buffies`).
+  The 12 names in the file match exactly the 12 the API auto-detected.
+
+## Reference tier list (AshBS, Nov 2026)
+
+- Used **only** for a sanity check (`reference/SANITY_CHECK.md`), never for training.
+- Name normalization: "new brawler frog" → Thunder Frogs (unreleased per the user, excluded),
+  "dick" → Tick (icon match 0.79 at that slot), "allie" → Alli, "primo" → El Primo, "ruffs" → Ruffs
+  (official API name), "larry lawrie" → Larry & Lawrie, "8bit" → 8-Bit, "mr p" → Mr. P.
+- Cross-checked by template-matching every icon against official Brawlify "emoji" icons
+  (`reference/match_tierlist.py`) plus visual checks. All transcribed tiers agree with the image. The image
+  also contains **Janet** and **R-T** (both B tier, green arrows), which were missing from the transcription
+  and are added. Rey and Ruby are on neither.
+- Arrow reading rule: each arrow marker sits over the top-right of its icon. This was calibrated on the
+  six brawlers the patch notes give new Buffies (all rainbow). Arrows correlate with the patch but also
+  mark unchanged brawlers, so they look like tier movement rather than a buff/nerf legend. `patch.json`
+  keeps the official notes as the source of truth.

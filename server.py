@@ -65,7 +65,9 @@ def get_personal(bracket: str = DEFAULT_BRACKET):
         return None
     md = get_model(bracket)
     p = _state["personal"].get(bracket)
-    if p is None or time.time() - p.built_at > 600:
+    bf = personal.MY_BUFFIES
+    stale = p is not None and bf.exists() and bf.stat().st_mtime > p.built_at
+    if p is None or stale or time.time() - p.built_at > 600:
         p = _state["personal"][bracket] = personal.build_profile(md)
     return p
 
@@ -166,6 +168,40 @@ def recommend(req: DraftRequest):
         r["name"] = _name(md, r["brawler_id"])
     out["ms"] = round(1000 * (time.time() - t0))
     return out
+
+
+class BuffiesUpdate(BaseModel):
+    text: str
+
+
+@app.get("/api/my_buffies")
+def get_my_buffies():
+    """Contents of reference/my_buffies.txt (brawlers you're MISSING buffies on)."""
+    import personal
+    md = get_model()
+    name_to_id = {v["name"]: int(b) for b, v in md.meta.items()}
+    names = personal.read_buffies_file() or []
+    return {"path": str(personal.MY_BUFFIES.relative_to(ROOT)),
+            "exists": personal.MY_BUFFIES.exists(),
+            "text": personal.MY_BUFFIES.read_text() if personal.MY_BUFFIES.exists() else "",
+            "resolved": [{"typed": n, "brawler": md.meta.get(personal.resolve_name(n, name_to_id), {}).get("name")}
+                         for n in names]}
+
+
+@app.put("/api/my_buffies")
+def put_my_buffies(upd: BuffiesUpdate):
+    """Overwrite reference/my_buffies.txt; personal mode picks it up immediately."""
+    import personal
+    md = get_model()
+    name_to_id = {v["name"]: int(b) for b, v in md.meta.items()}
+    text = upd.text if upd.text.endswith("\n") else upd.text + "\n"
+    names = [l.split("#", 1)[0].strip() for l in text.splitlines()]
+    unknown = [n for n in names if n and personal.resolve_name(n, name_to_id) is None]
+    if unknown:
+        raise HTTPException(400, f"unknown brawler name(s): {', '.join(unknown)}")
+    personal.MY_BUFFIES.write_text(text)
+    _state["personal"].clear()
+    return get_my_buffies()
 
 
 @app.get("/api/my_stats")

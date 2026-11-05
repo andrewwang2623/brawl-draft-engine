@@ -2,23 +2,14 @@
 # Teammates and enemies are always assumed fully built. With personal mode off, everything
 # is assumed maxed.
 #
-# Buffies are read automatically from your profile (BRAWL_PLAYER_TAG) via the official API:
-# /players/{tag} -> brawlers[].buffies {gadget, starPower, hyperCharge}. Only brawlers that
-# actually have buffies in the game count (inferred from top players' profiles; see
-# meta/buffies_available.json). Entries below override the API.
-
+# WHICH brawlers you're missing buffies on comes from reference/my_buffies.txt (editable in
+# the UI's "My stats" panel). If that file exists, it's authoritative: listed brawlers are missing
+# buffies (which ones: from the API's /players buffie flags when available, else all three), and
+# every other brawler is fully built.
+#
+# Fallback when my_buffies.txt doesn't exist: API detection, plus these overrides.
 use_api_buffies: true
-
-# Force "missing all buffies" (from the user, 2026-11-04):
-missing_buffies:
-  - Gale
-  - Mr. P
-  - Lou
-  - Berry
-  - Mandy
-  - Chester
-
-# Treat as fully built even if the API says buffies are missing:
+missing_buffies: []
 assume_full: []
 
 # Win-% penalty for missing ALL buffies on a brawler; scaled by the fraction missing.
