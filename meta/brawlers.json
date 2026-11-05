@@ -1,0 +1,758 @@
+{
+ "16000110": {
+  "id": 16000110,
+  "name": "Vince",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000110.png"
+ },
+ "16000109": {
+  "id": 16000109,
+  "name": "Cosmo",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000109.png"
+ },
+ "16000108": {
+  "id": 16000108,
+  "name": "Wendy",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000108.png"
+ },
+ "16000107": {
+  "id": 16000107,
+  "name": "Nori",
+  "class": "Assassin",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000107.png"
+ },
+ "16000106": {
+  "id": 16000106,
+  "name": "Bolt",
+  "class": "Tank",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000106.png"
+ },
+ "16000105": {
+  "id": 16000105,
+  "name": "Starr Nova",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000105.png"
+ },
+ "16000104": {
+  "id": 16000104,
+  "name": "Damian",
+  "class": "Tank",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000104.png"
+ },
+ "16000103": {
+  "id": 16000103,
+  "name": "Najia",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000103.png"
+ },
+ "16000102": {
+  "id": 16000102,
+  "name": "Sirius",
+  "class": "Controller",
+  "rarity": "Ultra Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000102.png"
+ },
+ "16000101": {
+  "id": 16000101,
+  "name": "Glowy",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000101.png"
+ },
+ "16000100": {
+  "id": 16000100,
+  "name": "Gigi",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000100.png"
+ },
+ "16000099": {
+  "id": 16000099,
+  "name": "Pierce",
+  "class": "Marksman",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000099.png"
+ },
+ "16000098": {
+  "id": 16000098,
+  "name": "Ziggy",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000098.png"
+ },
+ "16000097": {
+  "id": 16000097,
+  "name": "Mina",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000097.png"
+ },
+ "16000096": {
+  "id": 16000096,
+  "name": "Trunk",
+  "class": "Tank",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000096.png"
+ },
+ "16000095": {
+  "id": 16000095,
+  "name": "Alli",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000095.png"
+ },
+ "16000094": {
+  "id": 16000094,
+  "name": "Kaze",
+  "class": "Assassin",
+  "rarity": "Ultra Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000094.png"
+ },
+ "16000093": {
+  "id": 16000093,
+  "name": "Jae-Yong",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000093.png"
+ },
+ "16000092": {
+  "id": 16000092,
+  "name": "Finx",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000092.png"
+ },
+ "16000091": {
+  "id": 16000091,
+  "name": "Lumi",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000091.png"
+ },
+ "16000090": {
+  "id": 16000090,
+  "name": "Ollie",
+  "class": "Tank",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000090.png"
+ },
+ "16000089": {
+  "id": 16000089,
+  "name": "Meeple",
+  "class": "Controller",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000089.png"
+ },
+ "16000087": {
+  "id": 16000087,
+  "name": "Juju",
+  "class": "Artillery",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000087.png"
+ },
+ "16000086": {
+  "id": 16000086,
+  "name": "Shade",
+  "class": "Assassin",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000086.png"
+ },
+ "16000085": {
+  "id": 16000085,
+  "name": "Kenji",
+  "class": "Assassin",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000085.png"
+ },
+ "16000084": {
+  "id": 16000084,
+  "name": "Moe",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000084.png"
+ },
+ "16000083": {
+  "id": 16000083,
+  "name": "Clancy",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000083.png"
+ },
+ "16000082": {
+  "id": 16000082,
+  "name": "Berry",
+  "class": "Support",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000082.png"
+ },
+ "16000081": {
+  "id": 16000081,
+  "name": "Lily",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000081.png"
+ },
+ "16000080": {
+  "id": 16000080,
+  "name": "Draco",
+  "class": "Tank",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000080.png"
+ },
+ "16000079": {
+  "id": 16000079,
+  "name": "Angelo",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000079.png"
+ },
+ "16000078": {
+  "id": 16000078,
+  "name": "Melodie",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000078.png"
+ },
+ "16000077": {
+  "id": 16000077,
+  "name": "Larry & Lawrie",
+  "class": "Artillery",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000077.png"
+ },
+ "16000076": {
+  "id": 16000076,
+  "name": "Kit",
+  "class": "Support",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000076.png"
+ },
+ "16000075": {
+  "id": 16000075,
+  "name": "Mico",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000075.png"
+ },
+ "16000074": {
+  "id": 16000074,
+  "name": "Charlie",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000074.png"
+ },
+ "16000073": {
+  "id": 16000073,
+  "name": "Chuck",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000073.png"
+ },
+ "16000072": {
+  "id": 16000072,
+  "name": "Pearl",
+  "class": "Damage Dealer",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000072.png"
+ },
+ "16000071": {
+  "id": 16000071,
+  "name": "Doug",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000071.png"
+ },
+ "16000070": {
+  "id": 16000070,
+  "name": "Cordelius",
+  "class": "Assassin",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000070.png"
+ },
+ "16000069": {
+  "id": 16000069,
+  "name": "Hank",
+  "class": "Tank",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000069.png"
+ },
+ "16000068": {
+  "id": 16000068,
+  "name": "Maisie",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000068.png"
+ },
+ "16000067": {
+  "id": 16000067,
+  "name": "Willow",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000067.png"
+ },
+ "16000066": {
+  "id": 16000066,
+  "name": "R-T",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000066.png"
+ },
+ "16000065": {
+  "id": 16000065,
+  "name": "Mandy",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000065.png"
+ },
+ "16000064": {
+  "id": 16000064,
+  "name": "Gray",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000064.png"
+ },
+ "16000063": {
+  "id": 16000063,
+  "name": "Chester",
+  "class": "Damage Dealer",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000063.png"
+ },
+ "16000062": {
+  "id": 16000062,
+  "name": "Buster",
+  "class": "Tank",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000062.png"
+ },
+ "16000061": {
+  "id": 16000061,
+  "name": "Gus",
+  "class": "Support",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000061.png"
+ },
+ "16000060": {
+  "id": 16000060,
+  "name": "Sam",
+  "class": "Assassin",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000060.png"
+ },
+ "16000059": {
+  "id": 16000059,
+  "name": "Otis",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000059.png"
+ },
+ "16000058": {
+  "id": 16000058,
+  "name": "Bonnie",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000058.png"
+ },
+ "16000057": {
+  "id": 16000057,
+  "name": "Janet",
+  "class": "Marksman",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000057.png"
+ },
+ "16000056": {
+  "id": 16000056,
+  "name": "Eve",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000056.png"
+ },
+ "16000054": {
+  "id": 16000054,
+  "name": "Fang",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000054.png"
+ },
+ "16000053": {
+  "id": 16000053,
+  "name": "Lola",
+  "class": "Damage Dealer",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000053.png"
+ },
+ "16000052": {
+  "id": 16000052,
+  "name": "Meg",
+  "class": "Tank",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000052.png"
+ },
+ "16000051": {
+  "id": 16000051,
+  "name": "Ash",
+  "class": "Tank",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000051.png"
+ },
+ "16000050": {
+  "id": 16000050,
+  "name": "Griff",
+  "class": "Controller",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000050.png"
+ },
+ "16000049": {
+  "id": 16000049,
+  "name": "Buzz",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000049.png"
+ },
+ "16000048": {
+  "id": 16000048,
+  "name": "Grom",
+  "class": "Artillery",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000048.png"
+ },
+ "16000047": {
+  "id": 16000047,
+  "name": "Squeak",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000047.png"
+ },
+ "16000046": {
+  "id": 16000046,
+  "name": "Belle",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000046.png"
+ },
+ "16000045": {
+  "id": 16000045,
+  "name": "Stu",
+  "class": "Assassin",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000045.png"
+ },
+ "16000044": {
+  "id": 16000044,
+  "name": "Ruffs",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000044.png"
+ },
+ "16000043": {
+  "id": 16000043,
+  "name": "Edgar",
+  "class": "Assassin",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000043.png"
+ },
+ "16000042": {
+  "id": 16000042,
+  "name": "Byron",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000042.png"
+ },
+ "16000041": {
+  "id": 16000041,
+  "name": "Lou",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000041.png"
+ },
+ "16000040": {
+  "id": 16000040,
+  "name": "Amber",
+  "class": "Controller",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000040.png"
+ },
+ "16000039": {
+  "id": 16000039,
+  "name": "Colette",
+  "class": "Damage Dealer",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000039.png"
+ },
+ "16000038": {
+  "id": 16000038,
+  "name": "Surge",
+  "class": "Damage Dealer",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000038.png"
+ },
+ "16000037": {
+  "id": 16000037,
+  "name": "Sprout",
+  "class": "Artillery",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000037.png"
+ },
+ "16000036": {
+  "id": 16000036,
+  "name": "Nani",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000036.png"
+ },
+ "16000035": {
+  "id": 16000035,
+  "name": "Gale",
+  "class": "Controller",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000035.png"
+ },
+ "16000034": {
+  "id": 16000034,
+  "name": "Jacky",
+  "class": "Tank",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000034.png"
+ },
+ "16000032": {
+  "id": 16000032,
+  "name": "Max",
+  "class": "Support",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000032.png"
+ },
+ "16000031": {
+  "id": 16000031,
+  "name": "Mr. P",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000031.png"
+ },
+ "16000030": {
+  "id": 16000030,
+  "name": "Emz",
+  "class": "Controller",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000030.png"
+ },
+ "16000029": {
+  "id": 16000029,
+  "name": "Bea",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000029.png"
+ },
+ "16000028": {
+  "id": 16000028,
+  "name": "Sandy",
+  "class": "Controller",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000028.png"
+ },
+ "16000027": {
+  "id": 16000027,
+  "name": "8-Bit",
+  "class": "Damage Dealer",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000027.png"
+ },
+ "16000026": {
+  "id": 16000026,
+  "name": "Bibi",
+  "class": "Tank",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000026.png"
+ },
+ "16000025": {
+  "id": 16000025,
+  "name": "Carl",
+  "class": "Damage Dealer",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000025.png"
+ },
+ "16000024": {
+  "id": 16000024,
+  "name": "Rosa",
+  "class": "Tank",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000024.png"
+ },
+ "16000023": {
+  "id": 16000023,
+  "name": "Leon",
+  "class": "Assassin",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000023.png"
+ },
+ "16000022": {
+  "id": 16000022,
+  "name": "Tick",
+  "class": "Artillery",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000022.png"
+ },
+ "16000021": {
+  "id": 16000021,
+  "name": "Gene",
+  "class": "Controller",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000021.png"
+ },
+ "16000020": {
+  "id": 16000020,
+  "name": "Frank",
+  "class": "Tank",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000020.png"
+ },
+ "16000019": {
+  "id": 16000019,
+  "name": "Penny",
+  "class": "Controller",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000019.png"
+ },
+ "16000018": {
+  "id": 16000018,
+  "name": "Darryl",
+  "class": "Tank",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000018.png"
+ },
+ "16000017": {
+  "id": 16000017,
+  "name": "Tara",
+  "class": "Damage Dealer",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000017.png"
+ },
+ "16000016": {
+  "id": 16000016,
+  "name": "Pam",
+  "class": "Support",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000016.png"
+ },
+ "16000015": {
+  "id": 16000015,
+  "name": "Piper",
+  "class": "Marksman",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000015.png"
+ },
+ "16000014": {
+  "id": 16000014,
+  "name": "Bo",
+  "class": "Controller",
+  "rarity": "Epic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000014.png"
+ },
+ "16000013": {
+  "id": 16000013,
+  "name": "Poco",
+  "class": "Support",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000013.png"
+ },
+ "16000012": {
+  "id": 16000012,
+  "name": "Crow",
+  "class": "Assassin",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000012.png"
+ },
+ "16000011": {
+  "id": 16000011,
+  "name": "Mortis",
+  "class": "Assassin",
+  "rarity": "Mythic",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000011.png"
+ },
+ "16000010": {
+  "id": 16000010,
+  "name": "El Primo",
+  "class": "Tank",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000010.png"
+ },
+ "16000009": {
+  "id": 16000009,
+  "name": "Dynamike",
+  "class": "Artillery",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000009.png"
+ },
+ "16000008": {
+  "id": 16000008,
+  "name": "Nita",
+  "class": "Damage Dealer",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000008.png"
+ },
+ "16000007": {
+  "id": 16000007,
+  "name": "Jessie",
+  "class": "Controller",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000007.png"
+ },
+ "16000006": {
+  "id": 16000006,
+  "name": "Barley",
+  "class": "Artillery",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000006.png"
+ },
+ "16000005": {
+  "id": 16000005,
+  "name": "Spike",
+  "class": "Damage Dealer",
+  "rarity": "Legendary",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000005.png"
+ },
+ "16000004": {
+  "id": 16000004,
+  "name": "Rico",
+  "class": "Damage Dealer",
+  "rarity": "Super Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000004.png"
+ },
+ "16000003": {
+  "id": 16000003,
+  "name": "Brock",
+  "class": "Marksman",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000003.png"
+ },
+ "16000002": {
+  "id": 16000002,
+  "name": "Bull",
+  "class": "Tank",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000002.png"
+ },
+ "16000001": {
+  "id": 16000001,
+  "name": "Colt",
+  "class": "Damage Dealer",
+  "rarity": "Rare",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000001.png"
+ },
+ "16000000": {
+  "id": 16000000,
+  "name": "Shelly",
+  "class": "Damage Dealer",
+  "rarity": "Common",
+  "image": "https://cdn.brawlify.com/brawlers/borderless/16000000.png"
+ }
+}
