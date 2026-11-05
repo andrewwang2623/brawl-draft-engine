@@ -145,3 +145,14 @@ def test_bracket_model_follows_high_tier_games():
     allr = DraftModel(dict(PARAMS, bracket_min_tier=0)).fit(m).map_model("M", "gemGrab")
     # the all-ranks model can't tell them apart
     assert abs(allr.S[allr.id_to_idx[16000003]] - allr.S[allr.id_to_idx[16000004]]) < 0.2
+
+
+def test_me_factor_is_heavily_shrunk():
+    from personal import BrawlerStat, ME_CAP
+    st = BrawlerStat()
+    for _ in range(5):                      # 5 straight wins at an expected 50%
+        st.w_resid += 0.5; st.w_info += 0.25
+    assert 0 < 25 * st.me < 2.5             # under ~2.5 win-% points
+    for _ in range(200):                    # lots of evidence -> larger, but capped
+        st.w_resid += 0.2; st.w_info += 0.25
+    assert st.me == pytest.approx(ME_CAP)

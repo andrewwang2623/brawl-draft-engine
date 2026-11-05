@@ -1,0 +1,266 @@
+{
+ "available": true,
+ "rank": "LEGENDARY I",
+ "n_games": 25,
+ "n_scored": 25,
+ "n_ranked": 15,
+ "n_owned": 108,
+ "top": [
+  {
+   "brawler_id": 16000021,
+   "name": "Gene",
+   "games": 2,
+   "ranked_games": 2,
+   "wr": 100.0,
+   "expected_wr": 67.6,
+   "me_factor_pct": 0.62,
+   "comfort_pct": 0.81
+  },
+  {
+   "brawler_id": 16000054,
+   "name": "Fang",
+   "games": 2,
+   "ranked_games": 0,
+   "wr": 100.0,
+   "expected_wr": 41.2,
+   "me_factor_pct": 0.41,
+   "comfort_pct": 0.4
+  },
+  {
+   "brawler_id": 16000072,
+   "name": "Pearl",
+   "games": 3,
+   "ranked_games": 3,
+   "wr": 66.7,
+   "expected_wr": 52.4,
+   "me_factor_pct": 0.4,
+   "comfort_pct": 1.02
+  },
+  {
+   "brawler_id": 16000015,
+   "name": "Piper",
+   "games": 3,
+   "ranked_games": 3,
+   "wr": 66.7,
+   "expected_wr": 55.7,
+   "me_factor_pct": 0.31,
+   "comfort_pct": 1.02
+  },
+  {
+   "brawler_id": 16000030,
+   "name": "Emz",
+   "games": 4,
+   "ranked_games": 3,
+   "wr": 50.0,
+   "expected_wr": 51.7,
+   "me_factor_pct": 0.27,
+   "comfort_pct": 1.09
+  },
+  {
+   "brawler_id": 16000051,
+   "name": "Ash",
+   "games": 1,
+   "ranked_games": 0,
+   "wr": 100.0,
+   "expected_wr": 47.6,
+   "me_factor_pct": 0.18,
+   "comfort_pct": 0.22
+  },
+  {
+   "brawler_id": 16000060,
+   "name": "Sam",
+   "games": 1,
+   "ranked_games": 0,
+   "wr": 100.0,
+   "expected_wr": 64.2,
+   "me_factor_pct": 0.12,
+   "comfort_pct": 0.22
+  },
+  {
+   "brawler_id": 16000105,
+   "name": "Starr Nova",
+   "games": 2,
+   "ranked_games": 0,
+   "wr": 50.0,
+   "expected_wr": 46.4,
+   "me_factor_pct": 0.02,
+   "comfort_pct": 0.4
+  }
+ ],
+ "bottom": [
+  {
+   "brawler_id": 16000001,
+   "name": "Colt",
+   "games": 2,
+   "ranked_games": 2,
+   "wr": 0.0,
+   "expected_wr": 42.6,
+   "me_factor_pct": -0.81,
+   "comfort_pct": 0.81
+  },
+  {
+   "brawler_id": 16000031,
+   "name": "Mr. P",
+   "games": 2,
+   "ranked_games": 2,
+   "wr": 0.0,
+   "expected_wr": 36.4,
+   "me_factor_pct": -0.7,
+   "comfort_pct": 0.81
+  },
+  {
+   "brawler_id": 16000093,
+   "name": "Jae-Yong",
+   "games": 1,
+   "ranked_games": 0,
+   "wr": 0.0,
+   "expected_wr": 53.1,
+   "me_factor_pct": -0.18,
+   "comfort_pct": 0.22
+  },
+  {
+   "brawler_id": 16000084,
+   "name": "Moe",
+   "games": 2,
+   "ranked_games": 0,
+   "wr": 50.0,
+   "expected_wr": 52.7,
+   "me_factor_pct": -0.02,
+   "comfort_pct": 0.4
+  },
+  {
+   "brawler_id": 16000105,
+   "name": "Starr Nova",
+   "games": 2,
+   "ranked_games": 0,
+   "wr": 50.0,
+   "expected_wr": 46.4,
+   "me_factor_pct": 0.02,
+   "comfort_pct": 0.4
+  },
+  {
+   "brawler_id": 16000060,
+   "name": "Sam",
+   "games": 1,
+   "ranked_games": 0,
+   "wr": 100.0,
+   "expected_wr": 64.2,
+   "me_factor_pct": 0.12,
+   "comfort_pct": 0.22
+  },
+  {
+   "brawler_id": 16000051,
+   "name": "Ash",
+   "games": 1,
+   "ranked_games": 0,
+   "wr": 100.0,
+   "expected_wr": 47.6,
+   "me_factor_pct": 0.18,
+   "comfort_pct": 0.22
+  },
+  {
+   "brawler_id": 16000030,
+   "name": "Emz",
+   "games": 4,
+   "ranked_games": 3,
+   "wr": 50.0,
+   "expected_wr": 51.7,
+   "me_factor_pct": 0.27,
+   "comfort_pct": 1.09
+  }
+ ],
+ "most_played": [
+  {
+   "brawler_id": 16000030,
+   "name": "Emz",
+   "games": 4,
+   "ranked_games": 3,
+   "wr": 50.0,
+   "expected_wr": 51.7,
+   "me_factor_pct": 0.27,
+   "comfort_pct": 1.09
+  },
+  {
+   "brawler_id": 16000072,
+   "name": "Pearl",
+   "games": 3,
+   "ranked_games": 3,
+   "wr": 66.7,
+   "expected_wr": 52.4,
+   "me_factor_pct": 0.4,
+   "comfort_pct": 1.02
+  },
+  {
+   "brawler_id": 16000015,
+   "name": "Piper",
+   "games": 3,
+   "ranked_games": 3,
+   "wr": 66.7,
+   "expected_wr": 55.7,
+   "me_factor_pct": 0.31,
+   "comfort_pct": 1.02
+  },
+  {
+   "brawler_id": 16000021,
+   "name": "Gene",
+   "games": 2,
+   "ranked_games": 2,
+   "wr": 100.0,
+   "expected_wr": 67.6,
+   "me_factor_pct": 0.62,
+   "comfort_pct": 0.81
+  },
+  {
+   "brawler_id": 16000054,
+   "name": "Fang",
+   "games": 2,
+   "ranked_games": 0,
+   "wr": 100.0,
+   "expected_wr": 41.2,
+   "me_factor_pct": 0.41,
+   "comfort_pct": 0.4
+  },
+  {
+   "brawler_id": 16000105,
+   "name": "Starr Nova",
+   "games": 2,
+   "ranked_games": 0,
+   "wr": 50.0,
+   "expected_wr": 46.4,
+   "me_factor_pct": 0.02,
+   "comfort_pct": 0.4
+  },
+  {
+   "brawler_id": 16000084,
+   "name": "Moe",
+   "games": 2,
+   "ranked_games": 0,
+   "wr": 50.0,
+   "expected_wr": 52.7,
+   "me_factor_pct": -0.02,
+   "comfort_pct": 0.4
+  },
+  {
+   "brawler_id": 16000031,
+   "name": "Mr. P",
+   "games": 2,
+   "ranked_games": 2,
+   "wr": 0.0,
+   "expected_wr": 36.4,
+   "me_factor_pct": -0.7,
+   "comfort_pct": 0.81
+  }
+ ],
+ "low_power": [
+  {
+   "brawler_id": 16000098,
+   "name": "Ziggy",
+   "power": 9
+  },
+  {
+   "brawler_id": 16000110,
+   "name": "Vince",
+   "power": 9
+  }
+ ]
+}
