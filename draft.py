@@ -34,6 +34,23 @@ P_ban and a uniform plan ban at odds = 1), so meta bans count little. sigma_C is
 pick-weighted RMS of C on the map, so intent is in "typical counters" and gamma means the
 same on every map. gamma = 0 (or no known enemy bans) is exactly the old model.
 
+Counterpick risk: real players counter-pick on purpose, most of all with their LAST pick. The
+enemy's greed beta therefore depends on how many enemy picks remain (`beta_enemy_left`:
+near best-response on their last pick, the realistic policy earlier); this is part of the
+expectimax itself. On top, candidates are ranked by a risk-adjusted value that penalizes
+*candidate-specific* counter exposure: for each remaining enemy pick k (drawn from the
+position-aware policy p_k), how much worse the worst `cvar_q` of their answers is for THIS pick
+than their average answer, in the candidate's own matchup term C[e, c]:
+    penalty(c) = sum_k ( E_{p_k}[C[e, c]] - CVaR_q,p_k[-C[e, c]] ... )  >= 0   (logit)
+    risk-adjusted P = sigmoid(logit(P) - lambda * penalty(c)),  lambda from the "risk" setting.
+A brawler with a devastating, realistic answer is penalized even if the enemy rarely picks it;
+the penalty grows with the number of enemy picks still to come (early picks); last-pick-proof
+picks and brawlers nobody counters lose nothing. (A first version took a CVaR of the whole
+outcome at every enemy node; that punished all variance, including the enemy simply taking a
+strong brawler regardless of our pick, so uncounterable picks lost ~9 points. Replaced.) The
+displayed win% stays the plain expectation. Each pick also reports its biggest realistic
+answers (`exposure`), with the win% if they take one and how likely.
+
 Explanations follow the expected final comp: for a candidate x we track the
 expectation (under the search policy) of
     strength(x) | synergy with current teammates | synergy with future teammates |
@@ -56,6 +73,23 @@ COMP_NAMES = ("strength", "synergy_now", "synergy_future", "counters_now", "coun
 BAN_INTENT_PRESETS = {"off": 0.0, "low": 0.10, "medium": 0.20}
 BAN_READ_MIN_TV = 0.04      # show the ban read if the enemy's next-pick distribution moves >= this (TV)
 BAN_READ_MIN_PCT = 1.0      # ... or a top pick rec's win% moves >= this many points
+# lambda (weight on the candidate-specific counter-exposure penalty) per "risk" setting
+RISK_PRESETS = {"greedy": 0.0, "balanced": 0.5, "safe": 1.0}
+
+
+def _logit(p: float) -> float:
+    p = min(max(p, 1e-6), 1 - 1e-6)
+    return float(np.log(p / (1 - p)))
+
+
+def _cvar(vals: np.ndarray, w: np.ndarray, q: float) -> float:
+    """Mean of the worst q of the probability mass (w sums to 1)."""
+    order = np.argsort(vals)
+    v, ww = vals[order], w[order]
+    before = np.cumsum(ww) - ww
+    take = np.clip(q - before, 0.0, ww)
+    tot = take.sum()
+    return float(np.dot(take, v) / tot) if tot > 0 else float(v[0])
 
 
 @dataclass
@@ -82,6 +116,11 @@ class SearchConfig:
     ban_beta: float = 4.0     # (same shape as the opponent's "threat" score used for ban recs)
     ban_meta_odds: float = 1.0   # prior odds that a ban is a meta ban rather than a plan ban
     intent_cap: float = 8.0   # cap on a brawler's normalized intent (bounds exp(gamma * intent))
+    # counterpick risk
+    beta_enemy_left: tuple = (12.0, 6.0, 4.0)   # enemy greed with 1 / 2 / 3 enemy picks left (incl. this one)
+    risk_lambda: float = RISK_PRESETS["balanced"]
+    cvar_q: float = 0.25      # tail mass: the worst 25% of the enemy's answer distribution
+    answer_min_rate: float = 1.0   # realistic answers: picked in >= this % of games on the map
 
 
 def pct(z: float) -> float:
@@ -161,6 +200,24 @@ class DraftEngine:
         c_scale = float(np.sqrt(max(mm.prior @ (mm.C ** 2) @ mm.prior, 0.0)))
         self.c_scale = c_scale if c_scale > 1e-9 else 1.0
 
+    def with_risk(self, level: str) -> "DraftEngine":
+        """A shallow copy with a different risk setting (greedy / balanced / safe)."""
+        import copy
+        from dataclasses import replace
+        lam = RISK_PRESETS[level]
+        if lam == self.cfg.risk_lambda:
+            return self
+        e = copy.copy(self)
+        e.cfg = replace(self.cfg, risk_lambda=float(lam))
+        return e
+
+    def beta_for(self, enemy_left: int | None) -> float:
+        """Enemy greed for a pick with `enemy_left` enemy picks remaining (incl. this one)."""
+        if not enemy_left:
+            return self.cfg.beta
+        t = self.cfg.beta_enemy_left
+        return float(t[min(enemy_left, len(t)) - 1])
+
     def with_gamma(self, gamma: float) -> "DraftEngine":
         """A shallow copy that reads enemy bans with a different gamma (per request; the cached
         engine is shared between threads, so it's never mutated)."""
@@ -197,11 +254,12 @@ class DraftEngine:
             mask[list(used)] = False
         return mask
 
-    def opponent_dist(self, opp, our, avail, bias=None) -> np.ndarray:
+    def opponent_dist(self, opp, our, avail, bias=None, enemy_left: int | None = None) -> np.ndarray:
         """Realistic probability of each brawler being the opponent's next pick.
-        bias: optional per-brawler log-weight (gamma * ban intent)."""
+        bias: optional per-brawler log-weight (gamma * ban intent). enemy_left: enemy picks
+        remaining incl. this one (None = the flat default greed `beta`)."""
         gain = self.mm.marginal(opp, our)
-        s = self.cfg.alpha * self.log_prior + self.cfg.beta * gain
+        s = self.cfg.alpha * self.log_prior + self.beta_for(enemy_left) * gain
         if bias is not None:
             s = s + bias
         s = np.where(avail, s, -np.inf)
@@ -209,11 +267,15 @@ class DraftEngine:
         p = np.exp(s)
         return p / p.sum()
 
-    def teammate_dist(self, our, opp, avail) -> np.ndarray:
+    def teammate_dist(self, our, opp, avail, our_left: int | None = None) -> np.ndarray:
         """Realistic distribution of our own later picks (solo-queue teammates): pick-rate
-        weighted, leaning toward picks that are good with conservative (p25-ish) strength."""
+        weighted, leaning toward picks that are good with conservative (p25-ish) strength.
+        our_left: our picks remaining incl. this one. Teammates counter-pick on their last pick
+        just like the enemy, so the same position-aware greed applies (keeps both sides
+        symmetric; an only-greedy enemy pushed the typical first pick down to ~47%)."""
         gain = self.mm.marginal(our, opp) + self.sel_off
-        s = self.cfg.alpha_us * self.log_prior + self.cfg.beta_us * gain
+        beta = self.beta_for(our_left) if our_left else self.cfg.beta_us
+        s = self.cfg.alpha_us * self.log_prior + beta * gain
         s = np.where(avail, s, -np.inf)
         s = s - s[avail].max()
         p = np.exp(s)
@@ -272,11 +334,13 @@ class DraftEngine:
                         best = r
                 res = best
         else:
+            rem = widths["seq"][step - widths["root"]:]
             if ours_turn:
-                p = self.teammate_dist(our, opp, avail)
+                p = self.teammate_dist(our, opp, avail, our_left=sum(1 for t in rem if t))
                 dz = mm.marginal(our, opp)          # our logit change per pick
             else:
-                p = self.opponent_dist(opp, our, avail, widths.get("bias"))
+                p = self.opponent_dist(opp, our, avail, widths.get("bias"),
+                                       enemy_left=sum(1 for t in rem if not t))
                 dz = -mm.marginal(opp, our)
             if last:
                 idx = np.flatnonzero(avail)
@@ -368,7 +432,11 @@ class DraftEngine:
         w = p_real[real_c] / p_real[real_c].sum()
         baseline = float(sum(wc * children[int(c)][0][0] for c, wc in zip(real_c, w)))
 
-        ranked = sorted(cands, key=lambda c: -children[int(c)][0][1])[:top]
+        # risk-adjusted ranking: conservative (p25) value minus lambda x counter exposure
+        lam = cfg.risk_lambda
+        pen = {int(c): (self.exposure_penalty(st, int(c)) if lam else 0.0) for c in cands}
+        radj = lambda c, j: float(sigmoid(_logit(float(children[int(c)][0][j])) - lam * pen[int(c)]))
+        ranked = sorted(cands, key=lambda c: -radj(c, 1))[:top]
         no_intent = {}
         if compare_intent and self.opp_bias(st) is not None:
             no_intent = self._root_children(st, [int(c) for c in ranked[:compare_intent]], widths,
@@ -377,7 +445,7 @@ class DraftEngine:
         for c in ranked:
             c = int(c)
             vals, vec = children[c]
-            v, v25 = float(vals[0]), float(vals[1])
+            v, v25, vr = float(vals[0]), float(vals[1]), radj(c, 0)
             sd_pct = pct(self.pick_sd(c, st.our, st.opp))
             comps = {name: round(float(pct(val)), 2) for name, val in zip(COMP_NAMES, vec)}
             rec = {
@@ -397,6 +465,9 @@ class DraftEngine:
                 "confidence": ("high" if sd_pct <= cfg.conf_high else
                                "medium" if sd_pct <= cfg.conf_med else "low"),
                 "uncertainty_pct": round(sd_pct, 2),
+                "risk_adjusted_win_prob": round(100 * vr, 1),
+                "counter_exposure_pct": round(pct(pen[c]), 2),
+                "risk_answers": self.exposure(st, c, v),
                 "comp_notes": mm.comp_notes(list(st.our) + [c], list(st.opp)) if hasattr(mm, "comp_notes") else [],
             }
             if c in no_intent:
@@ -409,12 +480,72 @@ class DraftEngine:
             recs.append(rec)
         return {"baseline_win_prob": round(100 * baseline, 1), "picks": recs}
 
+    def _answer_dists(self, st: DraftState, c: int):
+        """Position-aware distributions of the enemy's remaining picks after we take c (each
+        drawn from the state right after our pick, ignoring picks in between), plus the
+        availability mask. Empty list when the enemy has no picks left."""
+        k_total = sum(1 for t in st.remaining()[1:] if not t)
+        avail = self._avail(set(st.validate()) | {c})
+        if not k_total:
+            return [], avail
+        our2 = list(st.our) + [c]
+        bias = self.opp_bias(st)
+        return [self.opponent_dist(st.opp, our2, avail, bias, enemy_left=k)
+                for k in range(k_total, 0, -1)], avail
+
+    def exposure_penalty(self, st: DraftState, c: int) -> float:
+        """Candidate-specific counter exposure (logit, >= 0): summed over the enemy's remaining
+        picks, how much worse their worst cvar_q of answers is for c than their average answer,
+        in c's own matchup term C[e, c]. 0 if nobody realistic counters c or no picks remain."""
+        dists, _ = self._answer_dists(st, c)
+        if not dists:
+            return 0.0
+        v = -self.mm.C[:, c]                   # our outcome per enemy answer (low = they counter c)
+        pen = 0.0
+        for d in dists:
+            pen += float(d @ v) - _cvar(v, d, self.cfg.cvar_q)
+        return max(pen, 0.0)
+
+    def exposure(self, st: DraftState, c: int, v: float, top: int = 3) -> list:
+        """The enemy's biggest realistic answers to us picking c now.
+
+        Answers = available brawlers picked in >= answer_min_rate % of games on the map, ranked by
+        how hard they beat c (C[e, c]). For each: damage to c (win-% points, negative = bad), our
+        win% if they take it (the expected outcome v shifted by that answer's damage relative to the
+        enemy's average answer), the chance they take it at some remaining pick (each remaining
+        enemy pick drawn from the position-aware policy, ignoring picks in between), and when.
+        """
+        mm, cfg = self.mm, self.cfg
+        dists, avail = self._answer_dists(st, c)
+        if not dists:
+            return []
+        ok = avail & (600.0 * mm.prior >= cfg.answer_min_rate)
+        dmg = mm.C[:, c]                       # e's edge over c (logit)
+        cand = [int(e) for e in np.argsort(-np.where(ok, dmg, -np.inf))[:top] if ok[e] and dmg[e] > 0]
+        if not cand:
+            return []
+        avg = float(dists[0] @ dmg)
+        logit_v = float(np.log(max(v, 1e-6) / max(1 - v, 1e-6)))
+        out = []
+        for e in cand:
+            ps = np.array([float(d[e]) for d in dists])
+            p_any = 1.0 - float(np.prod(1.0 - ps))
+            j = int(np.argmax(ps))
+            when = "their last pick" if j == len(ps) - 1 else ("their next pick" if j == 0 else "a later pick")
+            out.append({"brawler_id": int(mm.brawler_ids[e]),
+                        "damage_pct": round(-pct(float(dmg[e])), 1),
+                        "win_if_pct": round(100 * float(sigmoid(logit_v - (float(dmg[e]) - avg))), 1),
+                        "prob_pct": round(100 * p_any, 1),
+                        "when": when})
+        return out
+
     def predict_opponent(self, st: DraftState, top: int = 5) -> list:
         used = st.validate()
         avail = self._avail(used)
         bias = self.opp_bias(st)
-        p = self.opponent_dist(st.opp, st.our, avail, bias)
-        p0 = self.opponent_dist(st.opp, st.our, avail) if bias is not None else p
+        k = sum(1 for t in st.remaining() if not t)
+        p = self.opponent_dist(st.opp, st.our, avail, bias, enemy_left=k)
+        p0 = self.opponent_dist(st.opp, st.our, avail, enemy_left=k) if bias is not None else p
         idx = np.argsort(-p)[:top]
         out = []
         for i in idx:
@@ -494,8 +625,9 @@ class DraftEngine:
         name_of = name_of or (lambda bid: str(bid))
         mm = self.mm
         avail = self._avail(st.validate())
-        p1 = self.opponent_dist(st.opp, st.our, avail, bias)
-        p0 = self.opponent_dist(st.opp, st.our, avail)
+        k_left = sum(1 for t in st.remaining() if not t)
+        p1 = self.opponent_dist(st.opp, st.our, avail, bias, enemy_left=k_left)
+        p0 = self.opponent_dist(st.opp, st.our, avail, enemy_left=k_left)
         dp = p1 - p0
         tv = 0.5 * float(np.abs(dp).sum())
         B = list(dict.fromkeys(st.opp_bans))
@@ -570,6 +702,22 @@ def _sgn(v: float) -> str:
     return f"{v:+.1f}%"
 
 
+def biggest_risk(answers: list, min_damage: float = 2.0) -> dict | None:
+    """The answer most likely to hurt: largest damage x probability among the reported answers
+    (answers are listed by raw damage; a devastating but never-picked one isn't the headline)."""
+    cand = [a for a in answers if -a["damage_pct"] >= min_damage]
+    if not cand:
+        return None
+    return max(cand, key=lambda a: -a["damage_pct"] * max(a["prob_pct"], 0.5))
+
+
+def risk_likelihood(a: dict) -> str:
+    p = a["prob_pct"]
+    if p >= 25:
+        return f"likely as {a['when']}"
+    return (f"{p:.0f}% chance" if p >= 1 else "<1% chance") + f", most likely as {a['when']}"
+
+
 def explain_pick(rec: dict, st: DraftState, eng: DraftEngine) -> str:
     b = rec["breakdown_pct"]
     step = st.step
@@ -599,6 +747,10 @@ def explain_pick(rec: dict, st: DraftState, eng: DraftEngine) -> str:
             "Mid-draft pick")
     notes = rec.get("comp_notes") or []
     extra = (" " + notes[0] + ".") if notes else ""
+    r = biggest_risk(rec.get("risk_answers") or [])
+    if r is not None:
+        who = r.get("name") or str(r["brawler_id"])
+        extra += f" Biggest risk: {who} ({r['damage_pct']:+.1f}%, {risk_likelihood(r)})."
     conf = ""
     if rec.get("confidence") == "low" or rec["games_on_map"] < 30:
         conf = (f" Low confidence ({rec['games_on_map']} games on this map): leaning on similar maps "

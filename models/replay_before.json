@@ -1,0 +1,930 @@
+[
+ {
+  "id": "62984baf-b4a6-47ab-976f-fe4bede96297",
+  "map": "Double Swoosh",
+  "mode": "gemGrab",
+  "result": null,
+  "we_first": true,
+  "my_slot": null,
+  "slots": [
+   "8-Bit",
+   "Melodie",
+   "Colette",
+   "Emz",
+   "Nani",
+   "Bo"
+  ],
+  "decisions": [
+   {
+    "slot": 0,
+    "actual": "8-Bit",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Melodie",
+     "Colette",
+     "Bo"
+    ],
+    "top5": [
+     {
+      "name": "Mr. P",
+      "win_prob": 56.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Melodie",
+      "win_prob": 53.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Amber",
+      "win_prob": 53.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mortis",
+      "win_prob": 52.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Starr Nova",
+      "win_prob": 52.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 3,
+    "actual": "Emz",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Bo"
+    ],
+    "top5": [
+     {
+      "name": "Mr. P",
+      "win_prob": 59.1,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Surge",
+      "win_prob": 55.7,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Amber",
+      "win_prob": 55.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bo",
+      "win_prob": 54.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Chester",
+      "win_prob": 53.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 4,
+    "actual": "Nani",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Bo"
+    ],
+    "top5": [
+     {
+      "name": "Mr. P",
+      "win_prob": 55.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Amber",
+      "win_prob": 52.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Surge",
+      "win_prob": 51.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bo",
+      "win_prob": 51.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Chester",
+      "win_prob": 49.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "4ac47e3b-19b9-4e34-be7a-290eaf5e96e8",
+  "map": "Double Swoosh",
+  "mode": "gemGrab",
+  "result": "loss",
+  "we_first": true,
+  "my_slot": 4,
+  "slots": [
+   "Sirius",
+   "Tara",
+   "Starr Nova",
+   "Cordelius",
+   "Emz",
+   "Surge"
+  ],
+  "decisions": [
+   {
+    "slot": 0,
+    "actual": "Sirius",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Tara",
+     "Starr Nova",
+     "Surge"
+    ],
+    "top5": [
+     {
+      "name": "Emz",
+      "win_prob": 56.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 54.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Edgar",
+      "win_prob": 54.7,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Melodie",
+      "win_prob": 54.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Tara",
+      "win_prob": 51.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 3,
+    "actual": "Cordelius",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Surge"
+    ],
+    "top5": [
+     {
+      "name": "Edgar",
+      "win_prob": 53.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 50.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Rosa",
+      "win_prob": 49.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bull",
+      "win_prob": 48.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Emz",
+      "win_prob": 48.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 4,
+    "actual": "Emz",
+    "actual_rank_in_top5": 2,
+    "later_enemy_picks": [
+     "Surge"
+    ],
+    "top5": [
+     {
+      "name": "Mr. P",
+      "win_prob": 43.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Emz",
+      "win_prob": 43.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Edgar",
+      "win_prob": 40.1,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Pearl",
+      "win_prob": 38.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Carl",
+      "win_prob": 38.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "ec0e7000-1aa1-482a-b9c6-939fa46180dd",
+  "map": "Pinball Dreams",
+  "mode": "brawlBall",
+  "result": "loss",
+  "we_first": true,
+  "my_slot": 3,
+  "slots": [
+   "Rico",
+   "Brock",
+   "Gigi",
+   "Bibi",
+   "Kenji",
+   "Bull"
+  ],
+  "decisions": [
+   {
+    "slot": 0,
+    "actual": "Rico",
+    "actual_rank_in_top5": 4,
+    "later_enemy_picks": [
+     "Brock",
+     "Gigi",
+     "Bull"
+    ],
+    "top5": [
+     {
+      "name": "Edgar",
+      "win_prob": 61.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bibi",
+      "win_prob": 57.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Melodie",
+      "win_prob": 55.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Rico",
+      "win_prob": 53.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Ash",
+      "win_prob": 52.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 3,
+    "actual": "Bibi",
+    "actual_rank_in_top5": 1,
+    "later_enemy_picks": [
+     "Bull"
+    ],
+    "top5": [
+     {
+      "name": "Bibi",
+      "win_prob": 69.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Edgar",
+      "win_prob": 67.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Melodie",
+      "win_prob": 67.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Ash",
+      "win_prob": 66.7,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 65.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 4,
+    "actual": "Kenji",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Bull"
+    ],
+    "top5": [
+     {
+      "name": "Melodie",
+      "win_prob": 72.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Edgar",
+      "win_prob": 71.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Chester",
+      "win_prob": 69.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Surge",
+      "win_prob": 69.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 68.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "e08414d0-af58-44ee-9102-e4f2a935c8d5",
+  "map": "Out in the Open",
+  "mode": "knockout",
+  "result": "win",
+  "we_first": true,
+  "my_slot": 3,
+  "slots": [
+   "Mandy",
+   "Byron",
+   "Edgar",
+   "Pearl",
+   "Otis",
+   "Wendy"
+  ],
+  "decisions": [
+   {
+    "slot": 0,
+    "actual": "Mandy",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Byron",
+     "Edgar",
+     "Wendy"
+    ],
+    "top5": [
+     {
+      "name": "Mr. P",
+      "win_prob": 57.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Angelo",
+      "win_prob": 51.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Squeak",
+      "win_prob": 50.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Pearl",
+      "win_prob": 50.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Ollie",
+      "win_prob": 48.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 3,
+    "actual": "Pearl",
+    "actual_rank_in_top5": 1,
+    "later_enemy_picks": [
+     "Wendy"
+    ],
+    "top5": [
+     {
+      "name": "Pearl",
+      "win_prob": 64.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 63.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Melodie",
+      "win_prob": 62.7,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Gus",
+      "win_prob": 62.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Angelo",
+      "win_prob": 62.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 4,
+    "actual": "Otis",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Wendy"
+    ],
+    "top5": [
+     {
+      "name": "Melodie",
+      "win_prob": 66.7,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 66.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Lou",
+      "win_prob": 65.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "R-T",
+      "win_prob": 65.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Angelo",
+      "win_prob": 64.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "45c77ce2-f223-45b3-a510-db8eef027069",
+  "map": "Hot Potato",
+  "mode": "heist",
+  "result": "loss",
+  "we_first": false,
+  "my_slot": 1,
+  "slots": [
+   "Bull",
+   "Colette",
+   "Griff",
+   "Jessie",
+   "Gus",
+   "Otis"
+  ],
+  "decisions": [
+   {
+    "slot": 1,
+    "actual": "Colette",
+    "actual_rank_in_top5": 3,
+    "later_enemy_picks": [
+     "Jessie",
+     "Gus"
+    ],
+    "top5": [
+     {
+      "name": "Emz",
+      "win_prob": 50.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Nori",
+      "win_prob": 48.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Colette",
+      "win_prob": 47.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Nita",
+      "win_prob": 46.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "8-Bit",
+      "win_prob": 46.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 2,
+    "actual": "Griff",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Jessie",
+     "Gus"
+    ],
+    "top5": [
+     {
+      "name": "Emz",
+      "win_prob": 52.9,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Nori",
+      "win_prob": 51.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Nita",
+      "win_prob": 49.3,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "8-Bit",
+      "win_prob": 48.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bibi",
+      "win_prob": 48.1,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 5,
+    "actual": "Otis",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [],
+    "top5": [
+     {
+      "name": "Emz",
+      "win_prob": 64.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 64.1,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bibi",
+      "win_prob": 63.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Sirius",
+      "win_prob": 62.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Nori",
+      "win_prob": 62.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "3a4e2f6c-2a28-4fa9-bb81-00d91460058b",
+  "map": "Ring of Fire",
+  "mode": "hotZone",
+  "result": "loss",
+  "we_first": true,
+  "my_slot": 0,
+  "slots": [
+   "Amber",
+   "Bo",
+   "Poco",
+   "Griff",
+   "8-Bit",
+   "Squeak"
+  ],
+  "decisions": [
+   {
+    "slot": 0,
+    "actual": "Amber",
+    "actual_rank_in_top5": 1,
+    "later_enemy_picks": [
+     "Bo",
+     "Poco",
+     "Squeak"
+    ],
+    "top5": [
+     {
+      "name": "Amber",
+      "win_prob": 57.4,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Chuck",
+      "win_prob": 56.1,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bo",
+      "win_prob": 54.7,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 52.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Gale",
+      "win_prob": 51.1,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 3,
+    "actual": "Griff",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Squeak"
+    ],
+    "top5": [
+     {
+      "name": "Chuck",
+      "win_prob": 59.2,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mr. P",
+      "win_prob": 57.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Starr Nova",
+      "win_prob": 54.0,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Gale",
+      "win_prob": 53.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mortis",
+      "win_prob": 53.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   },
+   {
+    "slot": 4,
+    "actual": "8-Bit",
+    "actual_rank_in_top5": null,
+    "later_enemy_picks": [
+     "Squeak"
+    ],
+    "top5": [
+     {
+      "name": "Mr. P",
+      "win_prob": 57.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Chuck",
+      "win_prob": 56.6,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Juju",
+      "win_prob": 54.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Bibi",
+      "win_prob": 50.8,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     },
+     {
+      "name": "Mortis",
+      "win_prob": 50.5,
+      "risk_adjusted": null,
+      "biggest_risk": null,
+      "biggest_risk_pct": null
+     }
+    ]
+   }
+  ]
+ }
+]

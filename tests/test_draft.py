@@ -124,5 +124,42 @@ def test_values_are_probabilities_and_fast():
     assert time.time() - t < 2.0
     for p in r["picks"]:
         assert 0 <= p["win_prob"] <= 100
-    vals = [p["win_prob"] for p in r["picks"]]
+    # ranked by the risk-adjusted value (default "balanced"); "greedy" = plain expected value
+    radj = [p["risk_adjusted_win_prob"] for p in r["picks"]]
+    assert radj == sorted(radj, reverse=True)
+    g = eng.with_risk("greedy").recommend_picks(DraftState(we_first=True))
+    vals = [p["win_prob"] for p in g["picks"]]
     assert vals == sorted(vals, reverse=True)
+
+
+def test_rare_devastating_counter_is_penalized():
+    """0 and 2 are equally strong; 0 has one big answer (1, about -15%) that the enemy rarely
+    picks early (~1% pick rate) but may still find. The expected value only partly reflects it,
+    so 0 carries a counter-exposure penalty (risk-adjusted < expected) while 2 carries none, and
+    the exposure report names the counter. With no enemy picks left, the penalty is gone."""
+    S = np.zeros(N); S[0] = 0.5; S[2] = 0.5
+    C = np.zeros((N, N)); set_counter(C, 1, 0, 0.6)
+    prior = np.ones(N); prior[1] = 0.02          # rarely picked, but still >= 1% of games
+    eng = DraftEngine(make_mm(S=S, C=C, prior=prior))
+    st = DraftState(we_first=True)
+    assert eng.exposure_penalty(st, 0) > 0.1
+    assert eng.exposure_penalty(st, 2) == 0.0
+    recs = {idx(p): p for p in eng.with_risk("safe").recommend_picks(st, top=N)["picks"]}
+    assert recs[0]["risk_adjusted_win_prob"] < recs[0]["win_prob"] - 1.0
+    assert recs[2]["risk_adjusted_win_prob"] == recs[2]["win_prob"]
+    assert recs[0]["risk_answers"] and recs[0]["risk_answers"][0]["brawler_id"] - 16000000 == 1
+    assert recs[0]["risk_answers"][0]["damage_pct"] < -10
+    # last pick (enemy has no picks left): nothing can punish it
+    last = DraftState(our=[3, 4], opp=[5, 6, 7], we_first=False)
+    assert eng.exposure_penalty(last, 0) == 0.0
+    assert eng.exposure(last, 0, 0.5) == []
+
+
+def test_enemy_last_pick_is_greedier():
+    """The enemy's last pick chases its best answer much harder than an earlier pick."""
+    S = np.zeros(N); C = np.zeros((N, N)); set_counter(C, 1, 0, 0.3)
+    eng = DraftEngine(make_mm(S=S, C=C))
+    avail = np.ones(N, bool); avail[0] = False
+    early = eng.opponent_dist([], [0], avail, enemy_left=3)[1]
+    last = eng.opponent_dist([], [0], avail, enemy_left=1)[1]
+    assert last > 2 * early

@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 import drafts
-from draft import BAN_INTENT_PRESETS, PICK_ORDER, DraftEngine, DraftState, pct
+from draft import BAN_INTENT_PRESETS, PICK_ORDER, RISK_PRESETS, DraftEngine, DraftState, explain_pick, pct
 from data import BRACKETS, tier_name
 from model import DraftModel, model_path
 
@@ -84,6 +84,8 @@ class DraftRequest(BaseModel):
     their_bans: list[int] = Field(default_factory=list)
     # How much the enemy's bans shift their predicted picks: off / low / medium
     ban_intent: str = "low"
+    # Counterpick risk appetite for ranking picks: greedy (expected value) / balanced / safe.
+    risk: str = "balanced"
     our: list[int] = Field(default_factory=list)
     opp: list[int] = Field(default_factory=list)
     personal: bool = False
@@ -138,6 +140,9 @@ def recommend(req: DraftRequest):
     if req.ban_intent not in BAN_INTENT_PRESETS:
         raise HTTPException(400, f"ban_intent must be one of {', '.join(BAN_INTENT_PRESETS)}")
     eng = eng.with_gamma(BAN_INTENT_PRESETS[req.ban_intent])
+    if req.risk not in RISK_PRESETS:
+        raise HTTPException(400, f"risk must be one of {', '.join(RISK_PRESETS)}")
+    eng = eng.with_risk(req.risk)
     try:
         to_idx = lambda ids: [mm.id_to_idx[int(b)] for b in ids]
         # both teams may ban the same brawler
@@ -183,7 +188,10 @@ def recommend(req: DraftRequest):
             pool_mask, bonus, info = prof.vectors(mm)
             out["personal"] = True
 
-    if st.step == 0:
+    # Ban suggestions only before any pick, and only when the caller isn't asking about a pick
+    # slot (the UI sends target_slot for pick slots, null for ban slots), so pick advice
+    # doesn't pay for the ban search.
+    if st.step == 0 and req.target_slot is None:
         out["ban_recs"] = eng.recommend_bans(st, top=req.top)
     if turn == 0:
         out["pick_recs"] = eng.recommend_picks(st, top=req.top, pool_mask=pool_mask,
@@ -223,11 +231,16 @@ def recommend(req: DraftRequest):
         if key in out:
             for r in out[key].get("picks", []) + out[key].get("bans", []):
                 r["name"] = _name(md, r["brawler_id"])
+                if r.get("risk_answers"):
+                    for a in r["risk_answers"]:
+                        a["name"] = _name(md, a["brawler_id"])
+                    r["explanation"] = explain_pick(r, st, eng)
     for r in out.get("opponent_prediction", []):
         r["name"] = _name(md, r["brawler_id"])
     # Ban intent: what the enemy's bans say about their plan. `ban_read` is a plain-words note,
     # only when it matters (moves their next-pick distribution or a top rec noticeably).
     out["ban_intent"] = {"level": req.ban_intent, "gamma": eng.cfg.gamma}
+    out["risk"] = {"level": req.risk, "lambda": eng.cfg.risk_lambda}
     br = eng.read_bans(st, (out.get("pick_recs") or {}).get("picks"), lambda b: _name(md, b))
     out["ban_read_info"] = br
     out["ban_read"] = br["text"] if br and br["meaningful"] else None

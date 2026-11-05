@@ -143,3 +143,11 @@ much removing a brawler raises our expected draft value, from the actual pick si
 
 Win% numbers assume equal skill and an opponent who drafts "realistically". Expect real
 prediction accuracy to top out around 55–60%, because player skill dominates.
+
+## Counter-pick risk
+
+Each pick suggestion shows its **biggest realistic counter** ("Biggest risk: Gale -4.6% · 20%
+chance, their last pick"). The **risk** setting (safe / balanced / greedy, under "Your pick")
+controls how much that exposure lowers a pick's rank. Teams' last picks are modeled as deliberate
+counter-picks. Tools: `replay_drafts.py` (replay logged drafts through the engine, compare
+before/after) and `counter_check.py` (learned vs. observed counter sizes).

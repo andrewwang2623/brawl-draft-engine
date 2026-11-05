@@ -219,6 +219,14 @@ html[data-theme="light"][data-accent="green"]{ --gold:#16a34a; --gold-hi:#22c55e
 html[data-theme="light"][data-accent="purple"]{ --gold:#7c3aed; --gold-hi:#8b5cf6; --on-gold:#fff; }
 html[data-theme="light"] .b span{color:var(--text)}
 
+/* ---------------- counter-pick risk ---------------- */
+.riskrow{display:flex;align-items:center;gap:8px;margin:0 0 8px;flex-wrap:wrap}
+.riskhint{font-size:12px;color:var(--muted)}
+.riskline{font-size:12.5px;margin-top:3px;color:color-mix(in srgb,var(--bad) 75%,var(--text))}
+.riskline b{color:var(--text)}
+.riskline.safe{color:color-mix(in srgb,var(--good) 75%,var(--text))}
+html[data-detail="simple"] .riskhint{display:none}
+
 /* ---------------- detail level ---------------- */
 .extra{display:none;font-size:12px;color:var(--muted);margin-top:3px}
 .b .pr{display:none;position:absolute;top:2px;right:2px;font-size:9.5px;font-weight:700;line-height:14px;padding:0 4px;border-radius:6px;background:rgba(0,0,0,.72);color:#fff;pointer-events:none}
@@ -318,13 +326,14 @@ const LS = "draft-v3";
 const S = {
   meta: null, byId: {}, brawlers: [], maps: [], bracket: "legendary", personalAvail: false,
   d: load() || fresh(), resp: null, respKey: "", err: null, open: {}, ctl: null, timer: null,
-  rates: {}, tiles: {}, loading: false, msg: "", banIntent: loadBanIntent(), logTimer: null, lastLog: ""
+  rates: {}, tiles: {}, loading: false, msg: "", banIntent: loadBanIntent(), risk: loadRisk(), logTimer: null, lastLog: ""
 };
 // Client-generated draft id: the draft log (data/drafts.db) updates one row per draft.
 function newId(){ return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12); }
 function fresh(){ return {mapKey: null, weFirst: true, personal: false, bans: {u: [null,null,null], t: [null,null,null]},
                           slots: [null,null,null,null,null,null], me: null, target: "bu0", hist: [],
                           id: newId(), result: null, logged: false}; }
+function loadRisk(){ try{ const v = localStorage.getItem("draft-risk"); return ["safe","balanced","greedy"].includes(v) ? v : "balanced"; }catch(e){ return "balanced"; } }
 function loadBanIntent(){ try{ const v = localStorage.getItem("draft-ban-intent"); return ["off","low","medium"].includes(v) ? v : "low"; }catch(e){ return "low"; } }
 function load(){
   try{
@@ -452,7 +461,7 @@ function schedule(){ clearTimeout(S.timer); S.timer = setTimeout(fetchRecs, 60);
 function reqFor(){
   const a = advice(), d = D();
   const [mode, map] = d.mapKey.split("|");
-  const body = {map, mode, we_first: d.weFirst, our_bans: teamBans("u"), their_bans: teamBans("t"), ban_intent: S.banIntent, slots: d.slots.slice(), my_slot: d.me,
+  const body = {map, mode, we_first: d.weFirst, our_bans: teamBans("u"), their_bans: teamBans("t"), ban_intent: S.banIntent, risk: S.risk, slots: d.slots.slice(), my_slot: d.me,
                 target_slot: a.kind === "pick" ? a.slot : null, personal: !!(d.personal && S.personalAvail), bracket: S.bracket, top: 5};
   return body;
 }
@@ -499,6 +508,27 @@ async function postLog(){
   }catch(e){ S.lastLog = ""; }
 }
 function setResult(v){ const d = D(); d.result = d.result === v ? null : v; save(); renderAdvice(); clearTimeout(S.logTimer); postLog(); }
+function setRisk(v){ S.risk = v; try{ localStorage.setItem("draft-risk", v); }catch(e){} renderAdvice(); schedule(); }
+const RISK_HINT = {safe: "Avoid picks with big realistic counters, especially early.",
+                   balanced: "Weighs win chance against the risk of being counter-picked.",
+                   greedy: "Highest expected win chance, ignoring counter-pick risk."};
+function riskSeg(){
+  return `<div class="riskrow" title="${esc(RISK_HINT[S.risk])}"><span class="mseg" id="riskSeg"><i>risk</i>` +
+    ["safe", "balanced", "greedy"].map(v => `<button data-v="${v}" class="${S.risk === v ? "on" : ""}">${v}</button>`).join("") +
+    `</span><span class="riskhint">${esc(RISK_HINT[S.risk])}</span></div>`;
+}
+function biggestRisk(r){
+  const c = (r.risk_answers || []).filter(a => -a.damage_pct >= 2);
+  if(!c.length) return null;
+  return c.reduce((b, a) => (-a.damage_pct * Math.max(a.prob_pct, 0.5) > -b.damage_pct * Math.max(b.prob_pct, 0.5) ? a : b));
+}
+function riskLine(r, last){
+  if(last) return `<div class="riskline safe">Can't be counter-picked: nothing left to answer it.</div>`;
+  const a = biggestRisk(r);
+  if(!a) return (r.risk_answers && r.risk_answers.length === 0) ? "" : `<div class="riskline safe">No big counter among their realistic picks.</div>`;
+  const p = a.prob_pct, likely = p >= 25 ? "likely" : (p >= 1 ? Math.round(p) + "% chance" : "<1% chance");
+  return `<div class="riskline">Biggest risk: <b>${esc(a.name || "")}</b> ${pct(a.damage_pct, 1)} · ${likely}, ${esc(a.when)}</div>`;
+}
 function setBanIntent(v){ S.banIntent = v; try{ localStorage.setItem("draft-ban-intent", v); }catch(e){} renderBanIntent(); renderAdvice(); schedule(); }
 function renderBanIntent(){ document.querySelectorAll("#readBans button").forEach(b => b.classList.toggle("on", b.dataset.v === S.banIntent)); }
 const rates = () => S.rates[D().mapKey.split("|")[1] + "|" + D().mapKey.split("|")[0]] || {};
@@ -643,6 +673,11 @@ function detailRows(r){
   }).join("");
   if(r.win_prob_p25 != null) h += `<div class="drow"><span>Likely range</span><span style="grid-column:2/4">${Math.round(r.win_prob_p25)}% to ${Math.round(r.win_prob)}%${r.confidence ? " · " + r.confidence + " confidence" : ""}</span></div>`;
   h += `<div class="drow"><span>Picked here</span><span style="grid-column:2/4">${Math.round(r.pick_rate)}% of games · ${r.games_on_map.toLocaleString()} on this map</span></div>`;
+  for(const a of (r.risk_answers || [])){
+    const p = a.prob_pct >= 1 ? Math.round(a.prob_pct) + "%" : "<1%";
+    h += `<div class="drow"><span>If they pick ${esc(a.name || "")}</span><span style="grid-column:2/4">${pct(a.damage_pct, 1)} → ${Math.round(a.win_if_pct)}% to win · ${p} chance, ${esc(a.when)}</span></div>`;
+  }
+  if(r.counter_exposure_pct > 0.05) h += `<div class="drow"><span>Counter-pick risk</span><span style="grid-column:2/4">−${r.counter_exposure_pct.toFixed(1)} pts exposure · ranked at ${Math.round(r.risk_adjusted_win_prob)}% on "${esc(S.risk)}"</span></div>`;
   return h;
 }
 function recCard(r, i, last, mine){
@@ -653,6 +688,7 @@ function recCard(r, i, last, mine){
   return `<div class="rec ${i === 0 ? "top" : ""} ${low ? "low" : ""} ${S.open[key] ? "open" : ""}" data-choose="${r.brawler_id}">
     <img src="${esc(img(r.brawler_id))}" alt="">
     <div class="body"><div class="name">${esc(r.name)}${dot}${low ? '<small style="color:var(--muted);font-weight:500;font-size:11px;white-space:nowrap">low conf.</small>' : ""}</div><div class="why">${esc(reasonsFor(r, last, mine))}</div>
+      ${riskLine(r, last)}
       <div class="extra">${extraLine(r)}</div>
       <button class="more" data-toggle="${key}">${S.open[key] ? "Hide" : "Why?"}</button></div>
     <div class="score"><b>${Math.round(r.win_prob)}%</b><small>${sub}</small></div>
@@ -743,6 +779,7 @@ function renderAdvice(){
     if(isFresh && r.unknown_before > 0) body += `<p class="note">${r.unknown_before} earlier pick${r.unknown_before > 1 ? "s" : ""} not entered: treated as unknown.</p>`;
     if(us && D().personal && S.personalAvail && !mine && D().me != null) body += `<p class="note">Teammate's pick, so your own brawler pool isn't applied.</p>`;
     else if(us && isFresh && r.personal) body += `<p class="note">Showing brawlers you own.</p>`;
+    if(r.turn === "us" && r.pick_recs) body += riskSeg();
     body += `<div class="recs">`;
     if(r.turn === "us" && r.pick_recs){
       const p = r.pick_recs.picks, last = D().slots.filter(x => x == null).length === 1 && a.slot === D().slots.findIndex(x => x == null);
@@ -817,6 +854,7 @@ document.addEventListener("click", e => {
   if(e.target.closest("#sugme")){ suggestForMe(); return; }
   const rb = e.target.closest("[data-result]"); if(rb){ setResult(rb.dataset.result); return; }
   const bi = e.target.closest("#readBans button[data-v]"); if(bi){ e.stopPropagation(); setBanIntent(bi.dataset.v); return; }
+  const rk = e.target.closest("#riskSeg button[data-v]"); if(rk){ e.stopPropagation(); setRisk(rk.dataset.v); return; }
   const s = e.target.closest("[data-slot]"); if(s){ setTarget(s.dataset.slot); return; }
   const c = e.target.closest("[data-choose]");
   if(c){ const a = advice(); choose(+c.dataset.choose, a.kind === "pick" ? a.key : D().target); return; }

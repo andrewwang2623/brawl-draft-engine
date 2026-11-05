@@ -1,8 +1,6 @@
 # Status
 
-_Updated: 2026-11-04 21:05 PST. The tuning loop has finished (stopped after 3 consecutive non-improving
-rounds). The crawler and profile fetch are still running. Next up: counterpick-risk work in the draft
-engine._
+_Updated: 2026-11-04 21:45 PST. The tuning loop has finished. Counterpick-risk work is done. The crawler and profile fetch are still running._
 
 ## For you to check
 - `roles.yaml`: all tags are high confidence after your 24 corrections. One open question: **Lumi** is
@@ -25,9 +23,9 @@ engine._
 | draft-only holdout log loss | **0.6717** (445k-game snapshot); coin flip 0.6931; per-map win-rate baseline 0.6753 |
 | Brier / accuracy | 0.2395 / 58.4% |
 | calibration | predicted vs. observed within ~2 pts in every bin |
-| audit (production model) | **1/26 maps flagged**: Gem Fort low-overlap with its most-picked. Its top 10 are 7/10 picked-and-winning, all high-confidence with 845+ games, so it's data-driven. Mean overlap 6.7/10 most-picked, 8.4/10 picked-and-winning |
+| audit (production model) | **0/26 maps flagged** with the counterpick-risk engine. Mean overlap 6.8/10 most-picked, 8.2/10 picked-and-winning |
 | matchup checks | **19/19** |
-| typical-pick baseline | 52.9% (was 63% before the fix) |
+| typical-pick baseline | 50.4% (was 63% before the fix; 52.9% before symmetric last-pick greed) |
 | AshBS tier correlation (sanity only) | Spearman 0.32 (was 0.00 before the fix) |
 
 ## Tuning loop summary
@@ -70,8 +68,9 @@ Regularization is at a plateau. Further gains need new information or better dra
 - One experiment: `.venv/bin/python experiment.py --desc "..." --set key=value --snapshot $(date +%s) --apply`.
 
 ## Known limitations / next ideas
-- **In progress:** counterpick risk (position-aware enemy greed, worst-case exposure, risk slider, pair
-  counter magnitudes, draft replay).
+- **Counterpick risk (done):** position-aware greed on both sides, counter-exposure penalty with a risk
+  setting (safe/balanced/greedy), "Biggest risk" per pick. Pair counters checked: not over-shrunk.
+  Shelly > Edgar is under-learned. Next: fit the last-pick greed and gamma from logged drafts (pick order known).
 - **Fit the ban-intent strength (gamma)** from logged drafts once ~100 drafts with bans exist.
 - **Retrain periodically** as profile coverage grows.
 - **Some learned matchup magnitudes are large** (e.g. Edgar vs Sprout +12%). Directionally right.

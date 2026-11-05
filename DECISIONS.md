@@ -414,3 +414,37 @@ the logged results let us check calibration of the displayed win% (equal-skill c
   picks are losing, and every recommendation there is high-confidence with 845+ games. The per-map
   test now passes if *either* overlap clears its bar (≥4 most-picked or ≥6 picked-and-winning). The
   audit's flag definition is unchanged (Gem Fort stays visibly flagged in AUDIT/STATUS).
+
+## Counterpick risk (user request, 2026-11-04 evening)
+
+- **Position-aware greed, both sides.** Enemy and teammate picks in the expectimax use beta = 12 / 6 /
+  4 with 1 / 2 / 3 of that side's picks left (incl. this one), i.e. near best-response on a team's
+  last pick, the realistic policy earlier. Applying it to the enemy only pushed the typical first
+  pick down to ~47% (the old inflation bug in reverse). Symmetric greed gives 50.4%. This is a
+  draft-time policy, so holdout log loss can't measure it. Battlelogs have no pick order, so
+  there's no direct data to fit beta. It's gated by the audit (0/26 flagged, matchups 19/19) and the
+  draft replay. The logged drafts (pick order known) can be used to fit it later, like gamma.
+- **Risk-adjusted ranking = candidate-specific counter exposure, not outcome variance.** First
+  version: a CVaR blend of the whole outcome at every enemy chance node. That punished all variance,
+  including the enemy simply taking a strong brawler regardless of our pick, so brawlers nobody
+  counters lost ~9 points. Replaced by penalty(c) = sum over remaining enemy picks k of
+  (E_{p_k}[-C(e,c)] - CVaR_0.25,p_k[-C(e,c)]) in logit, with p_k the position-aware enemy
+  distribution after we take c (intermediate picks ignored). Ranking uses
+  sigmoid(logit(p25 value) - lambda * penalty), lambda = 1.0 / 0.5 / 0 for safe / balanced / greedy
+  (default balanced). The displayed win% stays the plain expectation. Uncounterable and
+  last-pick picks get 0 penalty.
+- **Exposure report** per pick: the top 3 realistic answers (picked in >= 1% of games on the map) by
+  C(e,c), with damage, win% if they take it (expected win% shifted by that answer's damage relative
+  to the enemy's average answer), probability over their remaining picks, and when. The headline
+  "Biggest risk" is the answer with the largest damage x probability, so a devastating but
+  never-picked answer isn't the headline. All three answers are in the details.
+- **Counter magnitudes are not over-shrunk** (`counter_check.py`): residuals in head-to-head games
+  are ~0 or slightly negative for known counters and the 50 most-played pairs. No shrinkage change.
+  Shelly > Edgar is the one clearly under-learned pair.
+- **Pinball Dreams (Bibi at pick 4, Bull last-picked):** the data rates Bull > Bibi at about -4.5%
+  (matches raw), but in that state Gale (+7.0%) is a better enemy last pick than Bull (+5.1%,
+  weak on the map overall). So Bull stays an unlikely answer, and the new ranking moves Bibi to #2
+  mostly via Colette / Gale exposure. A bigger change would need evidence that Bull is stronger
+  there than the data shows.
+- **Speed:** ban suggestions are now computed only when no pick slot is targeted (the UI sends
+  `target_slot` for pick slots). Pick advice is 115-190 ms, ban advice ~300 ms.
