@@ -275,7 +275,8 @@ class MapModel:
 
     def comp_notes(self, ours, theirs, min_pct: float = 2.0, top: int = 4) -> list:
         """Readable role-level matchup notes, e.g. 'Their 3 divers hard-counter your 3 throwers
-        (-12.0%)'. Parts worth at least min_pct win-% points, biggest first."""
+        (-12.0% for you)'. Percentages are always from our side. Parts worth at least min_pct
+        win-% points, biggest first."""
         from model import ROLE_LABEL
         names = self.role_names or []
         lab = lambda i, n: f"{n} {ROLE_LABEL.get(names[i], (names[i], names[i]))[0 if n == 1 else 1]}"
@@ -287,14 +288,14 @@ class MapModel:
             strong = abs(v) >= 6
             if kind == "counter":
                 if v < 0:
-                    notes.append(f"Their {lab(j, nj)} {'hard-counter' if strong else 'counter'} your {lab(i, ni)} ({v:+.1f}%)")
+                    notes.append(f"Their {lab(j, nj)} {'hard-counter' if strong else 'counter'} your {lab(i, ni)} ({v:+.1f}% for you)")
                 else:
-                    notes.append(f"Your {lab(i, ni)} {'hard-counter' if strong else 'counter'} their {lab(j, nj)} ({v:+.1f}%)")
+                    notes.append(f"Your {lab(i, ni)} {'hard-counter' if strong else 'counter'} their {lab(j, nj)} ({v:+.1f}% for you)")
             else:
                 who = "Your" if kind == "synergy" else "Their"
                 what = lab(i, ni) if i == j else f"{lab(i, ni)} + {lab(j, nj)}"
                 good = (v > 0) == (kind == "synergy")
-                notes.append(f"{who} {what} {'work well together' if good else 'overlap badly'} ({v:+.1f}%)")
+                notes.append(f"{who} {what} {'work well together' if good else 'overlap badly'} ({v:+.1f}% for you)")
         return notes
 
 
