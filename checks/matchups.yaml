@@ -14,3 +14,4 @@ checks:
   - {counter: Shelly, victim: [Edgar, Mortis], note: "close range punishes divers"}
   - {counter: Bull, victim: [Edgar], note: "close range punishes divers"}
   - {counter_role: assassin, victim_role: thrower, note: "divers beat throwers"}
+  - {counter: Bull, victim: [Bibi, Kenji], note: "user: Bull hard-counters Bibi and Kenji (close range, wins their brawls)"}

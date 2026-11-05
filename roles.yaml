@@ -26,7 +26,7 @@ brawlers:
   Crow: {roles: [assassin, mid_dps], confidence: medium, note: "poke/chip more than dive"}
   Edgar: {roles: [assassin], confidence: high}
   Fang: {roles: [assassin], confidence: high}
-  Gigi: {roles: [assassin], confidence: low}
+  Gigi: {roles: [assassin, tank], confidence: high, source: user, note: "semi-tank / assassin hybrid"}
   Kaze: {roles: [assassin], confidence: medium}
   Kenji: {roles: [assassin], confidence: high}
   Leon: {roles: [assassin], confidence: high}
@@ -34,23 +34,23 @@ brawlers:
   Melodie: {roles: [assassin], confidence: high}
   Mico: {roles: [assassin], confidence: high}
   Mortis: {roles: [assassin], confidence: high}
-  Nori: {roles: [assassin], confidence: low}
+  Nori: {roles: [assassin], confidence: high, source: user}
   Sam: {roles: [assassin, tank], confidence: medium}
   Shade: {roles: [assassin], confidence: medium}
-  Starr Nova: {roles: [assassin], confidence: low}
+  Starr Nova: {roles: [assassin, mid_dps], confidence: high, source: user, note: "Surge-like fighter, more assassin-style"}
   Stu: {roles: [assassin, mid_dps], confidence: medium}
   Kit: {roles: [assassin, support], confidence: medium}
-  Chuck: {roles: [assassin, controller], confidence: low, note: "dashes between his posts"}
+  Chuck: {roles: [tank, controller, assassin], confidence: high, source: user, note: "holds areas with posts, dives in for damage then back out"}
   Surge: {roles: [mid_dps, assassin], confidence: medium}
   Bonnie: {roles: [sniper, assassin], confidence: medium, note: "cannon form snipes, Clyde form dives"}
-  Janet: {roles: [sniper, assassin], confidence: low}
+  Janet: {roles: [mid_dps], confidence: high, source: user}
   # --- tanks / frontline ---
   Ash: {roles: [tank], confidence: high}
   Bibi: {roles: [tank], confidence: high}
-  Bolt: {roles: [tank], confidence: low}
+  Bolt: {roles: [tank], confidence: high, source: user}
   Bull: {roles: [tank, wall_breaker], confidence: high, note: "close range, punishes divers"}
   Buster: {roles: [tank, support], confidence: medium}
-  Damian: {roles: [tank], confidence: low}
+  Damian: {roles: [tank], confidence: high, source: user}
   Darryl: {roles: [tank], confidence: high}
   Draco: {roles: [tank], confidence: medium}
   El Primo: {roles: [tank, wall_breaker], confidence: high}
@@ -58,11 +58,11 @@ brawlers:
   Hank: {roles: [tank], confidence: medium}
   Jacky: {roles: [tank, wall_breaker], confidence: medium}
   Meg: {roles: [tank, mid_dps], confidence: medium}
-  Ollie: {roles: [tank], confidence: low}
+  Ollie: {roles: [tank], confidence: high, source: user}
   Rosa: {roles: [tank], confidence: high}
-  Trunk: {roles: [tank], confidence: low}
+  Trunk: {roles: [tank], confidence: high, source: user}
   Shelly: {roles: [tank, wall_breaker], confidence: medium, note: "short-range shotgun; frontline anti-diver"}
-  Doug: {roles: [tank, support], confidence: low}
+  Doug: {roles: [tank], confidence: high, source: user}
   # --- throwers ---
   Barley: {roles: [thrower], confidence: high}
   Dynamike: {roles: [thrower, wall_breaker], confidence: high}
@@ -92,25 +92,25 @@ brawlers:
   # --- controllers / area denial ---
   Amber: {roles: [controller, mid_dps], confidence: medium}
   Charlie: {roles: [controller], confidence: medium}
-  Cosmo: {roles: [controller], confidence: low}
+  Cosmo: {roles: [controller], confidence: high, source: user}
   Emz: {roles: [controller], confidence: high}
-  Finx: {roles: [controller], confidence: low}
+  Finx: {roles: [controller, mid_dps], confidence: high, source: user}
   Gale: {roles: [controller], confidence: high}
   Gene: {roles: [controller, support], confidence: medium}
   Jessie: {roles: [controller], confidence: medium}
   Lou: {roles: [controller], confidence: high}
-  Meeple: {roles: [controller], confidence: low}
+  Meeple: {roles: [controller], confidence: high, source: user}
   Mr. P: {roles: [controller], confidence: medium}
   Otis: {roles: [controller], confidence: medium}
   Penny: {roles: [controller], confidence: medium}
   Sandy: {roles: [controller], confidence: medium}
-  Sirius: {roles: [controller], confidence: low}
-  Ziggy: {roles: [controller], confidence: low}
+  Sirius: {roles: [controller], confidence: high, source: user}
+  Ziggy: {roles: [controller], confidence: high, source: user}
   Nita: {roles: [mid_dps, controller], confidence: medium}
   Spike: {roles: [mid_dps, controller], confidence: medium}
   Tara: {roles: [mid_dps, controller], confidence: medium}
   # --- supports / healers ---
-  Glowy: {roles: [support], confidence: low}
+  Glowy: {roles: [support], confidence: high, source: user}
   Gray: {roles: [support, controller], confidence: medium}
   Gus: {roles: [support], confidence: high}
   Jae-Yong: {roles: [support], confidence: medium}
@@ -118,19 +118,19 @@ brawlers:
   Pam: {roles: [support], confidence: high}
   Poco: {roles: [support], confidence: high}
   Ruffs: {roles: [support], confidence: medium}
-  Wendy: {roles: [support], confidence: low}
+  Wendy: {roles: [support, controller], confidence: high, source: user}
   # --- mid-range damage ---
   Carl: {roles: [mid_dps], confidence: medium}
   Chester: {roles: [mid_dps], confidence: medium}
   Clancy: {roles: [mid_dps], confidence: medium}
   Colette: {roles: [mid_dps], confidence: high, note: "percent damage: counters tanks"}
-  Eve: {roles: [mid_dps], confidence: low}
+  Eve: {roles: [mid_dps], confidence: high, source: user}
   Griff: {roles: [mid_dps], confidence: medium}
   Lola: {roles: [mid_dps], confidence: medium}
-  Lumi: {roles: [mid_dps], confidence: low}
-  Mina: {roles: [mid_dps], confidence: low}
-  Moe: {roles: [mid_dps], confidence: low}
-  Najia: {roles: [mid_dps], confidence: low}
+  Lumi: {roles: [controller], confidence: high, source: user, note: "user unsure: may have been typed as a second Eve line - please confirm"}
+  Mina: {roles: [assassin, mid_dps], confidence: high, source: user, note: "assassin/fighter carry"}
+  Moe: {roles: [assassin, controller], confidence: high, source: user}
+  Najia: {roles: [controller], confidence: high, source: user}
   Pearl: {roles: [mid_dps], confidence: medium}
-  R-T: {roles: [mid_dps], confidence: low}
-  Vince: {roles: [mid_dps], confidence: low}
+  R-T: {roles: [sniper, controller], confidence: high, source: user, note: "near-sniper with some control"}
+  Vince: {roles: [mid_dps], confidence: high, source: user}

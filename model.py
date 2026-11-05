@@ -165,6 +165,7 @@ DEFAULT_PARAMS = {
     "lam_ccls_mode": 20.0,
     "lam_ccls_map": 100.0,
     "use_role_pairs": True,     # role-vs-role counters / role+role synergy (roles.yaml)
+    "roles_file": "roles.yaml", # role tags file, relative to the repo root (for A/B tests)
     "lam_role": 100.0,
     "lam_role_mode": 300.0,
     "lat_k": 4,                 # latent matchup embedding size (0 = off)
@@ -355,7 +356,7 @@ class DraftModel:
         self.class_names = sorted(set(cls.get(int(b), "Unknown") for b in self.ids))
         cidx = {c: i for i, c in enumerate(self.class_names)}
         self.cls = np.array([cidx[cls.get(int(b), "Unknown")] for b in self.ids], dtype=np.int64)
-        roles = load_roles()
+        roles = load_roles(ROOT / self.params.get("roles_file", "roles.yaml"))
         self.role_names = list(ROLE_NAMES)
         nR = len(ROLE_NAMES)
         self.roles_raw = np.zeros((len(self.ids), nR))      # 0/1 tags

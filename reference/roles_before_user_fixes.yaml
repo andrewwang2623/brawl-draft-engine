@@ -1,0 +1,136 @@
+# Brawler role tags: used by the model (role-vs-role counter and role+role synergy terms,
+# which per-pair counters/synergy shrink toward), for comp notes in explanations
+# ("Their 3 divers hard-counter your 3 throwers"), and by checks/matchups.yaml role checks.
+# In-game (Brawlify) classes are NOT used for this any more; they're UI filters only.
+#
+# Tags (several per brawler allowed; a brawler's weight is split evenly across its tags):
+#   assassin    assassin / diver: closes distance fast to kill backliners
+#   thrower     lobs attacks over walls (artillery)
+#   sniper      long-range poke / marksman
+#   tank        tank / frontline: high HP, wins close fights, holds space
+#   controller  area denial: zones, slows, pulls, turrets, mines
+#   support     healer / buffer / utility
+#   wall_breaker  reliably destroys walls (super / gadget / attack)
+#   mid_dps     mid-range damage dealer
+#
+# Pre-filled by the engine from Brawlify classes, Legendary+ pick patterns (learned range,
+# which maps a brawler is picked on) and common game knowledge. confidence: low = please
+# check; medium = probably right; high = clear-cut. Edit freely and retrain
+# (.venv/bin/python train.py). Names must match meta/brawlers.json.
+
+brawlers:
+  # --- assassins / divers ---
+  Alli: {roles: [assassin], confidence: medium}
+  Buzz: {roles: [assassin, controller], confidence: medium}
+  Cordelius: {roles: [assassin], confidence: medium}
+  Crow: {roles: [assassin, mid_dps], confidence: medium, note: "poke/chip more than dive"}
+  Edgar: {roles: [assassin], confidence: high}
+  Fang: {roles: [assassin], confidence: high}
+  Gigi: {roles: [assassin], confidence: low}
+  Kaze: {roles: [assassin], confidence: medium}
+  Kenji: {roles: [assassin], confidence: high}
+  Leon: {roles: [assassin], confidence: high}
+  Lily: {roles: [assassin], confidence: high}
+  Melodie: {roles: [assassin], confidence: high}
+  Mico: {roles: [assassin], confidence: high}
+  Mortis: {roles: [assassin], confidence: high}
+  Nori: {roles: [assassin], confidence: low}
+  Sam: {roles: [assassin, tank], confidence: medium}
+  Shade: {roles: [assassin], confidence: medium}
+  Starr Nova: {roles: [assassin], confidence: low}
+  Stu: {roles: [assassin, mid_dps], confidence: medium}
+  Kit: {roles: [assassin, support], confidence: medium}
+  Chuck: {roles: [assassin, controller], confidence: low, note: "dashes between his posts"}
+  Surge: {roles: [mid_dps, assassin], confidence: medium}
+  Bonnie: {roles: [sniper, assassin], confidence: medium, note: "cannon form snipes, Clyde form dives"}
+  Janet: {roles: [sniper, assassin], confidence: low}
+  # --- tanks / frontline ---
+  Ash: {roles: [tank], confidence: high}
+  Bibi: {roles: [tank], confidence: high}
+  Bolt: {roles: [tank], confidence: low}
+  Bull: {roles: [tank, wall_breaker], confidence: high, note: "close range, punishes divers"}
+  Buster: {roles: [tank, support], confidence: medium}
+  Damian: {roles: [tank], confidence: low}
+  Darryl: {roles: [tank], confidence: high}
+  Draco: {roles: [tank], confidence: medium}
+  El Primo: {roles: [tank, wall_breaker], confidence: high}
+  Frank: {roles: [tank, wall_breaker], confidence: high}
+  Hank: {roles: [tank], confidence: medium}
+  Jacky: {roles: [tank, wall_breaker], confidence: medium}
+  Meg: {roles: [tank, mid_dps], confidence: medium}
+  Ollie: {roles: [tank], confidence: low}
+  Rosa: {roles: [tank], confidence: high}
+  Trunk: {roles: [tank], confidence: low}
+  Shelly: {roles: [tank, wall_breaker], confidence: medium, note: "short-range shotgun; frontline anti-diver"}
+  Doug: {roles: [tank, support], confidence: low}
+  # --- throwers ---
+  Barley: {roles: [thrower], confidence: high}
+  Dynamike: {roles: [thrower, wall_breaker], confidence: high}
+  Grom: {roles: [thrower], confidence: high}
+  Juju: {roles: [thrower], confidence: medium}
+  Larry & Lawrie: {roles: [thrower], confidence: high}
+  Sprout: {roles: [thrower, controller], confidence: high}
+  Tick: {roles: [thrower, controller], confidence: high}
+  Willow: {roles: [thrower, controller], confidence: medium}
+  Squeak: {roles: [thrower, controller], confidence: medium}
+  Berry: {roles: [thrower, support], confidence: medium}
+  # --- snipers / long range ---
+  Angelo: {roles: [sniper], confidence: high}
+  Bea: {roles: [sniper], confidence: high}
+  Belle: {roles: [sniper], confidence: high}
+  Brock: {roles: [sniper, wall_breaker], confidence: high}
+  Maisie: {roles: [sniper], confidence: medium}
+  Mandy: {roles: [sniper], confidence: high}
+  Nani: {roles: [sniper], confidence: high}
+  Pierce: {roles: [sniper], confidence: high}
+  Piper: {roles: [sniper], confidence: high}
+  Colt: {roles: [sniper, mid_dps, wall_breaker], confidence: medium}
+  Byron: {roles: [sniper, support], confidence: high}
+  Bo: {roles: [sniper, controller], confidence: medium}
+  8-Bit: {roles: [mid_dps, sniper], confidence: medium}
+  Rico: {roles: [mid_dps, sniper], confidence: medium}
+  # --- controllers / area denial ---
+  Amber: {roles: [controller, mid_dps], confidence: medium}
+  Charlie: {roles: [controller], confidence: medium}
+  Cosmo: {roles: [controller], confidence: low}
+  Emz: {roles: [controller], confidence: high}
+  Finx: {roles: [controller], confidence: low}
+  Gale: {roles: [controller], confidence: high}
+  Gene: {roles: [controller, support], confidence: medium}
+  Jessie: {roles: [controller], confidence: medium}
+  Lou: {roles: [controller], confidence: high}
+  Meeple: {roles: [controller], confidence: low}
+  Mr. P: {roles: [controller], confidence: medium}
+  Otis: {roles: [controller], confidence: medium}
+  Penny: {roles: [controller], confidence: medium}
+  Sandy: {roles: [controller], confidence: medium}
+  Sirius: {roles: [controller], confidence: low}
+  Ziggy: {roles: [controller], confidence: low}
+  Nita: {roles: [mid_dps, controller], confidence: medium}
+  Spike: {roles: [mid_dps, controller], confidence: medium}
+  Tara: {roles: [mid_dps, controller], confidence: medium}
+  # --- supports / healers ---
+  Glowy: {roles: [support], confidence: low}
+  Gray: {roles: [support, controller], confidence: medium}
+  Gus: {roles: [support], confidence: high}
+  Jae-Yong: {roles: [support], confidence: medium}
+  Max: {roles: [support, mid_dps], confidence: medium}
+  Pam: {roles: [support], confidence: high}
+  Poco: {roles: [support], confidence: high}
+  Ruffs: {roles: [support], confidence: medium}
+  Wendy: {roles: [support], confidence: low}
+  # --- mid-range damage ---
+  Carl: {roles: [mid_dps], confidence: medium}
+  Chester: {roles: [mid_dps], confidence: medium}
+  Clancy: {roles: [mid_dps], confidence: medium}
+  Colette: {roles: [mid_dps], confidence: high, note: "percent damage: counters tanks"}
+  Eve: {roles: [mid_dps], confidence: low}
+  Griff: {roles: [mid_dps], confidence: medium}
+  Lola: {roles: [mid_dps], confidence: medium}
+  Lumi: {roles: [mid_dps], confidence: low}
+  Mina: {roles: [mid_dps], confidence: low}
+  Moe: {roles: [mid_dps], confidence: low}
+  Najia: {roles: [mid_dps], confidence: low}
+  Pearl: {roles: [mid_dps], confidence: medium}
+  R-T: {roles: [mid_dps], confidence: low}
+  Vince: {roles: [mid_dps], confidence: low}

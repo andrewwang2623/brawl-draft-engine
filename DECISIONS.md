@@ -394,3 +394,18 @@ the logged results let us check calibration of the displayed win% (equal-skill c
 - `recommend_bans` could pick unavailable brawlers as candidates when the pool has ≤ `ban_candidates`
   (12) brawlers (`argsort` includes −inf scores). It never happens on real maps (108 brawlers), but it hit
   the synthetic tests. Candidates are now filtered by availability. Real outputs are unchanged.
+
+## Role tag corrections (user, 2026-11-04)
+
+- Applied 24 user corrections to `roles.yaml` (all now `confidence: high, source: user`). The old file
+  is kept as `reference/roles_before_user_fixes.yaml`. Lumi → controller carries a "please confirm"
+  note (the user wasn't sure about that line). A/B on a frozen snapshot: metric-neutral (Δll
+  +0.00002 ± 0.00009, audit 0/26 both, matchups 17/17 both). Kept as domain knowledge.
+- New model param `roles_file` (default `roles.yaml`) enables A/B tests of role files.
+- The ban-intent test now bans *pure* off-meta divers (assassin as the only tag, outside the map's
+  10 most-picked). With Mina re-tagged assassin+mid_dps, she became one of the "3 most-picked divers"
+  and diluted the test's signal. The engine behaviour is unchanged.
+- Nori on Bridge Too Far: she isn't recommended for range (range_fit ≈ 0, learned range rank 66/108).
+  She's a Heist specialist (25% Heist pick rate vs 7% overall, 56% WR over 11k Heist games). Her score
+  comes from the Heist mode term and pick-rate prior, and her teams beat sniper comps there (57%,
+  4k games). That's consistent with her assassin tag.

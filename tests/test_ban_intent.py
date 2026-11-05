@@ -111,7 +111,13 @@ def test_diver_bans_raise_thrower_picks(trained):
     mm = thrower_map(trained)
     ti, ai = ROLE_NAMES.index("thrower"), ROLE_NAMES.index("assassin")
     thr = mm.roles[:, ti] > 0
-    divers = [int(i) for i in np.argsort(-mm.prior) if mm.roles[i, ai] > 0 and not thr[i]][:3]
+    # Off-meta divers (like the user's Mortis/Edgar/Kenji example): skip the map's 10 most-picked
+    # brawlers, whose bans are expected anyway and are deliberately discounted by the surprise weight.
+    meta = set(int(i) for i in np.argsort(-mm.prior)[:10])
+    # Pure divers only (assassin is their only tag), so the
+    # bans clearly say "we fear divers" rather than hybrids like Mina (assassin + mid_dps).
+    divers = [int(i) for i in np.argsort(-mm.prior)
+              if mm.roles[i, ai] > 0 and mm.roles[i].sum() == 1 and not thr[i] and int(i) not in meta][:3]
     st = DraftState(bans=divers, we_first=False, opp_bans=divers)
     avail = np.ones(len(mm.S), bool); avail[divers] = False
     probs = {}
