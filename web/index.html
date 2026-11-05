@@ -6,180 +6,235 @@
 <title>Draft Helper</title>
 <style>
 :root{
-  --bg:#0f1117; --panel:#171a23; --panel2:#1e2230; --line:#2a2f3f; --text:#e9ecf3; --muted:#8a91a6;
-  --us:#4d9bff; --us-soft:rgba(77,155,255,.14); --them:#ff6b6b; --them-soft:rgba(255,107,107,.14);
-  --good:#3ddc97; --bad:#ff7a7a; --gold:#ffd166; --radius:14px;
+  --bg:#0a0c13; --panel:#1b2030; --panel2:#262d42; --panel3:#303852; --line:#3f4865; 
+  --text:#f2f5fb; --muted:#b0b8cb; --faint:#98a1b8;
+  --us:#5eaaff; --us-strong:#2f7be0; --us-soft:rgba(94,170,255,.18);
+  --them:#ff7373; --them-soft:rgba(255,115,115,.18);
+  --good:#4be3a3; --bad:#ff8585; --gold:#ffc94d; --radius:14px; --t:56px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer}
-.wrap{max-width:1280px;margin:0 auto;padding:16px 20px 40px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;gap:10px;padding:10px 14px}
 
-/* top bar */
-.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.brand{font-weight:700;font-size:17px;letter-spacing:.2px;margin-right:6px}
+/* buttons, selects, toggles */
+.btn,select,.seg button{min-height:38px;font-size:14px;border-radius:10px}
+.btn{background:var(--panel3);border:1px solid #5a6486;color:var(--text);padding:0 16px;font-weight:600;transition:background .12s,border-color .12s,transform .05s}
+.btn:hover{background:#3a4466;border-color:#7782a6}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#231a02;font-weight:700}
+.btn.primary:hover{background:#ffd878;border-color:#ffd878}
+select{background:var(--panel3);border:1px solid #5a6486;color:var(--text);padding:0 12px;min-width:210px;font-weight:600}
+select:hover{border-color:#7782a6}
+.brand{font-weight:800;font-size:18px;letter-spacing:.2px;margin-right:6px}
 .brand span{color:var(--gold)}
-select,.seg button,.btn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
-select{color:var(--text);min-width:220px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.seg button{border:0;border-radius:0;background:var(--panel);color:var(--muted)}
-.seg button.on{background:var(--panel2);color:var(--text);box-shadow:inset 0 -2px 0 var(--gold)}
-.chip{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.top{display:flex;align-items:center;gap:10px;flex:none}
 .spacer{flex:1}
-.btn:hover,.seg button:hover{border-color:#3a4155}
-.btn.ghost{background:transparent}
-.toggle{display:inline-flex;align-items:center;gap:8px;color:var(--muted);user-select:none;cursor:pointer}
-.toggle input{display:none}
-.toggle .knob{width:34px;height:20px;border-radius:999px;background:#333a4d;position:relative;transition:.15s}
-.toggle .knob::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#cfd5e3;transition:.15s}
-.toggle input:checked + .knob{background:var(--us)}
-.toggle input:checked + .knob::after{left:17px;background:#fff}
+.seg{display:inline-flex;border:1px solid #5a6486;border-radius:10px;overflow:hidden;background:var(--panel2)}
+.seg button{border:0;border-radius:0;background:transparent;color:var(--muted);padding:0 16px;font-weight:600}
+.seg button + button{border-left:1px solid #5a6486}
+.seg button:hover{background:var(--panel3);color:var(--text)}
+.seg button.on{background:#3d62c4;color:#fff;font-weight:700}
+.toggle{display:inline-flex;align-items:center;gap:9px;color:var(--text);font-weight:600;user-select:none;cursor:pointer;min-height:38px}
+.toggle input{position:absolute;opacity:0;pointer-events:none}
+.toggle .knob{width:42px;height:24px;border-radius:999px;background:#4a5470;position:relative;transition:.15s;border:1px solid #6b7596}
+.toggle .knob::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#e6eaf4;transition:.15s}
+.toggle input:checked + .knob{background:var(--us-strong);border-color:var(--us)}
+.toggle input:checked + .knob::after{left:21px;background:#fff}
+.toggle input:focus-visible + .knob{outline:2px solid var(--gold);outline-offset:2px}
 .toggle.disabled{opacity:.4;pointer-events:none}
 
 /* board */
-.board{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center}
-.team h3{margin:0 0 10px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.board{flex:none;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:8px 18px 9px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:start}
+.team h3{margin:0 0 5px;font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:800;color:var(--muted)}
 .team.us h3{color:var(--us)} .team.them h3{color:var(--them);text-align:right}
-.slots{display:flex;gap:10px}
+.slots{display:flex;gap:12px}
 .team.them .slots{justify-content:flex-end}
-.slot{width:78px;height:78px;border-radius:16px;border:2px dashed #343a4d;display:flex;align-items:center;justify-content:center;position:relative;color:#4b5268;font-size:12px;background:#141720;transition:.15s}
-.slot img{width:100%;height:100%;object-fit:cover;border-radius:14px}
-.slot.filled{border-style:solid;cursor:pointer}
+.sl{display:flex;flex-direction:column;align-items:center;gap:4px}
+.slot{width:64px;height:64px;border-radius:14px;border:2px dashed #7a85a8;background:#121624;position:relative;color:#c3cadb;cursor:pointer;transition:border-color .12s,box-shadow .12s,background .12s;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;text-align:center;line-height:1.2}
+.slot .im{position:absolute;inset:0;border-radius:12px;overflow:hidden}
+.slot img{width:100%;height:100%;object-fit:cover;display:block}
+.slot.filled{border-style:solid}
 .team.us .slot.filled{border-color:var(--us)} .team.them .slot.filled{border-color:var(--them)}
-.slot.next{border-color:var(--gold);border-style:solid;box-shadow:0 0 0 4px rgba(255,209,102,.12);color:var(--gold)}
-.slot .x{position:absolute;inset:0;border-radius:14px;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:20px;color:#fff}
-.slot.filled:hover .x{display:flex}
-.slot .lbl{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mid{text-align:center;min-width:300px}
-.odds{font-size:13px;color:var(--muted);margin-bottom:6px}
-.odds b{font-size:22px;color:var(--text)}
-.bar{height:8px;border-radius:999px;background:var(--them);overflow:hidden;margin:0 auto 14px;max-width:280px}
+.team.us .slot:not(.filled){border-color:#4f7db8} .team.them .slot:not(.filled){border-color:#b9626a}
+.slot:hover{background:#1b2136}
+.slot.target{border-color:var(--gold)!important;border-style:solid;background:rgba(255,201,77,.12);color:var(--gold);box-shadow:0 0 0 3px #0a0c13,0 0 0 6px var(--gold),0 0 18px 6px rgba(255,201,77,.35)}
+.slot .num{position:absolute;top:2px;left:2px;min-width:17px;height:17px;border-radius:9px;background:rgba(0,0,0,.78);color:#fff;font-size:11px;font-weight:700;line-height:17px;text-align:center;padding:0 4px;pointer-events:none}
+.slot .nm{position:absolute;left:0;right:0;bottom:0;font-size:10.5px;font-weight:600;line-height:15px;text-align:center;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.88));border-radius:0 0 12px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:7px 2px 0;pointer-events:none}
+.x{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;border:1px solid #6b7596;background:#323a55;color:#fff;font-size:14px;font-weight:700;line-height:16px;padding:0;text-align:center;z-index:2}
+.x:hover{background:var(--bad);color:#1a0505;border-color:var(--bad)}
+.me{font-size:12px;font-weight:600;line-height:1;min-height:26px;padding:0 12px;border-radius:999px;border:1px dashed #5d6890;background:transparent;color:var(--faint)}
+.sl:hover .me{border-color:#8c98c0;color:#dfe5f3}
+.me:hover{border:1px solid var(--us);color:#fff;background:#38456b}
+.me.on{background:var(--us-strong);border:1px solid var(--us);color:#fff;font-weight:800;font-size:13px;padding:0 14px}
+.board.flash .me{animation:fl .5s 3}
+@keyframes fl{50%{box-shadow:0 0 0 5px rgba(94,170,255,.6)}}
+.mid{text-align:center;min-width:340px}
+.odds{font-size:14px;color:var(--muted);height:48px;line-height:28px}
+.odds b{font-size:24px;color:var(--text);font-weight:800}
+.bar{height:8px;border-radius:999px;background:var(--them);overflow:hidden;margin:4px auto 0;max-width:280px}
 .bar div{height:100%;background:var(--us);transition:width .3s}
-.bans{display:flex;gap:6px;justify-content:center}
-.ban{width:40px;height:40px;border-radius:10px;border:1.5px dashed #343a4d;background:#141720;position:relative;overflow:hidden}
-.ban img{width:100%;height:100%;object-fit:cover;filter:grayscale(.7) brightness(.8)}
-.ban.filled{border-style:solid;border-color:#555d74;cursor:pointer}
-.ban.filled::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:2px;background:var(--bad);transform:rotate(-35deg)}
-.ban.next{border-color:var(--gold)}
-.bans-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:6px 0 0}
+.bangrps{display:flex;gap:22px;justify-content:center;margin-top:2px}
+.bg h4{margin:0 0 4px;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:800}
+.bg.us h4{color:var(--us)} .bg.them h4{color:var(--them)}
+.bans{display:flex;gap:7px}
+.ban{width:40px;height:40px;border-radius:10px;border:2px dashed #7a85a8;background:#121624;position:relative;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.bg.us .ban:not(.filled){border-color:#4f7db8} .bg.them .ban:not(.filled){border-color:#b9626a}
+.ban .im{position:absolute;inset:0;border-radius:8px;overflow:hidden}
+.ban img{width:100%;height:100%;object-fit:cover;filter:grayscale(.6) brightness(.85)}
+.ban.filled{border-style:solid;border-color:#8791b0}
+.ban.filled .im::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:3px;background:var(--bad);transform:rotate(-35deg)}
+.ban:hover{background:#1b2136}
+.ban.target{border-color:var(--gold)!important;border-style:solid;background:rgba(255,201,77,.12);box-shadow:0 0 0 2px #0a0c13,0 0 0 4px var(--gold),0 0 14px 4px rgba(255,201,77,.35)}
+.ban .x{width:17px;height:17px;font-size:12px;line-height:13px;top:-7px;right:-7px}
 
 /* main */
-.main{display:grid;grid-template-columns:minmax(380px,5fr) 6fr;gap:16px;margin-top:16px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
-.headline{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
-.headline h2{margin:0;font-size:20px}
-.headline .who{font-size:12px;padding:3px 9px;border-radius:999px;font-weight:600;white-space:nowrap}
-.who.us{background:var(--us-soft);color:var(--us)} .who.them{background:var(--them-soft);color:var(--them)} .who.ban{background:rgba(255,209,102,.13);color:var(--gold)}
-.sub{color:var(--muted);margin:0 0 14px}
-.rec{display:flex;gap:14px;align-items:center;padding:12px;border-radius:12px;background:var(--panel2);border:1px solid transparent;cursor:pointer;margin-bottom:10px;transition:.12s}
-.rec:hover{border-color:#3a4155;transform:translateY(-1px)}
-.rec img{width:58px;height:58px;border-radius:12px;object-fit:cover;flex:none}
+.main{flex:1;min-height:0;display:grid;grid-template-columns:400px minmax(0,1fr);gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;min-height:0}
+.advice{overflow:auto;display:flex;flex-direction:column;transition:opacity .15s}
+.advice.loading .recs{opacity:.55}
+.adv-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.adv-head h2{margin:0;font-size:21px;line-height:1.2;font-weight:800}
+.adv-head h2 small{font-size:15px;font-weight:600;color:var(--muted)}
+.adv-head > div:first-child{flex:1 1 0;min-width:0}
+.who{white-space:nowrap;display:inline-block;font-size:12px;padding:3px 10px;border-radius:999px;font-weight:700;margin-top:5px}
+.who.us{background:var(--us-soft);color:#8cc2ff} .who.them{background:var(--them-soft);color:#ff9d9d} .who.bn{background:rgba(255,201,77,.18);color:var(--gold)}
+.sugme{margin-left:auto;flex:none;background:var(--gold);color:#231a02;border:1px solid var(--gold);border-radius:10px;min-height:40px;padding:0 14px;font-weight:800;font-size:14px;white-space:nowrap;transition:background .12s}
+.sugme:hover{background:#ffd878}
+.sugme.active{background:rgba(255,201,77,.18);color:var(--gold);border-color:var(--gold)}
+.sugme kbd{font:inherit;font-size:11px;opacity:.7;margin-left:6px}
+.compnotes{margin:0 0 8px;padding:7px 11px;border-radius:12px;background:rgba(255,201,77,.12);border:1px solid rgba(255,201,77,.55);color:#ffe7a8;font-size:14px;font-weight:600;line-height:1.35}
+.compnotes div + div{margin-top:4px}
+.compnotes b{color:var(--gold)}
+.note{font-size:13px;color:var(--muted);margin:0 0 7px}
+.note.warn{color:var(--gold);font-weight:600}
+.rec{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:7px 10px;border-radius:12px;background:var(--panel2);border:1px solid #3b4460;cursor:pointer;margin-bottom:6px;transition:.12s;position:relative}
+.rec:hover{border-color:#8a96bd;background:#2b3350}
+.rec img{width:46px;height:46px;border-radius:10px;object-fit:cover;flex:none}
 .rec .body{flex:1;min-width:0}
-.rec .name{font-weight:650;font-size:16px}
-.rec .why{color:#c4c9d6;font-size:13px;margin-top:2px}
-.rec .score{text-align:right;flex:none}
-.rec .score b{font-size:22px;display:block;line-height:1.1}
-.rec .score small{color:var(--muted);font-size:12px}
-.rec.top{border-color:rgba(255,209,102,.35);background:linear-gradient(180deg,rgba(255,209,102,.06),var(--panel2))}
+.rec .name{font-weight:700;font-size:16px;display:flex;align-items:center;gap:6px}
+.rec .why{color:#d4d9e8;font-size:13px;line-height:1.3;margin-top:1px}
+.rec .score{text-align:right;flex:none;max-width:132px}
+.rec .score b{font-size:24px;display:block;line-height:1.1;font-weight:800}
+.rec .score small{color:var(--muted);font-size:12px;display:block;line-height:1.25}
+.rec.top{border-color:rgba(255,201,77,.6);background:linear-gradient(180deg,rgba(255,201,77,.12),var(--panel2))}
+.rec.low{opacity:.78}
+.rec.low:hover{opacity:1}
+.cdot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none;background:#8791ad}
+.cdot.high{background:var(--good)} .cdot.medium{background:var(--gold)} .cdot.low{background:var(--bad)}
 .pos{color:var(--good)} .neg{color:var(--bad)}
-.also{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-.also button{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 4px}
-.also img{width:28px;height:28px;border-radius:50%;object-fit:cover}
-.also small{color:var(--muted)}
-.details{margin-top:8px;display:none}
+.also{display:flex;gap:7px;flex-wrap:wrap}
+.also button{display:flex;align-items:center;gap:7px;background:var(--panel3);border:1px solid #5a6486;border-radius:999px;padding:3px 13px 3px 3px;font-size:13px;font-weight:600;min-height:34px}
+.also button:hover{border-color:#8a96bd;background:#3a4466}
+.also img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.also small{color:var(--muted);font-size:12px;font-weight:500}
+.details{display:none;flex:0 0 100%;order:5;margin-top:2px;padding-top:8px;border-top:1px solid var(--line)}
 .rec.open .details{display:block}
-.drow{display:grid;grid-template-columns:150px 1fr 56px;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:3px 0}
-.dbar{height:6px;background:#2a2f3f;border-radius:999px;position:relative}
+.drow{display:grid;grid-template-columns:130px 1fr 52px;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin:3px 0}
+.dbar{height:6px;background:#3a4260;border-radius:999px;position:relative}
 .dbar i{position:absolute;top:0;bottom:0;border-radius:999px}
-.dbar::before{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:#454c62}
-.more{font-size:12px;color:var(--muted);background:none;border:0;padding:0;margin-top:4px;text-decoration:underline dotted}
-.section-title{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
-.empty{color:var(--muted);padding:20px 0;text-align:center}
-.err{background:rgba(255,122,122,.1);border:1px solid rgba(255,122,122,.35);color:#ffc2c2;border-radius:10px;padding:10px 12px;margin-bottom:12px}
-.final-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
-.final-row img{width:34px;height:34px;border-radius:8px}
-.final-row .v{margin-left:auto;font-variant-numeric:tabular-nums}
+.dbar::before{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:#6b7596}
+.more{font-size:12.5px;font-weight:600;color:#9ec8ff;background:none;border:0;padding:2px 0;margin-top:1px;text-decoration:underline}
+.more:hover{color:#fff}
+.section-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:8px 0 6px}
+.empty{color:var(--muted);padding:16px 0;text-align:center}
+.err{background:rgba(255,115,115,.14);border:1px solid rgba(255,115,115,.55);color:#ffd0d0;border-radius:10px;padding:9px 11px;margin-bottom:8px;font-size:14px}
+.final-row{display:flex;align-items:center;gap:9px;padding:4px 0;border-bottom:1px solid var(--line);font-size:15px}
+.final-row img{width:30px;height:30px;border-radius:7px}
+.final-row .v{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700}
+.foot{margin-top:auto;padding-top:8px;color:var(--faint);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* picker */
-.search{width:100%;padding:12px 14px 12px 40px;border-radius:12px;border:1px solid var(--line);background:var(--panel2) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="%238a91a6" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="m13 13 4 4"/></svg>') no-repeat 13px center;color:var(--text);font-size:15px;outline:none}
-.search:focus{border-color:var(--gold)}
-.pick-hint{font-size:12px;color:var(--muted);margin:8px 2px 10px;display:flex;gap:8px;align-items:center}
-.pick-hint .dot{width:8px;height:8px;border-radius:50%}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px;max-height:calc(100vh - 330px);min-height:260px;overflow:auto;padding:2px}
-.b{background:var(--panel2);border:1px solid transparent;border-radius:12px;padding:5px 4px 6px;text-align:center;cursor:pointer;transition:.1s}
-.b:hover{border-color:#3a4155}
-.b img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;display:block;background:#11141c}
-.b span{display:block;font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#cbd0dc}
-.b.used{opacity:.22;pointer-events:none}
-.b.first{border-color:var(--gold)}
-.b.sug{box-shadow:inset 0 0 0 1px rgba(61,220,151,.5)}
+.picker{display:flex;flex-direction:column;gap:9px}
+.pbar{display:flex;align-items:center;gap:14px;flex:none}
+.search{flex:0 0 270px;height:40px;padding:0 12px 0 38px;border-radius:11px;border:1.5px solid #5a6486;background:var(--panel3) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%23c3cadb" stroke-width="2"><circle cx="7" cy="7" r="5.5"/><path d="m11.5 11.5 3.5 3.5"/></svg>') no-repeat 13px center;color:var(--text);font-size:15px;outline:none}
+.search::placeholder{color:#a3abc0}
+.search:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,201,77,.25)}
+.pick-hint{font-size:15px;color:var(--muted);display:flex;gap:8px;align-items:center;min-width:0;white-space:nowrap;overflow:hidden}
+.pick-hint b{color:var(--text)}
+.pick-hint .dot{width:11px;height:11px;border-radius:50%;flex:none}
+.gridwrap{flex:1;min-height:0;position:relative}
+.grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(auto-fill,var(--t));justify-content:space-between;align-content:start;gap:4px 4px;overflow:auto}
+.b{width:var(--t);background:var(--panel2);border:1px solid #3b4460;border-radius:9px;padding:0;text-align:center;cursor:pointer;transition:border-color .1s,background .1s;position:relative;overflow:hidden}
+.b:hover{border-color:var(--gold);background:var(--panel3)}
+.b img{width:100%;height:var(--t);object-fit:cover;display:block;background:#11141c}
+.b span{display:block;font-size:10.5px;font-weight:600;line-height:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#eef1f8;padding:0 1px}
+.b.used{opacity:.3;pointer-events:none;filter:grayscale(.7)}
+.b.first{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.b.sug{border-color:var(--good);box-shadow:0 0 0 1.5px var(--good)}
 
 /* drawer */
-.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,92vw);background:var(--panel);border-left:1px solid var(--line);padding:20px;overflow:auto;transform:translateX(100%);transition:.2s;z-index:10}
-.drawer.open{transform:none;box-shadow:-20px 0 40px rgba(0,0,0,.4)}
-.drawer h3{margin:0 0 4px}
-.drawer table{width:100%;border-collapse:collapse;font-size:13px}
-.drawer td,.drawer th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:left}
-.drawer th{color:var(--muted);font-weight:500;font-size:12px}
-.drawer textarea{width:100%;min-height:170px;background:#11141c;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;font:13px ui-monospace,Menlo,monospace}
-.foot{margin-top:18px;color:#5d6479;font-size:12px;text-align:center}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,92vw);background:var(--panel);border-left:1px solid var(--line);padding:20px;overflow:auto;transform:translateX(100%);transition:.2s;z-index:10}
+.drawer.open{transform:none;box-shadow:-20px 0 40px rgba(0,0,0,.5)}
+.drawer h3{margin:0 0 4px;font-size:20px}
+.drawer .sub{color:var(--muted);margin:0 0 12px}
+.drawer table{width:100%;border-collapse:collapse;font-size:14px}
+.drawer td,.drawer th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
+.drawer th{color:var(--muted);font-weight:600;font-size:12px}
+.drawer textarea{width:100%;min-height:170px;background:#11141c;color:var(--text);border:1px solid #5a6486;border-radius:10px;padding:10px;font:13px ui-monospace,Menlo,monospace}
 @media (max-width:980px){
+  body{overflow:auto}
+  .app{height:auto}
   .main{grid-template-columns:1fr}
   .board{grid-template-columns:1fr;text-align:center}
-  .team.them h3{text-align:left} .team.them .slots{justify-content:flex-start}
-  .grid{max-height:none}
+  .team.them h3{text-align:left} .team.them .slots,.slots{justify-content:center}
+  .mid{min-width:0}
+  .gridwrap{height:520px;flex:none}
 }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
   <div class="top">
-    <div class="brand">Draft <span>Helper</span></div>
+    <div class="brand" id="brand">Draft <span>Helper</span></div>
     <select id="map" title="Map"></select>
     <div class="seg" id="side">
       <button data-v="1">We pick first</button><button data-v="0">They pick first</button>
     </div>
-    <span class="chip" id="bracket">Legendary+</span>
     <div class="spacer"></div>
     <label class="toggle" id="personalWrap" title="Only suggest brawlers you own, and account for your buffies and history">
       <input type="checkbox" id="personal"><span class="knob"></span>Use my brawlers
     </label>
-    <button class="btn ghost" id="youBtn" hidden>You</button>
-    <button class="btn ghost" id="undo" title="Undo (Backspace)">Undo</button>
-    <button class="btn" id="reset">New draft</button>
+    <button class="btn" id="youBtn" hidden>You</button>
+    <button class="btn" id="undo" title="Undo (Backspace or Cmd/Ctrl+Z)">Undo</button>
+    <button class="btn primary" id="reset">New draft</button>
   </div>
 
-  <div class="board">
+  <div class="board" id="board">
     <div class="team us"><h3>Your team</h3><div class="slots" id="usSlots"></div></div>
     <div class="mid">
-      <div class="odds" id="odds"></div>
-      <div class="bar" id="bar" hidden><div></div></div>
-      <div class="bans" id="bans"></div>
-      <div class="bans-label">Bans</div>
+      <div class="odds" id="odds"><div class="bar" id="bar" hidden><div></div></div></div>
+      <div class="bangrps">
+        <div class="bg us"><h4>Your bans</h4><div class="bans" id="bansU"></div></div>
+        <div class="bg them"><h4>Their bans</h4><div class="bans" id="bansT"></div></div>
+      </div>
     </div>
     <div class="team them"><h3>Enemy team</h3><div class="slots" id="themSlots"></div></div>
   </div>
 
   <div class="main">
-    <div class="card" id="advice"></div>
-    <div class="card">
-      <input class="search" id="q" placeholder="Search brawlers… (e.g. primo, mrp)" autocomplete="off" spellcheck="false">
-      <div class="pick-hint" id="hint"></div>
-      <div class="grid" id="grid"></div>
+    <div class="card advice" id="advice"></div>
+    <div class="card picker">
+      <div class="pbar">
+        <input class="search" id="q" placeholder="Search: primo, mrp, 8bit..." autocomplete="off" spellcheck="false">
+        <div class="pick-hint" id="hint"></div>
+      </div>
+      <div class="gridwrap" id="gridwrap"><div class="grid" id="grid"></div></div>
     </div>
   </div>
-  <div class="foot" id="foot"></div>
 </div>
 
 <div class="drawer" id="drawer">
-  <div style="display:flex;align-items:center"><h3>You</h3><div class="spacer"></div><button class="btn ghost" id="closeDrawer">Close</button></div>
+  <div style="display:flex;align-items:center"><h3>You</h3><div class="spacer"></div><button class="btn" id="closeDrawer">Close</button></div>
   <p class="sub" id="youSummary"></p>
   <div class="section-title">Your best brawlers (vs. what the model expected)</div>
   <div id="youTop"></div>
   <div class="section-title">Missing buffies</div>
   <p class="sub" style="margin-bottom:8px">One brawler per line. Everything else with buffies counts as fully built. Only affects <em>your</em> picks when "Use my brawlers" is on.</p>
   <textarea id="buffies" spellcheck="false"></textarea>
-  <div style="margin-top:8px;display:flex;gap:10px;align-items:center"><button class="btn" id="saveBuffies">Save</button><span id="buffiesMsg" class="sub" style="margin:0"></span></div>
+  <div style="margin-top:8px;display:flex;gap:10px;align-items:center"><button class="btn primary" id="saveBuffies">Save</button><span id="buffiesMsg" class="sub" style="margin:0"></span></div>
 </div>
 
 <script>
@@ -189,60 +244,119 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
 const MODE = {brawlBall:"Brawl Ball", gemGrab:"Gem Grab", knockout:"Knockout", bounty:"Bounty", heist:"Heist", hotZone:"Hot Zone"};
-const ORDER = [0,1,1,0,0,1];          // 0 = first-pick team
+const ORDER = [0,1,1,0,0,1];                       // 0 = first-pick team, indexed by pick slot (draft order)
+const KEYS = ["bu0","bu1","bu2","bt0","bt1","bt2","p0","p1","p2","p3","p4","p5"];   // auto-advance order
+const LS = "draft-v3";
 
 // ---------------------------------------------------------------- state
 const S = {
   meta: null, byId: {}, brawlers: [], maps: [], bracket: "legendary", personalAvail: false,
-  d: load() || fresh(), resp: null, err: null, open: {}, ctl: null, timer: null
+  d: load() || fresh(), resp: null, respKey: "", err: null, open: {}, ctl: null, timer: null,
+  rates: {}, tiles: {}, loading: false, msg: ""
 };
-function fresh(){ return {mapKey: null, weFirst: true, personal: false, bans: [], picks: [], phase: "bans", hist: []}; }
-function load(){ try{ return JSON.parse(localStorage.getItem("draft-v2")); }catch(e){ return null; } }
-function save(){ localStorage.setItem("draft-v2", JSON.stringify(S.d)); }
+function fresh(){ return {mapKey: null, weFirst: true, personal: false, bans: {u: [null,null,null], t: [null,null,null]},
+                          slots: [null,null,null,null,null,null], me: null, target: "bu0", hist: []}; }
+function load(){
+  try{
+    const d = JSON.parse(localStorage.getItem(LS));
+    if(!d || !d.bans || !d.slots || d.slots.length !== 6) return null;
+    return Object.assign(fresh(), d);
+  }catch(e){ return null; }
+}
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(S.d)); }catch(e){} }
 const D = () => S.d;
-const ours = () => D().picks.filter(p => p.us).map(p => p.id);
-const theirs = () => D().picks.filter(p => !p.us).map(p => p.id);
-const used = () => new Set([...D().bans, ...D().picks.map(p => p.id)]);
-function teamAt(step){ return (ORDER[step] === 0) === D().weFirst; }      // true = us
-function phase(){ return D().picks.length >= 6 ? "done" : (D().phase === "bans" && D().picks.length === 0 ? "bans" : "picks"); }
+const isUs = i => (ORDER[i] === 0) === D().weFirst;
+const teamIdx = us => [0,1,2,3,4,5].filter(i => isUs(i) === us);
 const img = id => (S.byId[id] && S.byId[id].image) || "";
 const nm = id => (S.byId[id] && S.byId[id].name) || ("#" + id);
 const pct = (v, d=0) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d) + "%";
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+function getVal(k){ return k[0] === "p" ? D().slots[+k.slice(1)] : D().bans[k[1]][+k[2]]; }
+function setVal(k, v){ if(k[0] === "p") D().slots[+k.slice(1)] = v; else D().bans[k[1]][+k[2]] = v; }
+function pickIdx(k){ return k[0] === "p" ? +k.slice(1) : -1; }
+function allBans(){ return [...D().bans.u, ...D().bans.t].filter(x => x != null); }
+function nextEmptyAfter(k){                           // next empty key in auto order after k (wraps)
+  const s = KEYS.indexOf(k);
+  for(let j = 1; j <= KEYS.length; j++){ const kk = KEYS[(s + j) % KEYS.length]; if(getVal(kk) == null) return kk; }
+  return null;
+}
+function nextEmptyPick(after){                         // next empty pick slot in draft order after index `after`, wrapping
+  for(let j = 1; j <= 6; j++){ const i = (after + j) % 6; if(D().slots[i] == null) return i; }
+  return null;
+}
+// What the advice panel is about, derived from the target slot.
+function advice(){
+  const k = D().target;
+  if(k[0] === "b") return {kind: "ban", key: k, mine: k[1] === "u"};
+  const i = +k.slice(1);
+  if(D().slots[i] == null) return {kind: "pick", slot: i, key: k};
+  const n = nextEmptyPick(i);
+  return n == null ? {kind: "final"} : {kind: "pick", slot: n, key: "p" + n, viaFilled: true};
+}
+function disabledFor(id, key){
+  const d = D();
+  for(let i = 0; i < 6; i++) if(d.slots[i] === id && key !== "p" + i) return "used";
+  if(key[0] === "p") return allBans().includes(id) ? "banned" : "";
+  const own = d.bans[key[1]];
+  for(let j = 0; j < 3; j++) if(own[j] === id && key !== key[0] + key[1] + j) return "banned";
+  return "";
+}
 
 // ---------------------------------------------------------------- actions
-function snapshot(){ D().hist.push(JSON.stringify({bans: D().bans, picks: D().picks, phase: D().phase})); if(D().hist.length > 60) D().hist.shift(); }
-function choose(id){
-  if(used().has(id)) return;
-  const ph = phase();
-  if(ph === "done") return;
+function snapshot(){ const d = D(); d.hist.push(JSON.stringify({bans: d.bans, slots: d.slots, me: d.me, target: d.target})); if(d.hist.length > 80) d.hist.shift(); }
+function choose(id, key){
+  key = key || D().target;
+  if(disabledFor(id, key)) return;
   snapshot();
-  if(ph === "bans"){
-    D().bans.push(id);
-    if(D().bans.length >= 6) D().phase = "picks";
-  } else {
-    D().picks.push({id, us: teamAt(D().picks.length)});
-  }
+  setVal(key, id);
+  // after a pick, stay among picks (so a finished draft shows its result); after a ban, flow on through bans then picks
+  if(key[0] === "p"){ const n = nextEmptyPick(+key.slice(1)); D().target = n == null ? key : "p" + n; }
+  else D().target = nextEmptyAfter(key) || key;
+  S.msg = "";
   $("#q").value = ""; changed();
 }
-function removeBan(id){ snapshot(); D().bans = D().bans.filter(b => b !== id); if(!D().picks.length) D().phase = "bans"; changed(); }
-function removePick(id){
-  const i = D().picks.findIndex(p => p.id === id);
-  if(i < 0) return;
-  snapshot(); D().picks = D().picks.slice(0, i);      // later picks depend on this one
+function clearSlot(key){ if(getVal(key) == null) return; snapshot(); setVal(key, null); D().target = key; changed(); }
+function setTarget(key){ D().target = key; S.msg = ""; changed(); }
+function undo(){
+  const h = D().hist.pop(); if(!h) return;
+  const s = JSON.parse(h); Object.assign(D(), s); changed();
+}
+function reset(){ const k = D(); S.d = Object.assign(fresh(), {mapKey: k.mapKey, weFirst: k.weFirst, personal: k.personal, me: k.me}); S.msg = ""; changed(); }
+function flipSide(wf){
+  const d = D(), oldU = teamIdx(true), oldT = teamIdx(false);
+  const uv = oldU.map(i => d.slots[i]), tv = oldT.map(i => d.slots[i]);
+  const meRank = d.me == null ? -1 : oldU.indexOf(d.me);
+  const tk = d.target, tRank = tk[0] === "p" ? (isUs(+tk.slice(1)) ? oldU : oldT).indexOf(+tk.slice(1)) : -1, tUs = tk[0] === "p" && isUs(+tk.slice(1));
+  d.weFirst = wf;
+  const nu = teamIdx(true), nt = teamIdx(false);
+  d.slots = [null,null,null,null,null,null];
+  nu.forEach((i, r) => d.slots[i] = uv[r]); nt.forEach((i, r) => d.slots[i] = tv[r]);
+  d.me = meRank >= 0 ? nu[meRank] : null;
+  if(tRank >= 0) d.target = "p" + (tUs ? nu : nt)[tRank];
+  d.hist = [];
   changed();
 }
-function undo(){ const h = D().hist.pop(); if(!h) return; Object.assign(D(), JSON.parse(h)); changed(); }
-function reset(){ const keep = {mapKey: D().mapKey, weFirst: D().weFirst, personal: D().personal}; S.d = Object.assign(fresh(), keep); changed(); }
-function changed(){ save(); renderBoard(); renderGrid(); schedule(); }
+function suggestForMe(){
+  const d = D();
+  if(d.me == null){
+    S.msg = "Tap “me” under your slot first.";
+    const b = $("#board"); b.classList.remove("flash"); void b.offsetWidth; b.classList.add("flash");
+    setTimeout(() => b.classList.remove("flash"), 1600);
+    renderAdvice(); return;
+  }
+  d.target = "p" + d.me; S.msg = ""; changed();
+}
+function changed(){ save(); renderBoard(); renderGrid(); renderAdvice(); schedule(); }
 
 // ---------------------------------------------------------------- data
 async function init(){
-  const r = await fetch("/api/meta?bracket=" + S.bracket);
+  let r;
+  try{ r = await fetch("/api/meta?bracket=" + S.bracket); }catch(e){ r = {ok: false}; }
   if(!r.ok){ $("#advice").innerHTML = '<div class="err">The model isn\'t ready. Run <code>.venv/bin/python train.py</code>, then reload.</div>'; return; }
   S.meta = await r.json();
   S.brawlers = S.meta.brawlers; S.byId = {}; S.brawlers.forEach(b => S.byId[b.id] = b);
   S.maps = S.meta.maps; S.personalAvail = !!S.meta.personal_available;
-  // map select grouped by mode
   const byMode = {};
   S.maps.forEach(m => (byMode[m.mode] = byMode[m.mode] || []).push(m));
   $("#map").innerHTML = Object.keys(byMode).sort((a,b) => (MODE[a]||a).localeCompare(MODE[b]||b)).map(mo =>
@@ -252,74 +366,82 @@ async function init(){
   if(!keys.includes(D().mapKey)){ const best = S.maps.slice().sort((a,b) => b.games - a.games)[0]; D().mapKey = best.mode + "|" + best.map; }
   $("#map").value = D().mapKey;
   const lab = (S.meta.brackets.find(b => b.id === S.bracket) || {}).label || "Legendary+";
-  $("#bracket").textContent = lab;
+  const dt = new Date(S.meta.model.trained_through * 1000);
+  S.foot = `${lab} · ${S.meta.model.n_in_bracket.toLocaleString()} games · data through ${dt.toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"})}. Win chances assume equal skill.`;
   $("#personalWrap").classList.toggle("disabled", !S.personalAvail);
+  $("#personalWrap").hidden = !S.personalAvail;
   if(!S.personalAvail) D().personal = false;
   $("#personal").checked = D().personal;
   $("#youBtn").hidden = !S.personalAvail;
-  const dt = new Date(S.meta.model.trained_through * 1000);
-  $("#foot").textContent = `${lab} games since the Nov 3 patch · ${S.meta.model.n_in_bracket.toLocaleString()} games · data through ${dt.toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"})}. Win chances assume equal skill.`;
-  renderSide(); renderBoard(); renderGrid(); schedule();
+  buildTiles(); fitGrid();
+  renderSide(); renderBoard(); renderGrid(); renderAdvice(); schedule();
 }
 function schedule(){ clearTimeout(S.timer); S.timer = setTimeout(fetchRecs, 60); }
+function reqFor(){
+  const a = advice(), d = D();
+  const [mode, map] = d.mapKey.split("|");
+  const body = {map, mode, we_first: d.weFirst, bans: allBans(), slots: d.slots.slice(), my_slot: d.me,
+                target_slot: a.kind === "pick" ? a.slot : null, personal: !!(d.personal && S.personalAvail), bracket: S.bracket, top: 5};
+  return body;
+}
 async function fetchRecs(){
   if(!S.meta) return;
   if(S.ctl) S.ctl.abort();
-  S.ctl = new AbortController();
-  const [mode, map] = D().mapKey.split("|");
-  const body = {map, mode, we_first: D().weFirst, bans: D().bans, our: ours(), opp: theirs(),
-                personal: D().personal && S.personalAvail, bracket: S.bracket, top: 5};
+  const ctl = S.ctl = new AbortController();
+  const body = reqFor(), key = JSON.stringify(body);
+  S.loading = true; $("#advice").classList.add("loading");
   try{
-    const r = await fetch("/api/recommend", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body), signal: S.ctl.signal});
-    const d = await r.json();
-    if(!r.ok){ S.err = d.detail || ("Error " + r.status); S.resp = null; }
-    else { S.err = null; S.resp = d; }
+    const r = await fetch("/api/recommend", {method: "POST", headers: {"Content-Type": "application/json"}, body: key, signal: ctl.signal});
+    let d = null; try{ d = await r.json(); }catch(e){}
+    if(!r.ok || !d){ S.err = (d && d.detail) || ("Error " + r.status); S.resp = null; }
+    else {
+      S.err = null; S.resp = d; S.respKey = key;
+      if(d.pick_rates && !S.rates[d.map + "|" + d.mode]) S.rates[d.map + "|" + d.mode] = d.pick_rates;
+    }
   }catch(e){ if(e.name === "AbortError") return; S.err = "Can't reach the server. Is server.py running?"; S.resp = null; }
+  S.loading = false; $("#advice").classList.remove("loading");
   renderAdvice(); renderOdds(); renderGrid();
 }
+const rates = () => S.rates[D().mapKey.split("|")[1] + "|" + D().mapKey.split("|")[0]] || {};
 
 // ---------------------------------------------------------------- board
 function renderSide(){ document.querySelectorAll("#side button").forEach(b => b.classList.toggle("on", (b.dataset.v === "1") === D().weFirst)); }
-function slotsFor(us){
-  const steps = [0,1,2,3,4,5].filter(s => teamAt(s) === us);
-  const picks = D().picks.map((p, i) => ({...p, step: i})).filter(p => p.us === us);
-  const nextStep = phase() === "picks" ? D().picks.length : -1;
-  return steps.map((s, k) => {
-    const p = picks[k];
-    if(p) return `<div class="slot filled" data-pick="${p.id}" title="Remove ${esc(nm(p.id))}"><img src="${esc(img(p.id))}" alt=""><div class="x">✕</div><div class="lbl">${esc(nm(p.id))}</div></div>`;
-    return `<div class="slot ${s === nextStep ? "next" : ""}">${s === nextStep ? "now" : "pick " + (s + 1)}</div>`;
-  }).join("");
+function slotHtml(i){
+  const key = "p" + i, id = D().slots[i], t = D().target === key, us = isUs(i);
+  const inner = id != null
+    ? `<div class="im"><img src="${esc(img(id))}" alt=""></div><span class="nm">${esc(nm(id))}</span><span class="num">${i + 1}</span><button class="x" data-clear="${key}" title="Clear">×</button>`
+    : `pick ${i + 1}`;
+  const me = us ? `<button class="me ${D().me === i ? "on" : ""}" data-me="${i}" title="${D().me === i ? "This is you (click to clear)" : "Mark this slot as yours"}">${D().me === i ? "★ me" : "me?"}</button>` : "";
+  return `<div class="sl"><div class="slot ${id != null ? "filled" : ""} ${t ? "target" : ""}" data-slot="${key}" title="${id != null ? esc(nm(id)) : "Pick " + (i + 1)}">${inner}</div>${me}</div>`;
+}
+function banHtml(team, j){
+  const key = "b" + team + j, id = D().bans[team][j], t = D().target === key;
+  return `<div class="ban ${id != null ? "filled" : ""} ${t ? "target" : ""}" data-slot="${key}" title="${id != null ? esc(nm(id)) : (team === "u" ? "Your" : "Their") + " ban " + (j + 1)}">` +
+    (id != null ? `<div class="im"><img src="${esc(img(id))}" alt=""></div><button class="x" data-clear="${key}" title="Clear">×</button>` : "") + `</div>`;
 }
 function renderBoard(){
-  $("#usSlots").innerHTML = slotsFor(true);
-  $("#themSlots").innerHTML = slotsFor(false);
-  const bans = D().bans, ph = phase();
-  let h = "";
-  for(let i = 0; i < 6; i++){
-    const id = bans[i];
-    h += id ? `<div class="ban filled" data-ban="${id}" title="Unban ${esc(nm(id))}"><img src="${esc(img(id))}" alt=""></div>`
-            : `<div class="ban ${ph === "bans" && i === bans.length ? "next" : ""}"></div>`;
-  }
-  $("#bans").innerHTML = h;
-  renderOdds(); renderHint();
+  $("#usSlots").innerHTML = teamIdx(true).map(slotHtml).join("");
+  $("#themSlots").innerHTML = teamIdx(false).map(slotHtml).join("");
+  $("#bansU").innerHTML = [0,1,2].map(j => banHtml("u", j)).join("");
+  $("#bansT").innerHTML = [0,1,2].map(j => banHtml("t", j)).join("");
+  renderSide(); renderOdds(); renderHint();
 }
 function renderOdds(){
-  const n = D().picks.length, r = S.resp;
-  if(!n || !r){ $("#odds").innerHTML = ph_text(); $("#bar").hidden = true; return; }
+  const n = D().slots.filter(x => x != null).length, r = S.resp;
+  const bar = $("#bar");
+  if(!n || !r){ $("#odds").innerHTML = ""; $("#odds").appendChild(bar); bar.hidden = true; return; }
   const p = r.final ? r.final.win_prob : r.current_win_prob;
-  $("#odds").innerHTML = `<b>${Math.round(p)}%</b> chance to win ${r.final ? "" : "with the picks so far"}`;
-  $("#bar").hidden = false; $("#bar div").style.width = p + "%";
+  $("#odds").innerHTML = `<b>${Math.round(p)}%</b> chance to win${r.final ? "" : " so far"}`;
+  bar.hidden = false; bar.firstElementChild.style.width = p + "%"; $("#odds").appendChild(bar);
 }
-function ph_text(){ return phase() === "bans" ? "Enter bans, then picks. Suggestions update as you go." : ""; }
+function targetLabel(key){
+  if(key[0] === "b") return {text: (key[1] === "u" ? "Your" : "Their") + " ban " + (+key[2] + 1), col: "--gold"};
+  const i = +key.slice(1), us = isUs(i);
+  return {text: (us ? (D().me == null ? "Your team’s pick" : D().me === i ? "Your pick" : "Teammate’s pick") : "Enemy pick") + " " + (i + 1), col: us ? "--us" : "--them"};
+}
 function renderHint(){
-  const ph = phase();
-  let t;
-  if(ph === "bans") t = `<span class="dot" style="background:var(--gold)"></span>Clicking a brawler <b>bans</b> it. <button class="btn" id="startPicks" style="padding:3px 10px;margin-left:auto">Start picks →</button>`;
-  else if(ph === "done") t = `Draft complete. Click a pick to change it, or start a new draft.`;
-  else { const us = teamAt(D().picks.length);
-    t = `<span class="dot" style="background:var(${us ? "--us" : "--them"})"></span>Clicking a brawler adds it to <b style="color:var(${us ? "--us" : "--them"})">${us ? "your team" : "the enemy team"}</b> (pick ${D().picks.length + 1} of 6)`; }
-  $("#hint").innerHTML = t;
-  const sp = $("#startPicks"); if(sp) sp.onclick = () => { snapshot(); D().phase = "picks"; changed(); };
+  const l = targetLabel(D().target), k = D().target, filled = getVal(k) != null;
+  $("#hint").innerHTML = `<span class="dot" style="background:var(${l.col})"></span><span>Click a brawler to ${filled ? "replace" : "fill"} <b>${esc(l.text)}</b></span>`;
 }
 
 // ---------------------------------------------------------------- picker + search
@@ -331,34 +453,65 @@ function score(b, q){
   const words = b.name.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
   if(words.some(w => w.startsWith(q))) return 60;
   if(n.includes(q)) return 40;
-  // letters in order (e.g. "ltr" -> "Larry & Lawrie"), only for 3+ chars
   if(q.length >= 3){ let i = 0; for(const c of n){ if(c === q[i]) i++; if(i === q.length) return 10; } }
   return 0;
 }
 function filtered(){
-  const q = norm($("#q").value);
-  const arr = S.brawlers.map(b => ({b, s: score(b, q)})).filter(x => x.s > 0);
-  if(q) arr.sort((a, b) => b.s - a.s || a.b.name.localeCompare(b.b.name));
+  const q = norm($("#q").value), rt = rates();
+  let arr = S.brawlers.map(b => ({b, s: score(b, q)})).filter(x => x.s > 0);
+  if(q && arr.some(x => x.s >= 40)) arr = arr.filter(x => x.s >= 40);        // drop loose letter-order matches when real ones exist
+  const byRate = (a, b) => (rt[b.id] || 0) - (rt[a.id] || 0) || a.name.localeCompare(b.name);
+  arr.sort((x, y) => q ? (y.s - x.s || byRate(x.b, y.b)) : byRate(x.b, y.b));
   return arr.map(x => x.b);
 }
 function suggestedIds(){
-  const r = S.resp; if(!r) return new Set();
-  const list = phase() === "bans" ? ((r.ban_recs && r.ban_recs.bans) || [])
-             : (r.pick_recs && r.pick_recs.picks) || r.opponent_prediction || [];
+  const r = S.resp, a = advice(); if(!r) return new Set();
+  let list = [];
+  if(a.kind === "ban") list = (r.ban_recs && r.ban_recs.bans) || [];
+  else if(a.kind === "pick") list = (r.pick_recs && r.pick_recs.picks) || r.opponent_prediction || [];
   return new Set(list.slice(0, 3).map(x => x.brawler_id));
+}
+function buildTiles(){
+  const g = $("#grid"); g.innerHTML = "";
+  S.brawlers.forEach(b => {
+    const el = document.createElement("div");
+    el.className = "b"; el.dataset.id = b.id; el.title = b.name;
+    el.innerHTML = `<img src="${esc(b.image || "")}" alt="" onerror="this.style.visibility='hidden'"><span>${esc(b.name)}</span>`;
+    S.tiles[b.id] = el; g.appendChild(el);
+  });
 }
 function renderGrid(){
   if(!S.meta) return;
-  const u = used(), sug = suggestedIds(), list = filtered(), q = $("#q").value.trim();
-  const firstFree = list.find(b => !u.has(b.id));
-  $("#grid").innerHTML = list.length ? list.map(b =>
-    `<div class="b ${u.has(b.id) ? "used" : ""} ${q && firstFree && b.id === firstFree.id ? "first" : ""} ${sug.has(b.id) ? "sug" : ""}" data-id="${b.id}" title="${esc(b.name)}">
-       <img loading="lazy" src="${esc(b.image || "")}" alt="" onerror="this.style.visibility='hidden'"><span>${esc(b.name)}</span></div>`).join("")
-    : `<div class="empty" style="grid-column:1/-1">No brawler matches "${esc(q)}"</div>`;
+  const key = D().target, sug = suggestedIds(), list = filtered(), q = $("#q").value.trim();
+  const firstFree = q ? list.find(b => !disabledFor(b.id, key)) : null;
+  const frag = document.createDocumentFragment(), show = new Set();
+  list.forEach(b => {
+    const el = S.tiles[b.id], dis = disabledFor(b.id, key);
+    el.classList.toggle("used", !!dis);
+    el.classList.toggle("first", !!(firstFree && firstFree.id === b.id));
+    el.classList.toggle("sug", !dis && sug.has(b.id));
+    el.title = b.name + (dis === "banned" ? " (banned)" : dis ? " (already picked)" : "");
+    el.hidden = false; show.add(b.id); frag.appendChild(el);
+  });
+  S.brawlers.forEach(b => { if(!show.has(b.id)){ S.tiles[b.id].hidden = true; frag.appendChild(S.tiles[b.id]); } });
+  const g = $("#grid"); g.innerHTML = ""; g.appendChild(frag);
+  let e = g.querySelector(".nomatch");
+  if(!list.length){ e = document.createElement("div"); e.className = "empty nomatch"; e.style.gridColumn = "1/-1"; e.textContent = `No brawler matches "${q}"`; g.appendChild(e); }
+}
+// Pick the biggest tile size where every brawler fits without scrolling.
+function fitGrid(){
+  const w = $("#gridwrap"); if(!w || !S.brawlers.length) return;
+  const W = w.clientWidth, H = w.clientHeight, n = S.brawlers.length, gap = 4, nameH = 13;
+  let t = 34;
+  for(let s = 66; s >= 34; s--){
+    const cols = Math.max(1, Math.floor((W + gap) / (s + gap))), rows = Math.ceil(n / cols);
+    if(rows * (s + nameH + 2 + gap) - gap <= H){ t = s; break; }
+  }
+  document.documentElement.style.setProperty("--t", t + "px");
 }
 
-// ---------------------------------------------------------------- advice (plain-English)
-function reasonsFor(r, last){
+// ---------------------------------------------------------------- advice (plain English)
+function reasonsFor(r, last, mine){
   const b = r.breakdown_pct || {}, y = r.you_info || {}, out = [];
   if(b.map_strength >= 3) out.push("strong on this map");
   else if(b.map_strength <= -2) out.push("weak on this map");
@@ -369,32 +522,40 @@ function reasonsFor(r, last){
   if(last) out.push("nothing left to counter it");
   else if(b.risk_countered >= 0.5) out.push("hard to counter");
   else if(b.risk_countered <= -1) out.push("easy to counter, so risky this early");
-  if(y.games >= 3 && y.me_pct >= 0.5) out.push(`you do well on it (${y.games} games, ${Math.round(y.wr)}%)`);
-  if(y.games >= 3 && y.me_pct <= -0.5) out.push(`you've struggled on it (${y.games} games, ${Math.round(y.wr)}%)`);
-  if(y.buffie_pct) out.push(`you're missing buffies (${pct(y.buffie_pct, 0)})`);
-  if(y.power_pct) out.push(`only power ${y.power}`);
+  if(mine){
+    if(y.games >= 3 && y.me_pct >= 0.5) out.push(`you do well on it (${y.games} games, ${Math.round(y.wr)}%)`);
+    if(y.games >= 3 && y.me_pct <= -0.5) out.push(`you've struggled on it (${y.games} games, ${Math.round(y.wr)}%)`);
+    if(y.buffie_pct) out.push(`you're missing buffies (${pct(y.buffie_pct, 0)})`);
+    if(y.power_pct) out.push(`only power ${y.power}`);
+  }
   if(r.games_on_map < 30) out.push("not much data here yet");
   if(!out.length) out.push("solid all-round option");
-  const s = out.join(", ");
-  return s.charAt(0).toUpperCase() + s.slice(1) + ".";
+  return cap(out.join(", ")) + ".";
 }
 function detailRows(r){
   const b = r.breakdown_pct || {};
   const rows = [["On this map", b.map_strength], ["With your team", b.synergy], ["Vs. their picks", b.counters], ["Vs. their next picks", b.risk_countered]];
   if(b.you !== undefined) rows.push(["You", b.you]);
-  return rows.map(([k, v]) => {
+  rows.push(["Vs. usual pick", r.delta_vs_typical]);
+  let h = rows.map(([k, v]) => {
     v = v || 0; const w = Math.min(50, Math.abs(v) * 5);
     return `<div class="drow"><span>${k}</span><div class="dbar"><i style="${v >= 0 ? `left:50%;width:${w}%;background:var(--good)` : `right:50%;width:${w}%;background:var(--bad)`}"></i></div><span class="${v >= 0.05 ? "pos" : v <= -0.05 ? "neg" : ""}" style="text-align:right">${pct(v, 1)}</span></div>`;
-  }).join("") + `<div class="drow"><span>Picked here</span><span>${Math.round(r.pick_rate)}% of games · ${r.games_on_map.toLocaleString()} games on this map</span><span></span></div>`;
+  }).join("");
+  if(r.win_prob_p25 != null) h += `<div class="drow"><span>Likely range</span><span style="grid-column:2/4">${Math.round(r.win_prob_p25)}% to ${Math.round(r.win_prob)}%${r.confidence ? " · " + r.confidence + " confidence" : ""}</span></div>`;
+  h += `<div class="drow"><span>Picked here</span><span style="grid-column:2/4">${Math.round(r.pick_rate)}% of games · ${r.games_on_map.toLocaleString()} on this map</span></div>`;
+  return h;
 }
-function recCard(r, i, last){
-  const key = "p" + r.brawler_id;
-  return `<div class="rec ${i === 0 ? "top" : ""} ${S.open[key] ? "open" : ""}" data-choose="${r.brawler_id}">
+function recCard(r, i, last, mine){
+  const key = "p" + r.brawler_id, low = r.confidence === "low";
+  const sub = (r.win_prob_p25 != null && r.win_prob - r.win_prob_p25 >= 1) ? `could be as low as ${Math.round(r.win_prob_p25)}%`
+            : `<span class="${r.delta_vs_typical >= 0 ? "pos" : "neg"}">${pct(r.delta_vs_typical, 1)} vs usual</span>`;
+  const dot = r.confidence ? `<span class="cdot ${esc(r.confidence)}" title="${esc(cap(r.confidence))} confidence"></span>` : "";
+  return `<div class="rec ${i === 0 ? "top" : ""} ${low ? "low" : ""} ${S.open[key] ? "open" : ""}" data-choose="${r.brawler_id}">
     <img src="${esc(img(r.brawler_id))}" alt="">
-    <div class="body"><div class="name">${esc(r.name)}</div><div class="why">${esc(reasonsFor(r, last))}</div>
-      <button class="more" data-toggle="${key}">${S.open[key] ? "Hide details" : "Why?"}</button>
-      <div class="details">${detailRows(r)}</div></div>
-    <div class="score"><b>${Math.round(r.win_prob)}%</b><small class="${r.delta_vs_typical >= 0 ? "pos" : "neg"}">${pct(r.delta_vs_typical, 1)} vs usual pick</small></div>
+    <div class="body"><div class="name">${esc(r.name)}${dot}${low ? '<small style="color:var(--muted);font-weight:500;font-size:11px;white-space:nowrap">low conf.</small>' : ""}</div><div class="why">${esc(reasonsFor(r, last, mine))}</div>
+      <button class="more" data-toggle="${key}">${S.open[key] ? "Hide" : "Why?"}</button></div>
+    <div class="score"><b>${Math.round(r.win_prob)}%</b><small>${sub}</small></div>
+    <div class="details">${detailRows(r)}</div>
   </div>`;
 }
 function banCard(r, i){
@@ -403,10 +564,9 @@ function banCard(r, i){
   if(r.map_strength_pct >= 2) bits.push("strong on this map");
   if(r.opp_first_choice_prob >= 6) bits.push("a likely first choice for them");
   if(!bits.length) bits.push("takes away a good option for them");
-  const s = bits.join(", ");
   return `<div class="rec ${i === 0 ? "top" : ""}" data-choose="${r.brawler_id}">
     <img src="${esc(img(r.brawler_id))}" alt="">
-    <div class="body"><div class="name">${esc(r.name)}</div><div class="why">${esc(s.charAt(0).toUpperCase() + s.slice(1))}.</div></div>
+    <div class="body"><div class="name">${esc(r.name)}</div><div class="why">${esc(cap(bits.join(", ")))}.</div></div>
     <div class="score"><b class="pos">${pct(r.delta_win_prob, 1)}</b><small>your win chance</small></div></div>`;
 }
 function also(list, fmt){
@@ -414,46 +574,77 @@ function also(list, fmt){
   return `<div class="section-title">Also good</div><div class="also">` + list.map(r =>
     `<button data-choose="${r.brawler_id}"><img src="${esc(img(r.brawler_id))}" alt="">${esc(r.name)} <small>${fmt(r)}</small></button>`).join("") + `</div>`;
 }
-function renderAdvice(){
-  const el = $("#advice"), r = S.resp, ph = phase();
-  if(S.err){ el.innerHTML = `<div class="err">${esc(S.err)}</div>`; return; }
-  if(!r){ el.innerHTML = `<div class="empty">Thinking…</div>`; return; }
-  const [mode, map] = D().mapKey.split("|");
-  let h = "";
-  if(ph === "bans"){
-    const yourPickFirst = D().weFirst ? "You pick first, so you can also just take the best brawler yourself." : "They pick first, so ban what they'd grab.";
-    h += `<div class="headline"><h2>Who to ban</h2><span class="who ban">Ban phase</span></div><p class="sub">${esc(map)} · ${esc(MODE[mode] || mode)}. ${yourPickFirst}</p>`;
-    const bans = (r.ban_recs && r.ban_recs.bans) || [];
-    h += bans.slice(0, 3).map(banCard).join("") || `<div class="empty">No ban suggestions.</div>`;
-    h += also(bans.slice(3), x => pct(x.delta_win_prob, 1));
-    if(r.pick_recs){
-      const p = r.pick_recs.picks.slice(0, 3);
-      h += `<div class="section-title">Best first picks if they're open</div><div class="also">` + p.map(x =>
-        `<span class="chip" style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 3px"><img src="${esc(img(x.brawler_id))}" style="width:24px;height:24px;border-radius:50%">${esc(x.name)} ${Math.round(x.win_prob)}%</span>`).join("") + `</div>`;
-    }
-  } else if(ph === "done"){
-    const f = r.final;
-    h += `<div class="headline"><h2>Draft done</h2></div><p class="sub">Your comp's chance to win: <b style="color:var(--text);font-size:18px">${Math.round(f.win_prob)}%</b> (equal skill)</p>`;
-    const row = x => { const t = x.strength + x.synergy + x.counters;
-      return `<div class="final-row"><img src="${esc(img(x.brawler_id))}" alt=""><span>${esc(nm(x.brawler_id))}</span><span class="v ${t >= 0 ? "pos" : "neg"}">${pct(t, 1)}</span></div>`; };
-    h += `<div class="section-title">Your team's impact</div>` + f.ours.map(row).join("");
-    h += `<div class="section-title">Their team's impact</div>` + f.theirs.map(row).join("");
-  } else if(r.turn === "us"){
-    const n = D().picks.length, last = n === 5;
-    const title = n === 0 ? "Your first pick" : last ? "Your last pick" : "Your pick";
-    const sub = n === 0 ? "Blind pick: these hold up well whatever they pick next." : last ? "Nothing left to answer this pick, so go for the best counter." : "Balances map strength, your team, and what they can still pick.";
-    h += `<div class="headline"><h2>${title}</h2><span class="who us">You're up</span></div><p class="sub">${sub}${D().personal ? " Showing brawlers you own." : ""}</p>`;
-    const p = r.pick_recs.picks;
-    h += p.slice(0, 3).map((x, i) => recCard(x, i, last)).join("");
-    h += also(p.slice(3), x => Math.round(x.win_prob) + "%");
-  } else {
-    h += `<div class="headline"><h2>They're picking</h2><span class="who them">Enemy turn</span></div><p class="sub">Click what they picked. Most likely:</p>`;
-    h += (r.opponent_prediction || []).map(x =>
-      `<div class="rec" data-choose="${x.brawler_id}" style="padding:8px 12px"><img src="${esc(img(x.brawler_id))}" style="width:40px;height:40px" alt=""><div class="body"><div class="name" style="font-size:14px">${esc(x.name)}</div>
-       <div class="dbar" style="margin-top:6px;max-width:220px"><i style="left:0;width:${Math.min(100, x.prob * 3)}%;background:var(--them)"></i></div></div><div class="score"><b style="font-size:16px">${Math.round(x.prob)}%</b></div></div>`).join("");
-  }
-  el.innerHTML = h;
+function head(title, small, who, cls, withBtn){
+  const a = advice(), meOn = a.kind === "pick" && D().me != null && a.slot === D().me;
+  return `<div class="adv-head"><div><h2>${esc(title)} ${small ? `<small>(${esc(small)})</small>` : ""}</h2><span class="who ${cls}">${esc(who)}</span></div>` +
+    (withBtn ? `<button class="sugme ${meOn ? "active" : ""}" id="sugme" title="Jump to your pick slot (Cmd/Ctrl+Enter)">Suggest for me<kbd>⌘↵</kbd></button>` : "") + `</div>`;
 }
+function renderAdvice(){
+  const el = $("#advice");
+  const a = advice(), r = S.resp;
+  const isFresh = r && S.respKey === JSON.stringify(reqFor());
+  let h = "";
+  const btnHead = (t, s, w, c) => head(t, s, w, c, true);
+  if(S.msg) h += `<p class="note warn">${esc(S.msg)}</p>`;
+  if(r && Array.isArray(r.comp_notes) && r.comp_notes.length) h += `<div class="compnotes">` + r.comp_notes.map(n => `<div><b>⚠</b> ${esc(n)}</div>`).join("") + `</div>`;
+  if(S.err){ el.innerHTML = btnHead("Suggestions", "", "Something went wrong", "bn") + `<div class="err">${esc(S.err)}</div>` + footer(); return; }
+  if(!r){ el.innerHTML = btnHead("Suggestions", "", "Thinking", "bn") + `<div class="empty">Thinking…</div>` + footer(); return; }
+  const picksIn = D().slots.filter(x => x != null).length;
+  const [mode, map] = D().mapKey.split("|");
+  let body = "";
+  let top;
+  if(a.kind === "ban"){
+    const mine = a.mine;
+    top = btnHead(mine ? "Your ban" : "Their ban", "", mine ? "Ban slot" : "Enemy ban", "bn");
+    if(picksIn > 0){
+      body += `<p class="note">Ban suggestions are only available before picks start. Just click what was banned.</p>`;
+    } else if(mine){
+      const own = D().bans.u;
+      const bans = ((r.ban_recs && r.ban_recs.bans) || []).filter(x => !own.includes(x.brawler_id));
+      body += `<p class="note">${esc(map)} · ${esc(MODE[mode] || mode)}. ${D().weFirst ? "You pick first, so you can also just take the best brawler yourself." : "They pick first, so ban what they'd grab."}</p><div class="recs">`;
+      body += (bans.slice(0, 3).map(banCard).join("") || `<div class="empty">No ban suggestions.</div>`) + `</div>`;
+      body += also(bans.slice(3, 5), x => pct(x.delta_win_prob, 1));
+    } else {
+      const rt = r.pick_rates || {}, own = D().bans.t;
+      const pop = Object.keys(rt).map(Number).filter(id => S.byId[id] && !own.includes(id)).sort((x, y) => rt[y] - rt[x]).slice(0, 5);
+      body += `<p class="note">Enter what they banned. If you're guessing, these are the most played here:</p><div class="recs">`;
+      body += pop.slice(0, 3).map((id, i) => `<div class="rec ${i === 0 ? "top" : ""}" data-choose="${id}"><img src="${esc(img(id))}" alt=""><div class="body"><div class="name">${esc(nm(id))}</div><div class="why">Picked in ${Math.round(rt[id])}% of games here.</div></div></div>`).join("") + `</div>`;
+      body += also(pop.slice(3).map(id => ({brawler_id: id, name: nm(id)})), x => Math.round(rt[x.brawler_id]) + "%");
+    }
+  } else if(a.kind === "final"){
+    top = btnHead("Draft complete", "", "All picks in", "us");
+    if(r.final){
+      const f = r.final;
+      body += `<p class="note">Your comp's chance to win: <b style="color:var(--text);font-size:17px">${Math.round(f.win_prob)}%</b> (equal skill). Click any slot to change it.</p>`;
+      const row = x => { const t = x.strength + x.synergy + x.counters;
+        return `<div class="final-row"><img src="${esc(img(x.brawler_id))}" alt=""><span>${esc(nm(x.brawler_id))}</span><span class="v ${t >= 0 ? "pos" : "neg"}">${pct(t, 1)}</span></div>`; };
+      body += `<div class="section-title">Your team's impact</div>` + f.ours.map(row).join("");
+      body += `<div class="section-title">Their team's impact</div>` + f.theirs.map(row).join("");
+    }
+  } else {
+    const i = a.slot, us = isUs(i), mine = D().me === i, n = i + 1;
+    if(us){
+      const title = D().me == null ? "Your team's pick" : mine ? "Your pick" : "Teammate's pick";
+      top = btnHead(title, "pick " + n, mine ? "You're up" : "Your team", "us");
+    } else top = btnHead("Likely enemy picks", "pick " + n, "Enemy turn", "them");
+    if(a.viaFilled) body += `<p class="note">That slot is filled. Showing the next empty one.</p>`;
+    if(isFresh && r.unknown_before > 0) body += `<p class="note">${r.unknown_before} earlier pick${r.unknown_before > 1 ? "s" : ""} not entered: treated as unknown.</p>`;
+    if(us && D().personal && S.personalAvail && !mine && D().me != null) body += `<p class="note">Teammate's pick, so your own brawler pool isn't applied.</p>`;
+    else if(us && isFresh && r.personal) body += `<p class="note">Showing brawlers you own.</p>`;
+    body += `<div class="recs">`;
+    if(r.turn === "us" && r.pick_recs){
+      const p = r.pick_recs.picks, last = D().slots.filter(x => x == null).length === 1 && a.slot === D().slots.findIndex(x => x == null);
+      body += p.slice(0, 3).map((x, k) => recCard(x, k, last, mine || D().me == null)).join("") + `</div>`;
+      body += also(p.slice(3, 5), x => Math.round(x.win_prob) + "%");
+    } else if(r.turn === "opp"){
+      body += (r.opponent_prediction || []).slice(0, 4).map(x =>
+        `<div class="rec" data-choose="${x.brawler_id}" style="padding:6px 10px"><img src="${esc(img(x.brawler_id))}" style="width:38px;height:38px" alt=""><div class="body"><div class="name" style="font-size:14px">${esc(x.name)}</div>
+         <div class="dbar" style="margin-top:5px;max-width:200px"><i style="left:0;width:${Math.min(100, x.prob * 3)}%;background:var(--them)"></i></div></div><div class="score"><b style="font-size:16px">${Math.round(x.prob)}%</b></div></div>`).join("") + `</div>`;
+    } else body += `</div><div class="empty">Thinking…</div>`;
+  }
+  el.innerHTML = top + h + body + footer();
+}
+function footer(){ return `<div class="foot" title="${esc(S.foot || "")}">${esc(S.foot || "")}</div>`; }
 
 // ---------------------------------------------------------------- "You" drawer
 async function openDrawer(){
@@ -478,11 +669,10 @@ async function saveBuffies(){
 }
 
 // ---------------------------------------------------------------- events
-$("#map").onchange = e => { D().mapKey = e.target.value; save(); schedule(); };
+$("#map").onchange = e => { D().mapKey = e.target.value; save(); renderGrid(); renderAdvice(); schedule(); };
 $("#side").onclick = e => { const b = e.target.closest("button"); if(!b) return;
-  const wf = b.dataset.v === "1"; if(wf === D().weFirst) return;
-  D().weFirst = wf; D().picks = []; D().hist = []; renderSide(); changed(); };
-$("#personal").onchange = e => { D().personal = e.target.checked; save(); schedule(); };
+  const wf = b.dataset.v === "1"; if(wf === D().weFirst) return; flipSide(wf); };
+$("#personal").onchange = e => { D().personal = e.target.checked; save(); renderAdvice(); schedule(); };
 $("#undo").onclick = undo;
 $("#reset").onclick = reset;
 $("#youBtn").onclick = openDrawer;
@@ -491,26 +681,36 @@ $("#saveBuffies").onclick = saveBuffies;
 $("#buffies").addEventListener("keydown", e => e.stopPropagation());
 $("#q").addEventListener("input", renderGrid);
 $("#q").addEventListener("keydown", e => {
-  if(e.key === "Enter"){ const u = used(); const f = filtered().find(b => !u.has(b.id)); if(f) choose(f.id); e.preventDefault(); }
+  if(e.key === "Enter" && !e.metaKey && !e.ctrlKey){
+    if($("#q").value.trim()){ const f = filtered().find(b => !disabledFor(b.id, D().target)); if(f) choose(f.id); }
+    e.preventDefault();
+  }
   else if(e.key === "Escape"){ e.target.value = ""; renderGrid(); }
   else if(e.key === "Backspace" && !e.target.value){ undo(); e.preventDefault(); }
 });
 document.addEventListener("keydown", e => {
-  if(e.metaKey || e.ctrlKey || e.altKey) { if((e.metaKey || e.ctrlKey) && e.key === "z"){ undo(); e.preventDefault(); } return; }
+  if((e.metaKey || e.ctrlKey) && e.key === "Enter"){ suggestForMe(); e.preventDefault(); return; }
+  if(e.metaKey || e.ctrlKey || e.altKey){ if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z"){ undo(); e.preventDefault(); } return; }
   const tag = (document.activeElement || {}).tagName;
   if(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-  if(e.key.length === 1 && /[\w\- .&]/.test(e.key)){ $("#q").focus(); }
+  if(e.key.length === 1 && /[a-z0-9&.\-]/i.test(e.key)){ $("#q").focus({preventScroll: true}); }
   else if(e.key === "Backspace"){ undo(); e.preventDefault(); }
   else if(e.key === "Escape"){ $("#drawer").classList.remove("open"); }
 });
 document.addEventListener("click", e => {
   const t = e.target.closest("[data-toggle]");
   if(t){ e.stopPropagation(); S.open[t.dataset.toggle] = !S.open[t.dataset.toggle]; renderAdvice(); return; }
-  const c = e.target.closest("[data-choose]"); if(c){ choose(+c.dataset.choose); return; }
+  const x = e.target.closest("[data-clear]"); if(x){ e.stopPropagation(); clearSlot(x.dataset.clear); return; }
+  const m = e.target.closest("[data-me]"); if(m){ const i = +m.dataset.me; D().me = D().me === i ? null : i; S.msg = ""; save(); renderBoard(); renderAdvice(); schedule(); return; }
+  if(e.target.closest("#sugme")){ suggestForMe(); return; }
+  const s = e.target.closest("[data-slot]"); if(s){ setTarget(s.dataset.slot); return; }
+  const c = e.target.closest("[data-choose]");
+  if(c){ const a = advice(); choose(+c.dataset.choose, a.kind === "pick" ? a.key : D().target); return; }
   const g = e.target.closest(".b[data-id]"); if(g){ choose(+g.dataset.id); return; }
-  const p = e.target.closest("[data-pick]"); if(p){ removePick(+p.dataset.pick); return; }
-  const bn = e.target.closest("[data-ban]"); if(bn){ removeBan(+bn.dataset.ban); return; }
 });
+if(window.ResizeObserver) new ResizeObserver(fitGrid).observe($("#gridwrap")); else window.addEventListener("resize", fitGrid);
+$("#brand").title = "Draft Helper";
+renderBoard();
 init();
 })();
 </script>
