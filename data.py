@@ -58,8 +58,12 @@ class Matches:
 
 
 def load_matches(db_path: Path = DB_PATH, battle_types=("soloRanked", "teamRanked"),
-                 min_rank: int = 0) -> Matches:
-    """Load decisive (non-draw) ranked 3v3 games, sorted by time."""
+                 min_rank: int = 0, max_ts: int | None = None,
+                 max_inserted: int | None = None) -> Matches:
+    """Load decisive (non-draw) ranked 3v3 games, sorted by time. max_inserted freezes a data
+    snapshot (rows the crawler had inserted by that unix time), so paired experiments see the
+    same games while the crawler keeps writing. (max_ts filters on game time, which does NOT
+    freeze the set: battlelogs keep delivering older games.)"""
     con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True, timeout=30)
     q = f"""
         SELECT m.battle_key, m.ts, m.map, m.mode, m.winner,
@@ -67,9 +71,13 @@ def load_matches(db_path: Path = DB_PATH, battle_types=("soloRanked", "teamRanke
         FROM matches m JOIN match_players p ON p.battle_key = m.battle_key
         WHERE m.winner IS NOT NULL AND m.map IS NOT NULL
           AND m.battle_type IN ({",".join("?" * len(battle_types))})
+          {"AND m.ts <= ?" if max_ts is not None else ""}
+          {"AND m.inserted_at <= ?" if max_inserted is not None else ""}
         ORDER BY m.ts, m.battle_key, p.team, p.slot
     """
-    rows = con.execute(q, battle_types).fetchall()
+    args = tuple(battle_types) + ((int(max_ts),) if max_ts is not None else ()) \
+        + ((int(max_inserted),) if max_inserted is not None else ())
+    rows = con.execute(q, args).fetchall()
     con.close()
 
     games = {}

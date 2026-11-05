@@ -188,7 +188,23 @@ def recommend(req: DraftRequest):
             "theirs": [{"brawler_id": int(mm.brawler_ids[x]),
                         **{k: round(pct(v), 2) for k, v in mm.contribution(x, st.opp, st.our).items()}}
                        for x in st.opp],
+            # role-level matchup notes for the finished comps, e.g. "Their 3 divers hard-counter
+            # your 3 throwers (-12.0%)"
+            "comp_notes": mm.comp_notes(st.our, st.opp) if hasattr(mm, "comp_notes") else [],
         }
+    # What the draft is worth from here if every remaining pick is realistic (pick-rate weighted,
+    # leaning strong): the apples-to-apples reference for pick recs' win_prob, unlike
+    # current_win_prob, which scores only the picks made so far.
+    if turn == 0:
+        out["expected_win_prob"] = out["pick_recs"]["baseline_win_prob"]
+    elif turn == 1:
+        cfg = eng.cfg
+        out["expected_win_prob"] = round(100 * eng.draft_value(
+            st, {"max": cfg.max_width, "chance": cfg.chance_width}), 1)
+    else:
+        out["expected_win_prob"] = out["final"]["win_prob"]
+    # Role-level notes on the current comps (also per pick rec, and in `final`).
+    out["comp_notes"] = mm.comp_notes(st.our, st.opp) if hasattr(mm, "comp_notes") else []
     # Live estimate of the current partial comps (equal skill), for the header.
     out["current_win_prob"] = round(100 * float(1 / (1 + np.exp(-mm.team_logit(st.our, st.opp)))), 1)
     for key in ("pick_recs", "ban_recs"):

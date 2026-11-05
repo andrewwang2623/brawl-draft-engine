@@ -51,6 +51,25 @@ power, `rank` = ranked tier, tag), `players` (crawl queue), `my_games`, `type_co
 .venv/bin/python -m pytest -q                 # tests (model + draft search)
 ```
 
+### Iteration loop: log loss AND the recommendation audit
+
+```bash
+.venv/bin/python audit.py                     # top-10 first picks on EVERY map + flags -> models/audit_latest.json
+.venv/bin/python audit.py --map "Bridge Too Far"   # full top 10 with every score component
+.venv/bin/python experiment.py --desc "..." --set k=v --apply --snapshot <unix time>
+```
+
+`audit.py` flags top-5 picks with < 30 games on the map, 0-game brawlers with a large positive map
+term, and maps whose top 10 barely overlaps the 15 most-picked brawlers. It also runs the matchup
+sanity checks in `checks/matchups.yaml` (domain knowledge, never training data; results in
+`reference/MATCHUP_CHECKS.md`). `experiment.py` trains baseline and candidate on the same frozen
+snapshot (`--snapshot` = crawler `inserted_at` cutoff), compares holdout log loss with a paired
+bootstrap, and audits both. **An experiment fails (is reverted) if the audit regresses** (more
+flagged maps or flags, or a lower matchup pass rate), even when log loss improves. Before/after
+history: `reference/AUDIT.md`. Role tags for brawlers (used for role-vs-role matchups and comp
+notes) live in `roles.yaml`; edit and retrain. Player profiles for the skill controls are
+cached by `profiles.py` in `data/profiles.db` (≤ 1 req/s, resumable).
+
 Hyperparameter overrides live in `params.json` (defaults in `model.DEFAULT_PARAMS`).
 **New balance patch?** Edit `patch_time_utc` (and `changed_brawlers`) in `patch.json` and retrain.
 Games before that time become a weak prior, and changed brawlers lean on it even less.
@@ -72,6 +91,10 @@ history from the crawler), `reference/my_buffies.txt` (brawlers you're missing b
 editable in the UI's "My stats" panel), and `my_brawlers.yaml` (penalty size).
 
 API: `GET /api/meta`, `POST /api/recommend`, `GET /api/my_stats`, `GET/PUT /api/my_buffies` (see `server.py`).
+Pick recs carry `win_prob`, `win_prob_p25` (same 0–100 scale; ranking key), `confidence`
+(low/medium/high) and `comp_notes`. The response has `comp_notes` for the current comps and
+`expected_win_prob` (the draft's value if all remaining picks are realistic, which is the fair
+reference for a pick's `win_prob`).
 
 ## Reference data
 
@@ -84,16 +107,21 @@ model and writes `SANITY_CHECK.md`. It's a sanity check only, never training dat
 **Comp model** (`model.py`): regularized logistic regression, antisymmetric in the two teams:
 
     logit P(A wins) = Σ_A S(a) − Σ_B S(b) + Σ_pairs∈A syn − Σ_pairs∈B syn + Σ_{a∈A,b∈B} C(a,b) [+ rank control]
-    S(x) = global(x) + mode(x) + map(x) + class×mode + class×map
+    S(x) = global(x) + mode(x) + map(x) + similar-maps(x) + pick-rate prior + range×openness
 
-Separate L2 penalties per layer amount to Bayesian shrinkage map → mode → global. Class terms give
-unseen brawler/map combinations a sensible prior. Games are recency-weighted. For the
+Separate L2 penalties per layer amount to Bayesian shrinkage map → mode → global; sparse cells shrink
+toward performance on maps with similar Legendary+ pick patterns and start from a pick-rate prior.
+Counters/synergy pairs shrink toward role-level (roles.yaml) and latent-embedding matchups. Player
+skill (tier, Elo, player effect, "main" signal) is controlled for in training and zeroed at draft time.
+See DECISIONS.md ("Recommendation fix"). Games are recency-weighted. For the
 Legendary+ bracket, lower-tier games inform only shared terms, at reduced weight (a weak prior).
 Every logit is a sum of per-brawler and per-pair terms, so each pick's contribution decomposes exactly.
 
-**Draft engine** (`draft.py`): expectimax over the remaining picks. Our picks are max nodes
-(beam of top candidates). Opponent picks are chance nodes drawn from a realistic distribution,
-∝ map pick rate × exp(β·gain), rather than perfect play. Because of this, first picks favor
+**Draft engine** (`draft.py`): expectimax over the remaining picks. The pick being recommended is
+a max node; every other pick (opponents and, by default, our solo-queue teammates) is a chance node
+drawn from a realistic distribution, ∝ map pick rate × exp(β·gain), rather than perfect play. Picks
+are ranked by `win_prob_p25` (candidate at the 25th percentile of its posterior), with a
+`confidence` label. Because of this, first picks favor
 brawlers that can't easily be countered, and last picks are pure counters. Each recommendation reports
 expected win%, delta vs a typical pick, and a breakdown: map strength / synergy /
 counters vs current enemies / vs likely future enemy picks (counter risk). Bans are scored by how

@@ -1,0 +1,16 @@
+# Matchup sanity checks: domain knowledge, NOT training data. audit.py checks after every
+# retrain that the model's head-to-head effect has the right direction with a meaningful
+# margin (margin_pct win-% points), and reports sample sizes. If the data strongly disagrees
+# (big sample, opposite direction) it says "data disagrees" instead of forcing anything.
+#
+# Entries: {counter: <brawler>, victim: <brawler or list>, map: optional, mode: optional, note}
+#      or  {counter_role: <role>, victim_role: <role>, ...}   (roles from roles.yaml)
+# Names must match meta/brawlers.json; modes as in the API (gemGrab, brawlBall, heist, ...).
+margin_pct: 0.5
+checks:
+  - {counter: Colette, victim: [Frank, Bull, El Primo, Darryl], note: "percent damage counters tanks"}
+  - {counter: Edgar, victim: [Tick, Dynamike, Barley, Larry & Lawrie, Sprout], note: "dives throwers"}
+  - {counter: Mortis, victim: [Tick, Dynamike, Barley, Larry & Lawrie], note: "dives throwers"}
+  - {counter: Shelly, victim: [Edgar, Mortis], note: "close range punishes divers"}
+  - {counter: Bull, victim: [Edgar], note: "close range punishes divers"}
+  - {counter_role: assassin, victim_role: thrower, note: "divers beat throwers"}

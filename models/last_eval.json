@@ -1,11 +1,11 @@
 {
- "n_matches": 52477,
- "n_train": 44605,
- "n_test": 7859,
+ "n_matches": 214091,
+ "n_train": 181977,
+ "n_test": 30802,
  "holdout_min_tier": 16,
  "holdout_post_patch_from": 1793696400,
  "n_maps": 26,
- "test_start": 1793833125,
+ "test_start": 1793833060,
  "params": {
   "lam_g": 20.0,
   "lam_mode": 80.0,
@@ -23,27 +23,106 @@
   "lam_dev_scale": 10.0,
   "use_patch": true,
   "pre_patch_weight": 0.3,
-  "changed_dev_scale": 0.3
+  "changed_prior_share": 0.1,
+  "use_class": false,
+  "class_overrides": true,
+  "use_sim": true,
+  "lam_sim": 100.0,
+  "sim_gamma": 3.0,
+  "sim_rank": 5,
+  "use_pr": true,
+  "lam_pr": 1.0,
+  "pr_floor": 0.01,
+  "use_ro": true,
+  "lam_ro": 1.0,
+  "rare_shrink": 6.0,
+  "rare_ref": 0.02,
+  "pair_rare_shrink": 6.0,
+  "pair_rare_ref": 0.005,
+  "use_class_pairs": false,
+  "lam_ccls": 5.0,
+  "lam_ccls_mode": 20.0,
+  "lam_ccls_map": 100.0,
+  "use_role_pairs": true,
+  "lam_role": 100.0,
+  "lam_role_mode": 300.0,
+  "lat_k": 4,
+  "lam_lat": 100.0,
+  "use_player": true,
+  "lam_player": 40.0,
+  "use_profiles": true,
+  "use_main": true,
+  "lam_ctrl": 1.0
  },
- "fit_seconds": 2.1,
+ "fit_seconds": 37.2,
  "coin_flip": {
   "log_loss": 0.6931471805599453,
   "brier": 0.25,
-  "accuracy": 0.49497391525639395
+  "accuracy": 0.5001623271216155
  },
  "map_winrate": {
-  "log_loss": 0.6800183615620334,
-  "brier": 0.24352168370134245,
-  "accuracy": 0.5686474106120372
+  "log_loss": 0.6767390278854309,
+  "brier": 0.2419431151658483,
+  "accuracy": 0.5718784494513344
  },
  "model_draft_only": {
-  "log_loss": 0.6770112715837363,
-  "brier": 0.24203338632642518,
-  "accuracy": 0.568774653263774
+  "log_loss": 0.6709407593774664,
+  "brier": 0.23915707137296496,
+  "accuracy": 0.5859359781832348
  },
  "model_with_rank": {
-  "log_loss": 0.6654354605217203,
-  "brier": 0.23640960909547773,
-  "accuracy": 0.592823514442041
- }
+  "log_loss": 0.6621073916388878,
+  "brier": 0.23495017262527557,
+  "accuracy": 0.5984027011233036
+ },
+ "calibration_draft_only": [
+  {
+   "bin": "0.00-0.30",
+   "n": 2482,
+   "pred": 0.259,
+   "obs": 0.276
+  },
+  {
+   "bin": "0.30-0.40",
+   "n": 9603,
+   "pred": 0.359,
+   "obs": 0.375
+  },
+  {
+   "bin": "0.40-0.45",
+   "n": 8622,
+   "pred": 0.426,
+   "obs": 0.433
+  },
+  {
+   "bin": "0.45-0.50",
+   "n": 10095,
+   "pred": 0.475,
+   "obs": 0.468
+  },
+  {
+   "bin": "0.50-0.55",
+   "n": 10095,
+   "pred": 0.525,
+   "obs": 0.532
+  },
+  {
+   "bin": "0.55-0.60",
+   "n": 8622,
+   "pred": 0.574,
+   "obs": 0.567
+  },
+  {
+   "bin": "0.60-0.70",
+   "n": 9603,
+   "pred": 0.641,
+   "obs": 0.625
+  },
+  {
+   "bin": "0.70-1.00",
+   "n": 2482,
+   "pred": 0.741,
+   "obs": 0.724
+  }
+ ]
 }

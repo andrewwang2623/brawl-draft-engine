@@ -1,5 +1,22 @@
 {
  "bracket_min_tier": 16,
  "low_tier_weight": 0.25,
- "lam_dev_scale": 10.0
+ "lam_dev_scale": 10.0,
+ "lam_player": 40.0,
+ "lam_role": 100.0,
+ "lam_role_mode": 300.0,
+ "sim_rank": 5,
+ "lam_lat": 100.0,
+ "lat_k": 4,
+ "rare_shrink": 6.0,
+ "pair_rare_shrink": 6.0,
+ "use_class": false,
+ "use_class_pairs": false,
+ "use_sim": true,
+ "use_pr": true,
+ "use_ro": true,
+ "use_role_pairs": true,
+ "use_player": true,
+ "use_profiles": true,
+ "use_main": true
 }

@@ -1,0 +1,6669 @@
+{
+ "n_maps": 26,
+ "n_flagged": 26,
+ "flag_counts": {
+  "low_data_top5": 23,
+  "zero_game_map": 13,
+  "low_overlap": 18
+ },
+ "n_flags": 75,
+ "mean_overlap_top15": 2.5,
+ "mean_overlap_picked_winning": 3.35,
+ "mean_baseline_win_prob": 63.1,
+ "low_data_top5_total": 37,
+ "maps": [
+  {
+   "mode": "bounty",
+   "map": "Hideout",
+   "games": 6162,
+   "baseline_win_prob": 62.7,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 2,
+   "n_picked_winning": 15,
+   "flags": [
+    "low_data_top5: Clancy (0 games)",
+    "low_data_top5: Surge (19 games)",
+    "zero_game_map: Clancy (+9.6%)",
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1037,
+     "pick_rate": 16.83,
+     "win_rate": 56.4,
+     "win_prob": 67.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.78,
+     "map_strength_centered": 5.87,
+     "breakdown_pct": {
+      "map_strength": 7.43,
+      "synergy": 1.03,
+      "counters": 0.0,
+      "risk_countered": -0.5
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.57,
+      "map": -2.15,
+      "class": -0.73
+     }
+    },
+    {
+     "name": "Mina",
+     "brawler_id": 16000097,
+     "games": 1544,
+     "pick_rate": 25.06,
+     "win_rate": 56.0,
+     "win_prob": 66.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.55,
+     "map_strength_centered": 5.31,
+     "breakdown_pct": {
+      "map_strength": 6.87,
+      "synergy": 1.02,
+      "counters": 0.0,
+      "risk_countered": -0.53
+     },
+     "strength_parts_pct": {
+      "global": 0.81,
+      "mode": 1.38,
+      "map": 2.5,
+      "class": 2.18
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 65.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.04,
+     "map_strength_centered": 9.61,
+     "breakdown_pct": {
+      "map_strength": 11.16,
+      "synergy": 0.11,
+      "counters": 0.0,
+      "risk_countered": 0.21
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.0,
+      "map": 0.0,
+      "class": 2.18
+     }
+    },
+    {
+     "name": "Surge",
+     "brawler_id": 16000038,
+     "games": 19,
+     "pick_rate": 0.31,
+     "win_rate": 73.7,
+     "win_prob": 65.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.64,
+     "map_strength_centered": 6.77,
+     "breakdown_pct": {
+      "map_strength": 8.32,
+      "synergy": 0.27,
+      "counters": 0.0,
+      "risk_countered": -0.16
+     },
+     "strength_parts_pct": {
+      "global": 3.25,
+      "mode": 2.63,
+      "map": 0.26,
+      "class": 2.18
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 255,
+     "pick_rate": 4.14,
+     "win_rate": 50.2,
+     "win_prob": 63.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.13,
+     "map_strength_centered": 2.38,
+     "breakdown_pct": {
+      "map_strength": 3.94,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": 0.09
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": -0.26,
+      "map": 0.01,
+      "class": -0.16
+     }
+    },
+    {
+     "name": "Carl",
+     "brawler_id": 16000025,
+     "games": 145,
+     "pick_rate": 2.35,
+     "win_rate": 49.0,
+     "win_prob": 63.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.1,
+     "map_strength_centered": 3.32,
+     "breakdown_pct": {
+      "map_strength": 4.88,
+      "synergy": 0.69,
+      "counters": 0.0,
+      "risk_countered": 0.05
+     },
+     "strength_parts_pct": {
+      "global": 1.8,
+      "mode": 0.16,
+      "map": 0.74,
+      "class": 2.18
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 2,
+     "pick_rate": 0.03,
+     "win_rate": 0.0,
+     "win_prob": 63.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.61,
+     "map_strength_centered": 4.15,
+     "breakdown_pct": {
+      "map_strength": 5.7,
+      "synergy": 0.14,
+      "counters": 0.0,
+      "risk_countered": 0.15
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": -0.11,
+      "map": 0.0,
+      "class": 2.18
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 140,
+     "pick_rate": 2.27,
+     "win_rate": 48.6,
+     "win_prob": 63.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.43,
+     "map_strength_centered": 3.66,
+     "breakdown_pct": {
+      "map_strength": 5.22,
+      "synergy": 0.06,
+      "counters": 0.0,
+      "risk_countered": 0.54
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 1.86,
+      "map": -0.14,
+      "class": -2.79
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 32,
+     "pick_rate": 0.52,
+     "win_rate": 59.4,
+     "win_prob": 62.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.06,
+     "map_strength_centered": 3.92,
+     "breakdown_pct": {
+      "map_strength": 5.48,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": -0.41
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 0.67,
+      "map": 0.09,
+      "class": -0.73
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 146,
+     "pick_rate": 2.37,
+     "win_rate": 57.5,
+     "win_prob": 61.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.12,
+     "map_strength_centered": 2.27,
+     "breakdown_pct": {
+      "map_strength": 3.82,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": 0.31
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.32,
+      "map": 0.65,
+      "class": -2.79
+     }
+    }
+   ]
+  },
+  {
+   "mode": "bounty",
+   "map": "Dry Season",
+   "games": 5663,
+   "baseline_win_prob": 62.9,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 3,
+   "n_picked_winning": 13,
+   "flags": [
+    "low_data_top5: Clancy (3 games)",
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1049,
+     "pick_rate": 18.52,
+     "win_rate": 59.1,
+     "win_prob": 69.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 6.08,
+     "map_strength_centered": 11.83,
+     "breakdown_pct": {
+      "map_strength": 12.67,
+      "synergy": 0.79,
+      "counters": 0.0,
+      "risk_countered": -2.07
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.57,
+      "map": 0.64,
+      "class": 1.72
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 574,
+     "pick_rate": 10.14,
+     "win_rate": 57.0,
+     "win_prob": 64.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.87,
+     "map_strength_centered": 4.98,
+     "breakdown_pct": {
+      "map_strength": 5.82,
+      "synergy": -0.65,
+      "counters": 0.0,
+      "risk_countered": 2.44
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": -0.26,
+      "map": 0.58,
+      "class": 1.15
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 3,
+     "pick_rate": 0.05,
+     "win_rate": 33.3,
+     "win_prob": 63.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.9,
+     "map_strength_centered": 9.04,
+     "breakdown_pct": {
+      "map_strength": 9.88,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": 0.12
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.0,
+      "map": 0.0,
+      "class": 0.9
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 43,
+     "pick_rate": 0.76,
+     "win_rate": 41.9,
+     "win_prob": 63.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.49,
+     "map_strength_centered": 6.34,
+     "breakdown_pct": {
+      "map_strength": 7.19,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.22
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 0.67,
+      "map": -0.65,
+      "class": 1.72
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 65,
+     "pick_rate": 1.15,
+     "win_rate": 64.6,
+     "win_prob": 63.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.33,
+     "map_strength_centered": 5.78,
+     "breakdown_pct": {
+      "map_strength": 6.63,
+      "synergy": -0.3,
+      "counters": 0.0,
+      "risk_countered": 0.57
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 1.86,
+      "map": 1.03,
+      "class": -2.54
+     }
+    },
+    {
+     "name": "Surge",
+     "brawler_id": 16000038,
+     "games": 51,
+     "pick_rate": 0.9,
+     "win_rate": 54.9,
+     "win_prob": 62.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.11,
+     "map_strength_centered": 6.35,
+     "breakdown_pct": {
+      "map_strength": 7.2,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": -0.2
+     },
+     "strength_parts_pct": {
+      "global": 3.25,
+      "mode": 2.63,
+      "map": 0.42,
+      "class": 0.9
+     }
+    },
+    {
+     "name": "Starr Nova",
+     "brawler_id": 16000105,
+     "games": 110,
+     "pick_rate": 1.94,
+     "win_rate": 61.8,
+     "win_prob": 61.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.1,
+     "map_strength_centered": 4.48,
+     "breakdown_pct": {
+      "map_strength": 5.32,
+      "synergy": -0.17,
+      "counters": 0.0,
+      "risk_countered": 0.5
+     },
+     "strength_parts_pct": {
+      "global": 3.98,
+      "mode": -0.4,
+      "map": 0.59,
+      "class": 1.15
+     }
+    },
+    {
+     "name": "Mortis",
+     "brawler_id": 16000011,
+     "games": 1504,
+     "pick_rate": 26.56,
+     "win_rate": 52.9,
+     "win_prob": 61.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.24,
+     "map_strength_centered": 4.18,
+     "breakdown_pct": {
+      "map_strength": 5.03,
+      "synergy": -0.76,
+      "counters": 0.0,
+      "risk_countered": 0.22
+     },
+     "strength_parts_pct": {
+      "global": 1.44,
+      "mode": 1.76,
+      "map": 0.67,
+      "class": 1.15
+     }
+    },
+    {
+     "name": "Bo",
+     "brawler_id": 16000014,
+     "games": 61,
+     "pick_rate": 1.08,
+     "win_rate": 52.5,
+     "win_prob": 61.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.58,
+     "map_strength_centered": 4.58,
+     "breakdown_pct": {
+      "map_strength": 5.43,
+      "synergy": 0.42,
+      "counters": 0.0,
+      "risk_countered": -0.48
+     },
+     "strength_parts_pct": {
+      "global": 1.39,
+      "mode": 1.91,
+      "map": 0.41,
+      "class": 1.72
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 3,
+     "pick_rate": 0.05,
+     "win_rate": 33.3,
+     "win_prob": 60.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.61,
+     "map_strength_centered": 3.5,
+     "breakdown_pct": {
+      "map_strength": 4.34,
+      "synergy": -0.07,
+      "counters": 0.0,
+      "risk_countered": -0.01
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": -0.11,
+      "map": -0.08,
+      "class": 0.9
+     }
+    }
+   ]
+  },
+  {
+   "mode": "bounty",
+   "map": "Shooting Star",
+   "games": 5759,
+   "baseline_win_prob": 63.1,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 14,
+   "flags": [
+    "low_data_top5: Clancy (0 games)",
+    "low_data_top5: Surge (7 games)",
+    "zero_game_map: Clancy (+9.3%)",
+    "zero_game_map: Tara (+3.8%)",
+    "zero_game_map: Barley (+3.7%)",
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1148,
+     "pick_rate": 19.93,
+     "win_rate": 61.3,
+     "win_prob": 69.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 6.82,
+     "map_strength_centered": 9.68,
+     "breakdown_pct": {
+      "map_strength": 11.01,
+      "synergy": 0.81,
+      "counters": 0.0,
+      "risk_countered": -0.4
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.57,
+      "map": 1.57,
+      "class": -0.87
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 64.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.48,
+     "map_strength_centered": 9.25,
+     "breakdown_pct": {
+      "map_strength": 10.58,
+      "synergy": 0.11,
+      "counters": 0.0,
+      "risk_countered": 0.16
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.0,
+      "map": 0.0,
+      "class": 1.6
+     }
+    },
+    {
+     "name": "Surge",
+     "brawler_id": 16000038,
+     "games": 7,
+     "pick_rate": 0.12,
+     "win_rate": 85.7,
+     "win_prob": 64.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.2,
+     "map_strength_centered": 6.27,
+     "breakdown_pct": {
+      "map_strength": 7.6,
+      "synergy": 0.08,
+      "counters": 0.0,
+      "risk_countered": -0.24
+     },
+     "strength_parts_pct": {
+      "global": 3.25,
+      "mode": 2.63,
+      "map": 0.12,
+      "class": 1.6
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 119,
+     "pick_rate": 2.07,
+     "win_rate": 52.9,
+     "win_prob": 64.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.86,
+     "map_strength_centered": 2.97,
+     "breakdown_pct": {
+      "map_strength": 4.29,
+      "synergy": -0.81,
+      "counters": 0.0,
+      "risk_countered": 2.0
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": -0.26,
+      "map": 0.29,
+      "class": -0.09
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 112,
+     "pick_rate": 1.94,
+     "win_rate": 51.8,
+     "win_prob": 63.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.18,
+     "map_strength_centered": 4.03,
+     "breakdown_pct": {
+      "map_strength": 5.35,
+      "synergy": -0.37,
+      "counters": 0.0,
+      "risk_countered": 0.73
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 1.86,
+      "map": -0.23,
+      "class": -2.55
+     }
+    },
+    {
+     "name": "Melodie",
+     "brawler_id": 16000078,
+     "games": 832,
+     "pick_rate": 14.45,
+     "win_rate": 56.5,
+     "win_prob": 63.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.05,
+     "map_strength_centered": 2.69,
+     "breakdown_pct": {
+      "map_strength": 4.02,
+      "synergy": 0.32,
+      "counters": 0.0,
+      "risk_countered": 0.42
+     },
+     "strength_parts_pct": {
+      "global": 3.96,
+      "mode": -1.8,
+      "map": 1.95,
+      "class": -0.09
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 30,
+     "pick_rate": 0.52,
+     "win_rate": 73.3,
+     "win_prob": 62.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.25,
+     "map_strength_centered": 4.41,
+     "breakdown_pct": {
+      "map_strength": 5.74,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.31
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 0.67,
+      "map": 0.49,
+      "class": -0.87
+     }
+    },
+    {
+     "name": "Pearl",
+     "brawler_id": 16000072,
+     "games": 679,
+     "pick_rate": 11.79,
+     "win_rate": 53.9,
+     "win_prob": 62.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.35,
+     "map_strength_centered": 3.81,
+     "breakdown_pct": {
+      "map_strength": 5.14,
+      "synergy": 0.48,
+      "counters": 0.0,
+      "risk_countered": -0.72
+     },
+     "strength_parts_pct": {
+      "global": -0.54,
+      "mode": 2.42,
+      "map": 1.66,
+      "class": 1.6
+     }
+    },
+    {
+     "name": "Najia",
+     "brawler_id": 16000103,
+     "games": 1495,
+     "pick_rate": 25.96,
+     "win_rate": 56.1,
+     "win_prob": 62.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.91,
+     "map_strength_centered": 4.6,
+     "breakdown_pct": {
+      "map_strength": 5.93,
+      "synergy": 0.2,
+      "counters": 0.0,
+      "risk_countered": -0.79
+     },
+     "strength_parts_pct": {
+      "global": -1.72,
+      "mode": 3.12,
+      "map": 2.94,
+      "class": 1.6
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 62.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.94,
+     "map_strength_centered": 3.8,
+     "breakdown_pct": {
+      "map_strength": 5.12,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": -0.07
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": -0.11,
+      "map": 0.0,
+      "class": 1.6
+     }
+    }
+   ]
+  },
+  {
+   "mode": "bounty",
+   "map": "Layer Cake",
+   "games": 5512,
+   "baseline_win_prob": 64.0,
+   "overlap_top15": 1,
+   "overlap_picked_winning": 1,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Clancy (3 games)",
+    "low_overlap: 1/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 989,
+     "pick_rate": 17.94,
+     "win_rate": 60.8,
+     "win_prob": 71.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 7.47,
+     "map_strength_centered": 12.04,
+     "breakdown_pct": {
+      "map_strength": 12.93,
+      "synergy": 0.75,
+      "counters": 0.0,
+      "risk_countered": -1.66
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.57,
+      "map": 0.97,
+      "class": 1.65
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 59,
+     "pick_rate": 1.07,
+     "win_rate": 64.4,
+     "win_prob": 62.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.47,
+     "map_strength_centered": 7.21,
+     "breakdown_pct": {
+      "map_strength": 8.1,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": -0.19
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 0.67,
+      "map": 0.33,
+      "class": 1.65
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 3,
+     "pick_rate": 0.05,
+     "win_rate": 66.7,
+     "win_prob": 62.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.73,
+     "map_strength_centered": 9.33,
+     "breakdown_pct": {
+      "map_strength": 10.22,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": 0.1
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.0,
+      "map": 0.0,
+      "class": 1.24
+     }
+    },
+    {
+     "name": "Surge",
+     "brawler_id": 16000038,
+     "games": 262,
+     "pick_rate": 4.75,
+     "win_rate": 59.5,
+     "win_prob": 61.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.14,
+     "map_strength_centered": 6.48,
+     "breakdown_pct": {
+      "map_strength": 7.37,
+      "synergy": -0.21,
+      "counters": 0.0,
+      "risk_countered": -0.3
+     },
+     "strength_parts_pct": {
+      "global": 3.25,
+      "mode": 2.63,
+      "map": 0.26,
+      "class": 1.24
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 32,
+     "pick_rate": 0.58,
+     "win_rate": 53.1,
+     "win_prob": 61.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.86,
+     "map_strength_centered": 4.19,
+     "breakdown_pct": {
+      "map_strength": 5.08,
+      "synergy": -0.21,
+      "counters": 0.0,
+      "risk_countered": 0.58
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 1.86,
+      "map": 0.08,
+      "class": -3.14
+     }
+    },
+    {
+     "name": "Bo",
+     "brawler_id": 16000014,
+     "games": 54,
+     "pick_rate": 0.98,
+     "win_rate": 57.4,
+     "win_prob": 60.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.89,
+     "map_strength_centered": 4.06,
+     "breakdown_pct": {
+      "map_strength": 4.95,
+      "synergy": 0.38,
+      "counters": 0.0,
+      "risk_countered": -0.37
+     },
+     "strength_parts_pct": {
+      "global": 1.39,
+      "mode": 1.91,
+      "map": 0.0,
+      "class": 1.65
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 12,
+     "pick_rate": 0.22,
+     "win_rate": 58.3,
+     "win_prob": 59.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -4.23,
+     "map_strength_centered": 3.9,
+     "breakdown_pct": {
+      "map_strength": 4.79,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": -0.12
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": -0.11,
+      "map": 0.04,
+      "class": 1.24
+     }
+    },
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 134,
+     "pick_rate": 2.43,
+     "win_rate": 50.0,
+     "win_prob": 59.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -4.58,
+     "map_strength_centered": 2.69,
+     "breakdown_pct": {
+      "map_strength": 3.58,
+      "synergy": -0.11,
+      "counters": 0.0,
+      "risk_countered": 0.1
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": -1.94,
+      "map": -0.34,
+      "class": 1.65
+     }
+    },
+    {
+     "name": "Barley",
+     "brawler_id": 16000006,
+     "games": 87,
+     "pick_rate": 1.58,
+     "win_rate": 59.8,
+     "win_prob": 59.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -4.7,
+     "map_strength_centered": 5.38,
+     "breakdown_pct": {
+      "map_strength": 6.27,
+      "synergy": -0.36,
+      "counters": 0.0,
+      "risk_countered": -1.27
+     },
+     "strength_parts_pct": {
+      "global": 2.17,
+      "mode": 1.93,
+      "map": 0.53,
+      "class": 1.65
+     }
+    },
+    {
+     "name": "Larry & Lawrie",
+     "brawler_id": 16000077,
+     "games": 42,
+     "pick_rate": 0.76,
+     "win_rate": 50.0,
+     "win_prob": 58.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -5.29,
+     "map_strength_centered": 2.84,
+     "breakdown_pct": {
+      "map_strength": 3.74,
+      "synergy": -0.16,
+      "counters": 0.0,
+      "risk_countered": -0.24
+     },
+     "strength_parts_pct": {
+      "global": 2.39,
+      "mode": -0.31,
+      "map": 0.0,
+      "class": 1.65
+     }
+    }
+   ]
+  },
+  {
+   "mode": "brawlBall",
+   "map": "Pinball Dreams",
+   "games": 5590,
+   "baseline_win_prob": 64.1,
+   "overlap_top15": 1,
+   "overlap_picked_winning": 1,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Ollie (17 games)",
+    "low_data_top5: Bolt (17 games)",
+    "low_overlap: 1/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 63,
+     "pick_rate": 1.13,
+     "win_rate": 61.9,
+     "win_prob": 68.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.59,
+     "map_strength_centered": 9.24,
+     "breakdown_pct": {
+      "map_strength": 10.02,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": 0.75
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": 5.09,
+      "map": 0.4,
+      "class": 0.31
+     }
+    },
+    {
+     "name": "El Primo",
+     "brawler_id": 16000010,
+     "games": 338,
+     "pick_rate": 6.05,
+     "win_rate": 63.3,
+     "win_prob": 68.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.04,
+     "map_strength_centered": 8.63,
+     "breakdown_pct": {
+      "map_strength": 9.42,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": 0.35
+     },
+     "strength_parts_pct": {
+      "global": -0.44,
+      "mode": 4.94,
+      "map": 0.73,
+      "class": 4.18
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 17,
+     "pick_rate": 0.3,
+     "win_rate": 70.6,
+     "win_prob": 68.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.04,
+     "map_strength_centered": 9.5,
+     "breakdown_pct": {
+      "map_strength": 10.28,
+      "synergy": -0.18,
+      "counters": 0.0,
+      "risk_countered": 0.24
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.33,
+      "map": 0.15,
+      "class": 4.18
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 17,
+     "pick_rate": 0.3,
+     "win_rate": 52.9,
+     "win_prob": 68.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.89,
+     "map_strength_centered": 9.45,
+     "breakdown_pct": {
+      "map_strength": 10.23,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.16
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.02,
+      "map": -0.25,
+      "class": 4.18
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 130,
+     "pick_rate": 2.33,
+     "win_rate": 65.4,
+     "win_prob": 67.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.09,
+     "map_strength_centered": 8.05,
+     "breakdown_pct": {
+      "map_strength": 8.83,
+      "synergy": -0.05,
+      "counters": 0.0,
+      "risk_countered": 0.07
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 0.02,
+      "map": 0.76,
+      "class": 4.18
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 16,
+     "pick_rate": 0.29,
+     "win_rate": 50.0,
+     "win_prob": 67.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.99,
+     "map_strength_centered": 8.27,
+     "breakdown_pct": {
+      "map_strength": 9.05,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": -0.02
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.27,
+      "map": 0.06,
+      "class": -0.26
+     }
+    },
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 1943,
+     "pick_rate": 34.76,
+     "win_rate": 55.9,
+     "win_prob": 66.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.5,
+     "map_strength_centered": 6.15,
+     "breakdown_pct": {
+      "map_strength": 6.93,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": -0.16
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": 1.23,
+      "map": 1.45,
+      "class": 0.31
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 54,
+     "pick_rate": 0.97,
+     "win_rate": 57.4,
+     "win_prob": 66.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.21,
+     "map_strength_centered": 6.8,
+     "breakdown_pct": {
+      "map_strength": 7.58,
+      "synergy": -0.06,
+      "counters": 0.0,
+      "risk_countered": 0.61
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 1.77,
+      "map": 0.06,
+      "class": 0.31
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 40,
+     "pick_rate": 0.72,
+     "win_rate": 52.5,
+     "win_prob": 65.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.86,
+     "map_strength_centered": 7.03,
+     "breakdown_pct": {
+      "map_strength": 7.81,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": -0.22
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": 0.84,
+      "map": 0.22,
+      "class": 4.18
+     }
+    },
+    {
+     "name": "Jacky",
+     "brawler_id": 16000034,
+     "games": 25,
+     "pick_rate": 0.45,
+     "win_rate": 48.0,
+     "win_prob": 65.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.51,
+     "map_strength_centered": 6.43,
+     "breakdown_pct": {
+      "map_strength": 7.21,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": 0.01
+     },
+     "strength_parts_pct": {
+      "global": 1.67,
+      "mode": 1.43,
+      "map": -0.07,
+      "class": 4.18
+     }
+    }
+   ]
+  },
+  {
+   "mode": "brawlBall",
+   "map": "Triple Dribble",
+   "games": 5502,
+   "baseline_win_prob": 62.8,
+   "overlap_top15": 0,
+   "overlap_picked_winning": 1,
+   "n_picked_winning": 14,
+   "flags": [
+    "low_data_top5: Bolt (4 games)",
+    "low_overlap: 0/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 176,
+     "pick_rate": 3.2,
+     "win_rate": 64.8,
+     "win_prob": 67.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.74,
+     "map_strength_centered": 9.92,
+     "breakdown_pct": {
+      "map_strength": 11.05,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": 0.85
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": 5.09,
+      "map": 1.56,
+      "class": 0.18
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 34,
+     "pick_rate": 0.62,
+     "win_rate": 52.9,
+     "win_prob": 67.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.65,
+     "map_strength_centered": 9.04,
+     "breakdown_pct": {
+      "map_strength": 10.17,
+      "synergy": -0.16,
+      "counters": 0.0,
+      "risk_countered": 0.28
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.33,
+      "map": -0.15,
+      "class": 4.37
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 4,
+     "pick_rate": 0.07,
+     "win_rate": 0.0,
+     "win_prob": 67.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.63,
+     "map_strength_centered": 9.28,
+     "breakdown_pct": {
+      "map_strength": 10.41,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": -0.04
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.02,
+      "map": -0.26,
+      "class": 4.37
+     }
+    },
+    {
+     "name": "El Primo",
+     "brawler_id": 16000010,
+     "games": 365,
+     "pick_rate": 6.63,
+     "win_rate": 55.3,
+     "win_prob": 67.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.31,
+     "map_strength_centered": 8.67,
+     "breakdown_pct": {
+      "map_strength": 9.8,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.14
+     },
+     "strength_parts_pct": {
+      "global": -0.44,
+      "mode": 4.94,
+      "map": 0.92,
+      "class": 4.37
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 86,
+     "pick_rate": 1.56,
+     "win_rate": 61.6,
+     "win_prob": 66.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.35,
+     "map_strength_centered": 7.62,
+     "breakdown_pct": {
+      "map_strength": 8.75,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": -0.06
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": 0.84,
+      "map": 0.97,
+      "class": 4.37
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 15,
+     "pick_rate": 0.27,
+     "win_rate": 26.7,
+     "win_prob": 66.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.33,
+     "map_strength_centered": 7.7,
+     "breakdown_pct": {
+      "map_strength": 8.83,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": 0.04
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.27,
+      "map": 0.13,
+      "class": -0.55
+     }
+    },
+    {
+     "name": "Larry & Lawrie",
+     "brawler_id": 16000077,
+     "games": 459,
+     "pick_rate": 8.34,
+     "win_rate": 56.2,
+     "win_prob": 65.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.78,
+     "map_strength_centered": 6.93,
+     "breakdown_pct": {
+      "map_strength": 8.06,
+      "synergy": -0.07,
+      "counters": 0.0,
+      "risk_countered": 0.13
+     },
+     "strength_parts_pct": {
+      "global": 2.39,
+      "mode": 2.68,
+      "map": 0.51,
+      "class": 2.48
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 82,
+     "pick_rate": 1.49,
+     "win_rate": 58.5,
+     "win_prob": 65.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.68,
+     "map_strength_centered": 6.61,
+     "breakdown_pct": {
+      "map_strength": 7.74,
+      "synergy": -0.05,
+      "counters": 0.0,
+      "risk_countered": 0.57
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 1.77,
+      "map": 0.34,
+      "class": 0.18
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 221,
+     "pick_rate": 4.02,
+     "win_rate": 52.9,
+     "win_prob": 65.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.34,
+     "map_strength_centered": 6.48,
+     "breakdown_pct": {
+      "map_strength": 7.61,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": 0.05
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 0.02,
+      "map": -0.65,
+      "class": 4.37
+     }
+    },
+    {
+     "name": "Jacky",
+     "brawler_id": 16000034,
+     "games": 18,
+     "pick_rate": 0.33,
+     "win_rate": 55.6,
+     "win_prob": 65.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.31,
+     "map_strength_centered": 6.57,
+     "breakdown_pct": {
+      "map_strength": 7.7,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.08
+     },
+     "strength_parts_pct": {
+      "global": 1.67,
+      "mode": 1.43,
+      "map": 0.23,
+      "class": 4.37
+     }
+    }
+   ]
+  },
+  {
+   "mode": "brawlBall",
+   "map": "Center Stage",
+   "games": 5425,
+   "baseline_win_prob": 63.8,
+   "overlap_top15": 0,
+   "overlap_picked_winning": 1,
+   "n_picked_winning": 13,
+   "flags": [
+    "low_data_top5: Ziggy (18 games)",
+    "low_data_top5: Ollie (25 games)",
+    "low_data_top5: Bolt (7 games)",
+    "low_overlap: 0/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 18,
+     "pick_rate": 0.33,
+     "win_rate": 50.0,
+     "win_prob": 68.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.97,
+     "map_strength_centered": 9.46,
+     "breakdown_pct": {
+      "map_strength": 10.75,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": 0.69
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": 5.09,
+      "map": 0.09,
+      "class": 1.36
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 25,
+     "pick_rate": 0.46,
+     "win_rate": 52.0,
+     "win_prob": 68.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.83,
+     "map_strength_centered": 9.73,
+     "breakdown_pct": {
+      "map_strength": 11.02,
+      "synergy": -0.18,
+      "counters": 0.0,
+      "risk_countered": 0.19
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.33,
+      "map": 0.19,
+      "class": 4.88
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 7,
+     "pick_rate": 0.13,
+     "win_rate": 71.4,
+     "win_prob": 68.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.82,
+     "map_strength_centered": 10.11,
+     "breakdown_pct": {
+      "map_strength": 11.4,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.33
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.02,
+      "map": 0.22,
+      "class": 4.88
+     }
+    },
+    {
+     "name": "El Primo",
+     "brawler_id": 16000010,
+     "games": 419,
+     "pick_rate": 7.72,
+     "win_rate": 61.3,
+     "win_prob": 68.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.79,
+     "map_strength_centered": 9.32,
+     "breakdown_pct": {
+      "map_strength": 10.61,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.28
+     },
+     "strength_parts_pct": {
+      "global": -0.44,
+      "mode": 4.94,
+      "map": 1.23,
+      "class": 4.88
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 62,
+     "pick_rate": 1.14,
+     "win_rate": 59.7,
+     "win_prob": 67.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.82,
+     "map_strength_centered": 7.77,
+     "breakdown_pct": {
+      "map_strength": 9.06,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": 0.76
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 1.77,
+      "map": 0.49,
+      "class": 1.36
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 21,
+     "pick_rate": 0.39,
+     "win_rate": 38.1,
+     "win_prob": 67.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.69,
+     "map_strength_centered": 8.84,
+     "breakdown_pct": {
+      "map_strength": 10.13,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": 0.04
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.27,
+      "map": -0.08,
+      "class": 0.97
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 23,
+     "pick_rate": 0.42,
+     "win_rate": 56.5,
+     "win_prob": 66.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.13,
+     "map_strength_centered": 7.6,
+     "breakdown_pct": {
+      "map_strength": 8.89,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": 0.12
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 0.02,
+      "map": 0.12,
+      "class": 4.88
+     }
+    },
+    {
+     "name": "Jacky",
+     "brawler_id": 16000034,
+     "games": 16,
+     "pick_rate": 0.29,
+     "win_rate": 37.5,
+     "win_prob": 66.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.24,
+     "map_strength_centered": 6.67,
+     "breakdown_pct": {
+      "map_strength": 7.96,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": -0.01
+     },
+     "strength_parts_pct": {
+      "global": 1.67,
+      "mode": 1.43,
+      "map": -0.02,
+      "class": 4.88
+     }
+    },
+    {
+     "name": "Rosa",
+     "brawler_id": 16000024,
+     "games": 66,
+     "pick_rate": 1.22,
+     "win_rate": 60.6,
+     "win_prob": 65.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.0,
+     "map_strength_centered": 6.09,
+     "breakdown_pct": {
+      "map_strength": 7.38,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.24
+     },
+     "strength_parts_pct": {
+      "global": 0.63,
+      "mode": 1.9,
+      "map": -0.03,
+      "class": 4.88
+     }
+    },
+    {
+     "name": "Bull",
+     "brawler_id": 16000002,
+     "games": 310,
+     "pick_rate": 5.71,
+     "win_rate": 56.8,
+     "win_prob": 65.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.93,
+     "map_strength_centered": 6.83,
+     "breakdown_pct": {
+      "map_strength": 8.12,
+      "synergy": -0.01,
+      "counters": 0.0,
+      "risk_countered": -0.04
+     },
+     "strength_parts_pct": {
+      "global": 2.67,
+      "mode": 0.15,
+      "map": 0.42,
+      "class": 4.88
+     }
+    }
+   ]
+  },
+  {
+   "mode": "brawlBall",
+   "map": "Sneaky Fields",
+   "games": 5494,
+   "baseline_win_prob": 63.3,
+   "overlap_top15": 1,
+   "overlap_picked_winning": 2,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Bolt (13 games)",
+    "low_data_top5: Ollie (21 games)",
+    "low_data_top5: Clancy (21 games)",
+    "low_overlap: 1/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 13,
+     "pick_rate": 0.24,
+     "win_rate": 76.9,
+     "win_prob": 68.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 5.13,
+     "map_strength_centered": 10.08,
+     "breakdown_pct": {
+      "map_strength": 11.81,
+      "synergy": 0.04,
+      "counters": 0.0,
+      "risk_countered": -0.22
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.02,
+      "map": 0.3,
+      "class": 5.21
+     }
+    },
+    {
+     "name": "El Primo",
+     "brawler_id": 16000010,
+     "games": 643,
+     "pick_rate": 11.7,
+     "win_rate": 55.4,
+     "win_prob": 67.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.51,
+     "map_strength_centered": 7.08,
+     "breakdown_pct": {
+      "map_strength": 8.81,
+      "synergy": -0.09,
+      "counters": 0.0,
+      "risk_countered": 0.3
+     },
+     "strength_parts_pct": {
+      "global": -0.44,
+      "mode": 4.94,
+      "map": -0.9,
+      "class": 5.21
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 21,
+     "pick_rate": 0.38,
+     "win_rate": 33.3,
+     "win_prob": 67.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.28,
+     "map_strength_centered": 9.11,
+     "breakdown_pct": {
+      "map_strength": 10.84,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": 0.07
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.33,
+      "map": -0.32,
+      "class": 5.21
+     }
+    },
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 41,
+     "pick_rate": 0.75,
+     "win_rate": 51.2,
+     "win_prob": 67.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.27,
+     "map_strength_centered": 8.05,
+     "breakdown_pct": {
+      "map_strength": 9.78,
+      "synergy": -0.11,
+      "counters": 0.0,
+      "risk_countered": 0.67
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": 5.09,
+      "map": -0.02,
+      "class": 0.49
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 21,
+     "pick_rate": 0.38,
+     "win_rate": 52.4,
+     "win_prob": 67.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.23,
+     "map_strength_centered": 8.44,
+     "breakdown_pct": {
+      "map_strength": 10.17,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": 0.03
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.27,
+      "map": 0.0,
+      "class": 0.93
+     }
+    },
+    {
+     "name": "Rosa",
+     "brawler_id": 16000024,
+     "games": 104,
+     "pick_rate": 1.89,
+     "win_rate": 52.9,
+     "win_prob": 66.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.51,
+     "map_strength_centered": 6.93,
+     "breakdown_pct": {
+      "map_strength": 8.66,
+      "synergy": 0.04,
+      "counters": 0.0,
+      "risk_countered": 0.2
+     },
+     "strength_parts_pct": {
+      "global": 0.63,
+      "mode": 1.9,
+      "map": 0.91,
+      "class": 5.21
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 71,
+     "pick_rate": 1.29,
+     "win_rate": 53.5,
+     "win_prob": 66.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.24,
+     "map_strength_centered": 7.15,
+     "breakdown_pct": {
+      "map_strength": 8.88,
+      "synergy": -0.06,
+      "counters": 0.0,
+      "risk_countered": 0.11
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 0.02,
+      "map": -0.22,
+      "class": 5.21
+     }
+    },
+    {
+     "name": "Jacky",
+     "brawler_id": 16000034,
+     "games": 38,
+     "pick_rate": 0.69,
+     "win_rate": 68.4,
+     "win_prob": 66.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.96,
+     "map_strength_centered": 7.02,
+     "breakdown_pct": {
+      "map_strength": 8.75,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": -0.07
+     },
+     "strength_parts_pct": {
+      "global": 1.67,
+      "mode": 1.43,
+      "map": 0.43,
+      "class": 5.21
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 81,
+     "pick_rate": 1.47,
+     "win_rate": 58.0,
+     "win_prob": 66.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.8,
+     "map_strength_centered": 6.97,
+     "breakdown_pct": {
+      "map_strength": 8.7,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.03
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": 0.84,
+      "map": 0.08,
+      "class": 5.21
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 800,
+     "pick_rate": 14.56,
+     "win_rate": 57.4,
+     "win_prob": 65.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.65,
+     "map_strength_centered": 6.73,
+     "breakdown_pct": {
+      "map_strength": 8.46,
+      "synergy": -0.5,
+      "counters": 0.0,
+      "risk_countered": -0.41
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": -0.4,
+      "map": 0.63,
+      "class": 0.49
+     }
+    }
+   ]
+  },
+  {
+   "mode": "gemGrab",
+   "map": "Gem Fort",
+   "games": 5723,
+   "baseline_win_prob": 67.0,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 2,
+   "n_picked_winning": 15,
+   "flags": [
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 988,
+     "pick_rate": 17.26,
+     "win_rate": 58.2,
+     "win_prob": 71.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.07,
+     "map_strength_centered": 7.89,
+     "breakdown_pct": {
+      "map_strength": 9.94,
+      "synergy": 0.22,
+      "counters": 0.0,
+      "risk_countered": -1.7
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": -0.39,
+      "map": 0.16,
+      "class": 2.42
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 49,
+     "pick_rate": 0.86,
+     "win_rate": 61.2,
+     "win_prob": 70.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.73,
+     "map_strength_centered": 10.93,
+     "breakdown_pct": {
+      "map_strength": 12.98,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": 0.08
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 1.79,
+      "map": 0.4,
+      "class": 1.81
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 34,
+     "pick_rate": 0.59,
+     "win_rate": 70.6,
+     "win_prob": 70.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.73,
+     "map_strength_centered": 12.04,
+     "breakdown_pct": {
+      "map_strength": 14.08,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": -0.18
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 2.73,
+      "map": 0.53,
+      "class": 4.54
+     }
+    },
+    {
+     "name": "Bull",
+     "brawler_id": 16000002,
+     "games": 347,
+     "pick_rate": 6.06,
+     "win_rate": 53.0,
+     "win_prob": 70.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.28,
+     "map_strength_centered": 7.67,
+     "breakdown_pct": {
+      "map_strength": 9.72,
+      "synergy": 0.13,
+      "counters": 0.0,
+      "risk_countered": 0.29
+     },
+     "strength_parts_pct": {
+      "global": 2.67,
+      "mode": 1.57,
+      "map": 0.93,
+      "class": 4.54
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 126,
+     "pick_rate": 2.2,
+     "win_rate": 58.7,
+     "win_prob": 70.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.13,
+     "map_strength_centered": 7.2,
+     "breakdown_pct": {
+      "map_strength": 9.24,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": -0.05
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": 2.06,
+      "map": 0.08,
+      "class": 4.54
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 54,
+     "pick_rate": 0.94,
+     "win_rate": 40.7,
+     "win_prob": 70.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.03,
+     "map_strength_centered": 7.79,
+     "breakdown_pct": {
+      "map_strength": 9.84,
+      "synergy": 0.05,
+      "counters": 0.0,
+      "risk_countered": 0.01
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.66,
+      "map": -0.32,
+      "class": 4.54
+     }
+    },
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 2143,
+     "pick_rate": 37.45,
+     "win_rate": 53.9,
+     "win_prob": 69.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.97,
+     "map_strength_centered": 4.44,
+     "breakdown_pct": {
+      "map_strength": 6.49,
+      "synergy": 0.52,
+      "counters": 0.0,
+      "risk_countered": 0.35
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": 0.52,
+      "map": -0.39,
+      "class": 2.42
+     }
+    },
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 7,
+     "pick_rate": 0.12,
+     "win_rate": 42.9,
+     "win_prob": 68.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.38,
+     "map_strength_centered": 4.65,
+     "breakdown_pct": {
+      "map_strength": 6.7,
+      "synergy": -0.15,
+      "counters": 0.0,
+      "risk_countered": 0.79
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": 0.02,
+      "map": 0.05,
+      "class": 2.42
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 54,
+     "pick_rate": 0.94,
+     "win_rate": 59.3,
+     "win_prob": 67.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.82,
+     "map_strength_centered": 4.72,
+     "breakdown_pct": {
+      "map_strength": 6.77,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": 0.38
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": -1.57,
+      "map": 0.48,
+      "class": 2.42
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 42,
+     "pick_rate": 0.73,
+     "win_rate": 54.8,
+     "win_prob": 67.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.71,
+     "map_strength_centered": 5.22,
+     "breakdown_pct": {
+      "map_strength": 7.27,
+      "synergy": -0.05,
+      "counters": 0.0,
+      "risk_countered": -0.03
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": -0.77,
+      "map": -0.37,
+      "class": 4.54
+     }
+    }
+   ]
+  },
+  {
+   "mode": "gemGrab",
+   "map": "Undermine",
+   "games": 5512,
+   "baseline_win_prob": 64.4,
+   "overlap_top15": 4,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 16,
+   "flags": [
+    "low_data_top5: Clancy (26 games)"
+   ],
+   "top": [
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 2062,
+     "pick_rate": 37.41,
+     "win_rate": 55.0,
+     "win_prob": 67.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.03,
+     "map_strength_centered": 4.85,
+     "breakdown_pct": {
+      "map_strength": 7.87,
+      "synergy": 0.52,
+      "counters": 0.0,
+      "risk_countered": -0.12
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": 0.52,
+      "map": 0.59,
+      "class": 2.83
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 26,
+     "pick_rate": 0.47,
+     "win_rate": 46.2,
+     "win_prob": 67.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.03,
+     "map_strength_centered": 10.14,
+     "breakdown_pct": {
+      "map_strength": 13.16,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": 0.07
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 1.79,
+      "map": -0.14,
+      "class": 2.53
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 42,
+     "pick_rate": 0.76,
+     "win_rate": 54.8,
+     "win_prob": 67.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.56,
+     "map_strength_centered": 9.41,
+     "breakdown_pct": {
+      "map_strength": 12.44,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.16
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 2.73,
+      "map": 0.28,
+      "class": 3.15
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1026,
+     "pick_rate": 18.61,
+     "win_rate": 54.8,
+     "win_prob": 66.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.39,
+     "map_strength_centered": 5.59,
+     "breakdown_pct": {
+      "map_strength": 8.62,
+      "synergy": 0.24,
+      "counters": 0.0,
+      "risk_countered": -0.71
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": -0.39,
+      "map": -1.56,
+      "class": 2.83
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 79,
+     "pick_rate": 1.43,
+     "win_rate": 58.2,
+     "win_prob": 66.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.3,
+     "map_strength_centered": 5.37,
+     "breakdown_pct": {
+      "map_strength": 8.4,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": 0.13
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": 2.06,
+      "map": 0.63,
+      "class": 3.15
+     }
+    },
+    {
+     "name": "Bull",
+     "brawler_id": 16000002,
+     "games": 221,
+     "pick_rate": 4.01,
+     "win_rate": 52.0,
+     "win_prob": 66.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.2,
+     "map_strength_centered": 4.91,
+     "breakdown_pct": {
+      "map_strength": 7.94,
+      "synergy": 0.13,
+      "counters": 0.0,
+      "risk_countered": 0.39
+     },
+     "strength_parts_pct": {
+      "global": 2.67,
+      "mode": 1.57,
+      "map": 0.55,
+      "class": 3.15
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 44,
+     "pick_rate": 0.8,
+     "win_rate": 52.3,
+     "win_prob": 66.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.18,
+     "map_strength_centered": 5.93,
+     "breakdown_pct": {
+      "map_strength": 8.96,
+      "synergy": 0.05,
+      "counters": 0.0,
+      "risk_countered": -0.09
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.66,
+      "map": 0.19,
+      "class": 3.15
+     }
+    },
+    {
+     "name": "Emz",
+     "brawler_id": 16000030,
+     "games": 926,
+     "pick_rate": 16.8,
+     "win_rate": 54.4,
+     "win_prob": 66.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.78,
+     "map_strength_centered": 4.24,
+     "breakdown_pct": {
+      "map_strength": 7.27,
+      "synergy": -0.19,
+      "counters": 0.0,
+      "risk_countered": 0.43
+     },
+     "strength_parts_pct": {
+      "global": 3.01,
+      "mode": 0.62,
+      "map": 0.81,
+      "class": 2.83
+     }
+    },
+    {
+     "name": "Surge",
+     "brawler_id": 16000038,
+     "games": 828,
+     "pick_rate": 15.02,
+     "win_rate": 54.7,
+     "win_prob": 66.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.71,
+     "map_strength_centered": 4.74,
+     "breakdown_pct": {
+      "map_strength": 7.77,
+      "synergy": 0.05,
+      "counters": 0.0,
+      "risk_countered": -0.63
+     },
+     "strength_parts_pct": {
+      "global": 3.25,
+      "mode": 1.16,
+      "map": 0.84,
+      "class": 2.53
+     }
+    },
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 8,
+     "pick_rate": 0.15,
+     "win_rate": 75.0,
+     "win_prob": 65.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.18,
+     "map_strength_centered": 4.08,
+     "breakdown_pct": {
+      "map_strength": 7.11,
+      "synergy": -0.15,
+      "counters": 0.0,
+      "risk_countered": 0.54
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": 0.02,
+      "map": 0.05,
+      "class": 2.83
+     }
+    }
+   ]
+  },
+  {
+   "mode": "gemGrab",
+   "map": "Double Swoosh",
+   "games": 5574,
+   "baseline_win_prob": 64.1,
+   "overlap_top15": 4,
+   "overlap_picked_winning": 5,
+   "n_picked_winning": 16,
+   "flags": [
+    "low_data_top5: Ollie (18 games)",
+    "zero_game_map: Ziggy (+4.1%)"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1080,
+     "pick_rate": 19.38,
+     "win_rate": 60.1,
+     "win_prob": 67.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.69,
+     "map_strength_centered": 9.23,
+     "breakdown_pct": {
+      "map_strength": 12.44,
+      "synergy": 0.27,
+      "counters": 0.0,
+      "risk_countered": -1.24
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": -0.39,
+      "map": 2.06,
+      "class": 3.03
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 18,
+     "pick_rate": 0.32,
+     "win_rate": 77.8,
+     "win_prob": 64.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.13,
+     "map_strength_centered": 8.13,
+     "breakdown_pct": {
+      "map_strength": 11.34,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": -0.13
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 2.73,
+      "map": 0.19,
+      "class": 2.14
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 34,
+     "pick_rate": 0.61,
+     "win_rate": 79.4,
+     "win_prob": 64.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.09,
+     "map_strength_centered": 10.47,
+     "breakdown_pct": {
+      "map_strength": 13.68,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": -0.03
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 1.79,
+      "map": 0.54,
+      "class": 2.37
+     }
+    },
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 1863,
+     "pick_rate": 33.42,
+     "win_rate": 55.0,
+     "win_prob": 63.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.25,
+     "map_strength_centered": 4.77,
+     "breakdown_pct": {
+      "map_strength": 7.99,
+      "synergy": 0.59,
+      "counters": 0.0,
+      "risk_countered": 0.07
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": 0.52,
+      "map": 0.5,
+      "class": 3.03
+     }
+    },
+    {
+     "name": "Emz",
+     "brawler_id": 16000030,
+     "games": 1779,
+     "pick_rate": 31.92,
+     "win_rate": 56.0,
+     "win_prob": 63.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.61,
+     "map_strength_centered": 4.46,
+     "breakdown_pct": {
+      "map_strength": 7.68,
+      "synergy": -0.07,
+      "counters": 0.0,
+      "risk_countered": 0.52
+     },
+     "strength_parts_pct": {
+      "global": 3.01,
+      "mode": 0.62,
+      "map": 1.02,
+      "class": 3.03
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 49,
+     "pick_rate": 0.88,
+     "win_rate": 61.2,
+     "win_prob": 61.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.46,
+     "map_strength_centered": 4.12,
+     "breakdown_pct": {
+      "map_strength": 7.33,
+      "synergy": 0.05,
+      "counters": 0.0,
+      "risk_countered": 0.26
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": 2.06,
+      "map": 0.57,
+      "class": 2.14
+     }
+    },
+    {
+     "name": "Ziggy",
+     "brawler_id": 16000098,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 61.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.54,
+     "map_strength_centered": 4.05,
+     "breakdown_pct": {
+      "map_strength": 7.26,
+      "synergy": -0.11,
+      "counters": 0.0,
+      "risk_countered": 0.36
+     },
+     "strength_parts_pct": {
+      "global": 4.22,
+      "mode": 0.02,
+      "map": 0.0,
+      "class": 3.03
+     }
+    },
+    {
+     "name": "Mortis",
+     "brawler_id": 16000011,
+     "games": 1056,
+     "pick_rate": 18.95,
+     "win_rate": 52.5,
+     "win_prob": 61.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.7,
+     "map_strength_centered": 3.57,
+     "breakdown_pct": {
+      "map_strength": 6.78,
+      "synergy": 0.21,
+      "counters": 0.0,
+      "risk_countered": -0.5
+     },
+     "strength_parts_pct": {
+      "global": 1.44,
+      "mode": 2.21,
+      "map": 1.42,
+      "class": 1.72
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 61,
+     "pick_rate": 1.09,
+     "win_rate": 55.7,
+     "win_prob": 61.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.75,
+     "map_strength_centered": 4.43,
+     "breakdown_pct": {
+      "map_strength": 7.65,
+      "synergy": -0.32,
+      "counters": 0.0,
+      "risk_countered": -0.13
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.66,
+      "map": -0.12,
+      "class": 2.14
+     }
+    },
+    {
+     "name": "Bo",
+     "brawler_id": 16000014,
+     "games": 940,
+     "pick_rate": 16.86,
+     "win_rate": 54.6,
+     "win_prob": 61.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.77,
+     "map_strength_centered": 4.34,
+     "breakdown_pct": {
+      "map_strength": 7.55,
+      "synergy": 0.31,
+      "counters": 0.0,
+      "risk_countered": -0.55
+     },
+     "strength_parts_pct": {
+      "global": 1.39,
+      "mode": 2.62,
+      "map": 0.51,
+      "class": 3.03
+     }
+    }
+   ]
+  },
+  {
+   "mode": "gemGrab",
+   "map": "Hard Rock Mine",
+   "games": 5345,
+   "baseline_win_prob": 65.3,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 3,
+   "n_picked_winning": 15,
+   "flags": [
+    "low_data_top5: Clancy (16 games)",
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 708,
+     "pick_rate": 13.25,
+     "win_rate": 55.5,
+     "win_prob": 68.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.43,
+     "map_strength_centered": 6.24,
+     "breakdown_pct": {
+      "map_strength": 8.45,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": -1.22
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": 0.53,
+      "map": 1.03,
+      "class": 2.53
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 16,
+     "pick_rate": 0.3,
+     "win_rate": 56.2,
+     "win_prob": 68.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.35,
+     "map_strength_centered": 11.7,
+     "breakdown_pct": {
+      "map_strength": 13.91,
+      "synergy": 0.05,
+      "counters": 0.0,
+      "risk_countered": 0.09
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 1.79,
+      "map": -0.07,
+      "class": 3.2
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 33,
+     "pick_rate": 0.62,
+     "win_rate": 69.7,
+     "win_prob": 68.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.05,
+     "map_strength_centered": 9.77,
+     "breakdown_pct": {
+      "map_strength": 11.97,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": -0.3
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 2.73,
+      "map": 0.09,
+      "class": 2.87
+     }
+    },
+    {
+     "name": "Surge",
+     "brawler_id": 16000038,
+     "games": 808,
+     "pick_rate": 15.12,
+     "win_rate": 55.7,
+     "win_prob": 68.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.68,
+     "map_strength_centered": 5.32,
+     "breakdown_pct": {
+      "map_strength": 7.52,
+      "synergy": -0.08,
+      "counters": 0.0,
+      "risk_countered": -0.39
+     },
+     "strength_parts_pct": {
+      "global": 3.25,
+      "mode": 1.16,
+      "map": -0.09,
+      "class": 3.2
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 32,
+     "pick_rate": 0.6,
+     "win_rate": 53.1,
+     "win_prob": 67.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.44,
+     "map_strength_centered": 6.26,
+     "breakdown_pct": {
+      "map_strength": 8.47,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.22
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.66,
+      "map": -0.02,
+      "class": 2.87
+     }
+    },
+    {
+     "name": "Bull",
+     "brawler_id": 16000002,
+     "games": 257,
+     "pick_rate": 4.81,
+     "win_rate": 53.3,
+     "win_prob": 67.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.97,
+     "map_strength_centered": 4.19,
+     "breakdown_pct": {
+      "map_strength": 6.4,
+      "synergy": 0.14,
+      "counters": 0.0,
+      "risk_countered": 0.5
+     },
+     "strength_parts_pct": {
+      "global": 2.67,
+      "mode": 1.57,
+      "map": -0.71,
+      "class": 2.87
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 115,
+     "pick_rate": 2.15,
+     "win_rate": 54.8,
+     "win_prob": 66.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.6,
+     "map_strength_centered": 5.88,
+     "breakdown_pct": {
+      "map_strength": 8.09,
+      "synergy": -0.07,
+      "counters": 0.0,
+      "risk_countered": -0.1
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": 0.88,
+      "map": 0.38,
+      "class": 3.2
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 49,
+     "pick_rate": 0.92,
+     "win_rate": 49.0,
+     "win_prob": 66.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.05,
+     "map_strength_centered": 4.81,
+     "breakdown_pct": {
+      "map_strength": 7.02,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": 0.12
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": 2.06,
+      "map": -0.46,
+      "class": 2.87
+     }
+    },
+    {
+     "name": "Starr Nova",
+     "brawler_id": 16000105,
+     "games": 252,
+     "pick_rate": 4.71,
+     "win_rate": 54.4,
+     "win_prob": 66.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.66,
+     "map_strength_centered": 4.6,
+     "breakdown_pct": {
+      "map_strength": 6.81,
+      "synergy": 0.04,
+      "counters": 0.0,
+      "risk_countered": 0.2
+     },
+     "strength_parts_pct": {
+      "global": 3.98,
+      "mode": 0.31,
+      "map": -0.02,
+      "class": 2.53
+     }
+    },
+    {
+     "name": "Bo",
+     "brawler_id": 16000014,
+     "games": 690,
+     "pick_rate": 12.91,
+     "win_rate": 54.2,
+     "win_prob": 65.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.17,
+     "map_strength_centered": 4.18,
+     "breakdown_pct": {
+      "map_strength": 6.38,
+      "synergy": 0.24,
+      "counters": 0.0,
+      "risk_countered": -0.78
+     },
+     "strength_parts_pct": {
+      "global": 1.39,
+      "mode": 2.62,
+      "map": 1.33,
+      "class": 1.05
+     }
+    }
+   ]
+  },
+  {
+   "mode": "heist",
+   "map": "Hot Potato",
+   "games": 5700,
+   "baseline_win_prob": 64.3,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Bolt (18 games)",
+    "low_data_top5: Ollie (0 games)",
+    "zero_game_map: Ollie (+7.4%)",
+    "zero_game_map: Damian (+3.7%)",
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Melodie",
+     "brawler_id": 16000078,
+     "games": 2798,
+     "pick_rate": 49.09,
+     "win_rate": 60.7,
+     "win_prob": 70.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 5.73,
+     "map_strength_centered": 10.94,
+     "breakdown_pct": {
+      "map_strength": 13.36,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": -1.43
+     },
+     "strength_parts_pct": {
+      "global": 3.96,
+      "mode": 5.43,
+      "map": 1.19,
+      "class": 2.78
+     }
+    },
+    {
+     "name": "Bull",
+     "brawler_id": 16000002,
+     "games": 676,
+     "pick_rate": 11.86,
+     "win_rate": 53.4,
+     "win_prob": 62.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.12,
+     "map_strength_centered": 7.44,
+     "breakdown_pct": {
+      "map_strength": 9.87,
+      "synergy": -0.05,
+      "counters": 0.0,
+      "risk_countered": 0.79
+     },
+     "strength_parts_pct": {
+      "global": 2.67,
+      "mode": 2.22,
+      "map": 1.15,
+      "class": 3.82
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 49,
+     "pick_rate": 0.86,
+     "win_rate": 55.1,
+     "win_prob": 61.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.6,
+     "map_strength_centered": 7.34,
+     "breakdown_pct": {
+      "map_strength": 9.76,
+      "synergy": 0.13,
+      "counters": 0.0,
+      "risk_countered": 0.3
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.7,
+      "map": -0.24,
+      "class": 0.31
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 18,
+     "pick_rate": 0.32,
+     "win_rate": 72.2,
+     "win_prob": 61.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.87,
+     "map_strength_centered": 9.0,
+     "breakdown_pct": {
+      "map_strength": 11.42,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.48
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.86,
+      "map": 0.46,
+      "class": 3.82
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 60.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.79,
+     "map_strength_centered": 7.42,
+     "breakdown_pct": {
+      "map_strength": 9.84,
+      "synergy": 0.06,
+      "counters": 0.0,
+      "risk_countered": -0.57
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.27,
+      "map": 0.0,
+      "class": 3.82
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 31,
+     "pick_rate": 0.54,
+     "win_rate": 61.3,
+     "win_prob": 60.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.96,
+     "map_strength_centered": 5.67,
+     "breakdown_pct": {
+      "map_strength": 8.09,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.63
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 0.28,
+      "map": 0.12,
+      "class": 3.82
+     }
+    },
+    {
+     "name": "Carl",
+     "brawler_id": 16000025,
+     "games": 635,
+     "pick_rate": 11.14,
+     "win_rate": 56.2,
+     "win_prob": 59.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -4.79,
+     "map_strength_centered": 5.5,
+     "breakdown_pct": {
+      "map_strength": 7.93,
+      "synergy": 0.08,
+      "counters": 0.0,
+      "risk_countered": -0.13
+     },
+     "strength_parts_pct": {
+      "global": 1.8,
+      "mode": 3.5,
+      "map": 2.31,
+      "class": 0.31
+     }
+    },
+    {
+     "name": "Nori",
+     "brawler_id": 16000107,
+     "games": 1450,
+     "pick_rate": 25.44,
+     "win_rate": 54.8,
+     "win_prob": 59.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -4.84,
+     "map_strength_centered": 6.83,
+     "breakdown_pct": {
+      "map_strength": 9.26,
+      "synergy": -0.26,
+      "counters": 0.0,
+      "risk_countered": -1.83
+     },
+     "strength_parts_pct": {
+      "global": 0.4,
+      "mode": 6.2,
+      "map": -0.12,
+      "class": 2.78
+     }
+    },
+    {
+     "name": "Damian",
+     "brawler_id": 16000104,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 58.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -5.87,
+     "map_strength_centered": 3.65,
+     "breakdown_pct": {
+      "map_strength": 6.07,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.63
+     },
+     "strength_parts_pct": {
+      "global": 2.56,
+      "mode": -0.31,
+      "map": 0.0,
+      "class": 3.82
+     }
+    },
+    {
+     "name": "Bibi",
+     "brawler_id": 16000026,
+     "games": 362,
+     "pick_rate": 6.35,
+     "win_rate": 55.5,
+     "win_prob": 58.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -6.23,
+     "map_strength_centered": 4.59,
+     "breakdown_pct": {
+      "map_strength": 7.02,
+      "synergy": -0.18,
+      "counters": 0.0,
+      "risk_countered": -0.17
+     },
+     "strength_parts_pct": {
+      "global": 1.81,
+      "mode": 1.17,
+      "map": 0.22,
+      "class": 3.82
+     }
+    }
+   ]
+  },
+  {
+   "mode": "heist",
+   "map": "Kaboom Canyon",
+   "games": 5562,
+   "baseline_win_prob": 61.1,
+   "overlap_top15": 4,
+   "overlap_picked_winning": 6,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Clancy (26 games)",
+    "low_data_top5: Bolt (28 games)",
+    "zero_game_map: Ziggy (+4.2%)"
+   ],
+   "top": [
+    {
+     "name": "Melodie",
+     "brawler_id": 16000078,
+     "games": 2856,
+     "pick_rate": 51.35,
+     "win_rate": 57.0,
+     "win_prob": 65.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.95,
+     "map_strength_centered": 10.8,
+     "breakdown_pct": {
+      "map_strength": 12.75,
+      "synergy": 0.27,
+      "counters": 0.0,
+      "risk_countered": -2.26
+     },
+     "strength_parts_pct": {
+      "global": 3.96,
+      "mode": 5.43,
+      "map": 1.41,
+      "class": 1.95
+     }
+    },
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 1820,
+     "pick_rate": 32.72,
+     "win_rate": 56.3,
+     "win_prob": 59.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.27,
+     "map_strength_centered": 4.45,
+     "breakdown_pct": {
+      "map_strength": 6.4,
+      "synergy": 0.42,
+      "counters": 0.0,
+      "risk_countered": 2.02
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": -0.61,
+      "map": 0.9,
+      "class": 2.18
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 26,
+     "pick_rate": 0.47,
+     "win_rate": 65.4,
+     "win_prob": 59.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.77,
+     "map_strength_centered": 10.47,
+     "breakdown_pct": {
+      "map_strength": 12.43,
+      "synergy": 0.3,
+      "counters": 0.0,
+      "risk_countered": 0.11
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.7,
+      "map": 0.38,
+      "class": 2.36
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 28,
+     "pick_rate": 0.5,
+     "win_rate": 67.9,
+     "win_prob": 58.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.58,
+     "map_strength_centered": 7.55,
+     "breakdown_pct": {
+      "map_strength": 9.51,
+      "synergy": -0.06,
+      "counters": 0.0,
+      "risk_countered": -0.56
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.86,
+      "map": 0.22,
+      "class": 2.15
+     }
+    },
+    {
+     "name": "Bull",
+     "brawler_id": 16000002,
+     "games": 193,
+     "pick_rate": 3.47,
+     "win_rate": 49.2,
+     "win_prob": 58.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.03,
+     "map_strength_centered": 5.0,
+     "breakdown_pct": {
+      "map_strength": 6.96,
+      "synergy": 0.38,
+      "counters": 0.0,
+      "risk_countered": 0.26
+     },
+     "strength_parts_pct": {
+      "global": 2.67,
+      "mode": 2.22,
+      "map": -0.08,
+      "class": 2.15
+     }
+    },
+    {
+     "name": "Colette",
+     "brawler_id": 16000039,
+     "games": 2903,
+     "pick_rate": 52.19,
+     "win_rate": 54.4,
+     "win_prob": 57.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.21,
+     "map_strength_centered": 5.07,
+     "breakdown_pct": {
+      "map_strength": 7.02,
+      "synergy": 0.23,
+      "counters": 0.0,
+      "risk_countered": 0.41
+     },
+     "strength_parts_pct": {
+      "global": 0.02,
+      "mode": 3.06,
+      "map": 1.58,
+      "class": 2.36
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 457,
+     "pick_rate": 8.22,
+     "win_rate": 57.5,
+     "win_prob": 57.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.28,
+     "map_strength_centered": 7.21,
+     "breakdown_pct": {
+      "map_strength": 9.17,
+      "synergy": 0.75,
+      "counters": 0.0,
+      "risk_countered": -1.25
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": -1.32,
+      "map": 0.57,
+      "class": 2.18
+     }
+    },
+    {
+     "name": "Nori",
+     "brawler_id": 16000107,
+     "games": 1412,
+     "pick_rate": 25.39,
+     "win_rate": 54.3,
+     "win_prob": 57.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.28,
+     "map_strength_centered": 7.33,
+     "breakdown_pct": {
+      "map_strength": 9.29,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": -2.03
+     },
+     "strength_parts_pct": {
+      "global": 0.4,
+      "mode": 6.2,
+      "map": 0.74,
+      "class": 1.95
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 2,
+     "pick_rate": 0.04,
+     "win_rate": 0.0,
+     "win_prob": 57.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.59,
+     "map_strength_centered": 6.1,
+     "breakdown_pct": {
+      "map_strength": 8.05,
+      "synergy": 0.28,
+      "counters": 0.0,
+      "risk_countered": -0.48
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.27,
+      "map": -0.11,
+      "class": 2.15
+     }
+    },
+    {
+     "name": "Carl",
+     "brawler_id": 16000025,
+     "games": 483,
+     "pick_rate": 8.68,
+     "win_rate": 54.0,
+     "win_prob": 57.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.87,
+     "map_strength_centered": 5.37,
+     "breakdown_pct": {
+      "map_strength": 7.32,
+      "synergy": 0.08,
+      "counters": 0.0,
+      "risk_countered": 0.14
+     },
+     "strength_parts_pct": {
+      "global": 1.8,
+      "mode": 3.5,
+      "map": -0.34,
+      "class": 2.36
+     }
+    }
+   ]
+  },
+  {
+   "mode": "heist",
+   "map": "Bridge Too Far",
+   "games": 5386,
+   "baseline_win_prob": 63.4,
+   "overlap_top15": 3,
+   "overlap_picked_winning": 3,
+   "n_picked_winning": 10,
+   "flags": [
+    "low_data_top5: Clancy (12 games)",
+    "low_data_top5: Bolt (15 games)",
+    "low_data_top5: Ollie (0 games)",
+    "zero_game_map: Ollie (+8.7%)",
+    "zero_game_map: Hank (+6.9%)",
+    "zero_game_map: Damian (+5.0%)",
+    "zero_game_map: Jacky (+3.9%)",
+    "low_overlap: 3/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "8-Bit",
+     "brawler_id": 16000027,
+     "games": 2090,
+     "pick_rate": 38.8,
+     "win_rate": 60.8,
+     "win_prob": 67.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.07,
+     "map_strength_centered": 8.47,
+     "breakdown_pct": {
+      "map_strength": 10.37,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": 0.54
+     },
+     "strength_parts_pct": {
+      "global": 0.97,
+      "mode": 2.56,
+      "map": 4.1,
+      "class": 2.74
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 12,
+     "pick_rate": 0.22,
+     "win_rate": 58.3,
+     "win_prob": 64.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.5,
+     "map_strength_centered": 10.85,
+     "breakdown_pct": {
+      "map_strength": 12.74,
+      "synergy": 0.06,
+      "counters": 0.0,
+      "risk_countered": 0.09
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.7,
+      "map": 0.32,
+      "class": 2.74
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 15,
+     "pick_rate": 0.28,
+     "win_rate": 46.7,
+     "win_prob": 64.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.33,
+     "map_strength_centered": 10.01,
+     "breakdown_pct": {
+      "map_strength": 11.91,
+      "synergy": -0.01,
+      "counters": 0.0,
+      "risk_countered": -0.43
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.86,
+      "map": 0.16,
+      "class": 4.6
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 64.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.81,
+     "map_strength_centered": 8.73,
+     "breakdown_pct": {
+      "map_strength": 10.62,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": -0.37
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.27,
+      "map": 0.0,
+      "class": 4.6
+     }
+    },
+    {
+     "name": "Bull",
+     "brawler_id": 16000002,
+     "games": 64,
+     "pick_rate": 1.19,
+     "win_rate": 57.8,
+     "win_prob": 63.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.3,
+     "map_strength_centered": 7.93,
+     "breakdown_pct": {
+      "map_strength": 9.82,
+      "synergy": 0.05,
+      "counters": 0.0,
+      "risk_countered": -0.3
+     },
+     "strength_parts_pct": {
+      "global": 2.67,
+      "mode": 2.22,
+      "map": 0.33,
+      "class": 4.6
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 63.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.26,
+     "map_strength_centered": 6.86,
+     "breakdown_pct": {
+      "map_strength": 8.75,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": 0.73
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 0.28,
+      "map": 0.0,
+      "class": 4.6
+     }
+    },
+    {
+     "name": "Colt",
+     "brawler_id": 16000001,
+     "games": 3268,
+     "pick_rate": 60.68,
+     "win_rate": 55.4,
+     "win_prob": 63.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.12,
+     "map_strength_centered": 5.0,
+     "breakdown_pct": {
+      "map_strength": 6.9,
+      "synergy": -0.15,
+      "counters": 0.0,
+      "risk_countered": 0.7
+     },
+     "strength_parts_pct": {
+      "global": -2.2,
+      "mode": 3.16,
+      "map": 3.19,
+      "class": 2.74
+     }
+    },
+    {
+     "name": "Nori",
+     "brawler_id": 16000107,
+     "games": 1336,
+     "pick_rate": 24.81,
+     "win_rate": 57.3,
+     "win_prob": 62.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.01,
+     "map_strength_centered": 5.84,
+     "breakdown_pct": {
+      "map_strength": 7.74,
+      "synergy": 0.3,
+      "counters": 0.0,
+      "risk_countered": -1.31
+     },
+     "strength_parts_pct": {
+      "global": 0.4,
+      "mode": 6.2,
+      "map": 1.69,
+      "class": -0.55
+     }
+    },
+    {
+     "name": "Carl",
+     "brawler_id": 16000025,
+     "games": 174,
+     "pick_rate": 3.23,
+     "win_rate": 48.9,
+     "win_prob": 62.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.23,
+     "map_strength_centered": 5.77,
+     "breakdown_pct": {
+      "map_strength": 7.67,
+      "synergy": -0.28,
+      "counters": 0.0,
+      "risk_countered": 0.38
+     },
+     "strength_parts_pct": {
+      "global": 1.8,
+      "mode": 3.5,
+      "map": -0.37,
+      "class": 2.74
+     }
+    },
+    {
+     "name": "Bibi",
+     "brawler_id": 16000026,
+     "games": 37,
+     "pick_rate": 0.69,
+     "win_rate": 51.4,
+     "win_prob": 61.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.55,
+     "map_strength_centered": 5.84,
+     "breakdown_pct": {
+      "map_strength": 7.74,
+      "synergy": 0.13,
+      "counters": 0.0,
+      "risk_countered": -0.45
+     },
+     "strength_parts_pct": {
+      "global": 1.81,
+      "mode": 1.17,
+      "map": 0.16,
+      "class": 4.6
+     }
+    }
+   ]
+  },
+  {
+   "mode": "heist",
+   "map": "Safe Zone",
+   "games": 5542,
+   "baseline_win_prob": 60.7,
+   "overlap_top15": 5,
+   "overlap_picked_winning": 6,
+   "n_picked_winning": 10,
+   "flags": [
+    "low_data_top5: Clancy (14 games)",
+    "zero_game_map: Tara (+3.1%)"
+   ],
+   "top": [
+    {
+     "name": "Melodie",
+     "brawler_id": 16000078,
+     "games": 2641,
+     "pick_rate": 47.65,
+     "win_rate": 56.6,
+     "win_prob": 64.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.65,
+     "map_strength_centered": 9.08,
+     "breakdown_pct": {
+      "map_strength": 11.34,
+      "synergy": 0.45,
+      "counters": 0.0,
+      "risk_countered": -2.13
+     },
+     "strength_parts_pct": {
+      "global": 3.96,
+      "mode": 5.43,
+      "map": -0.4,
+      "class": 2.35
+     }
+    },
+    {
+     "name": "Nori",
+     "brawler_id": 16000107,
+     "games": 1586,
+     "pick_rate": 28.62,
+     "win_rate": 56.4,
+     "win_prob": 58.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.02,
+     "map_strength_centered": 6.86,
+     "breakdown_pct": {
+      "map_strength": 9.12,
+      "synergy": -0.05,
+      "counters": 0.0,
+      "risk_countered": -1.79
+     },
+     "strength_parts_pct": {
+      "global": 0.4,
+      "mode": 6.2,
+      "map": 0.17,
+      "class": 2.35
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 14,
+     "pick_rate": 0.25,
+     "win_rate": 42.9,
+     "win_prob": 58.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.43,
+     "map_strength_centered": 8.82,
+     "breakdown_pct": {
+      "map_strength": 11.08,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": 0.12
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": 0.7,
+      "map": -0.19,
+      "class": 1.58
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 685,
+     "pick_rate": 12.36,
+     "win_rate": 55.5,
+     "win_prob": 58.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.6,
+     "map_strength_centered": 5.77,
+     "breakdown_pct": {
+      "map_strength": 8.02,
+      "synergy": 0.63,
+      "counters": 0.0,
+      "risk_countered": -1.05
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": -0.67,
+      "map": 2.1,
+      "class": 1.15
+     }
+    },
+    {
+     "name": "Starr Nova",
+     "brawler_id": 16000105,
+     "games": 66,
+     "pick_rate": 1.19,
+     "win_rate": 68.2,
+     "win_prob": 57.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.56,
+     "map_strength_centered": 4.09,
+     "breakdown_pct": {
+      "map_strength": 6.35,
+      "synergy": 0.08,
+      "counters": 0.0,
+      "risk_countered": 0.74
+     },
+     "strength_parts_pct": {
+      "global": 3.98,
+      "mode": -0.84,
+      "map": 0.85,
+      "class": 2.35
+     }
+    },
+    {
+     "name": "8-Bit",
+     "brawler_id": 16000027,
+     "games": 1687,
+     "pick_rate": 30.44,
+     "win_rate": 53.2,
+     "win_prob": 57.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.66,
+     "map_strength_centered": 2.88,
+     "breakdown_pct": {
+      "map_strength": 5.14,
+      "synergy": 0.11,
+      "counters": 0.0,
+      "risk_countered": 0.7
+     },
+     "strength_parts_pct": {
+      "global": 0.97,
+      "mode": 2.56,
+      "map": 0.03,
+      "class": 1.58
+     }
+    },
+    {
+     "name": "Carl",
+     "brawler_id": 16000025,
+     "games": 795,
+     "pick_rate": 14.35,
+     "win_rate": 51.3,
+     "win_prob": 57.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.7,
+     "map_strength_centered": 4.44,
+     "breakdown_pct": {
+      "map_strength": 6.69,
+      "synergy": 0.17,
+      "counters": 0.0,
+      "risk_countered": 0.16
+     },
+     "strength_parts_pct": {
+      "global": 1.8,
+      "mode": 3.5,
+      "map": -0.19,
+      "class": 1.58
+     }
+    },
+    {
+     "name": "Colette",
+     "brawler_id": 16000039,
+     "games": 2734,
+     "pick_rate": 49.33,
+     "win_rate": 54.1,
+     "win_prob": 56.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.87,
+     "map_strength_centered": 3.15,
+     "breakdown_pct": {
+      "map_strength": 5.4,
+      "synergy": 0.26,
+      "counters": 0.0,
+      "risk_countered": 0.36
+     },
+     "strength_parts_pct": {
+      "global": 0.02,
+      "mode": 3.06,
+      "map": 0.74,
+      "class": 1.58
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 22,
+     "pick_rate": 0.4,
+     "win_rate": 31.8,
+     "win_prob": 56.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -4.19,
+     "map_strength_centered": 5.08,
+     "breakdown_pct": {
+      "map_strength": 7.34,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": -0.57
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.86,
+      "map": -0.5,
+      "class": 0.7
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 3,
+     "pick_rate": 0.05,
+     "win_rate": 66.7,
+     "win_prob": 56.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -4.42,
+     "map_strength_centered": 4.46,
+     "breakdown_pct": {
+      "map_strength": 6.71,
+      "synergy": 0.2,
+      "counters": 0.0,
+      "risk_countered": -0.44
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.27,
+      "map": 0.0,
+      "class": 0.7
+     }
+    }
+   ]
+  },
+  {
+   "mode": "hotZone",
+   "map": "Parallel Plays",
+   "games": 5374,
+   "baseline_win_prob": 61.6,
+   "overlap_top15": 3,
+   "overlap_picked_winning": 5,
+   "n_picked_winning": 15,
+   "flags": [
+    "low_data_top5: Clancy (15 games)",
+    "low_data_top5: Bolt (22 games)",
+    "low_overlap: 3/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Juju",
+     "brawler_id": 16000087,
+     "games": 1499,
+     "pick_rate": 27.89,
+     "win_rate": 56.1,
+     "win_prob": 67.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 5.39,
+     "map_strength_centered": 8.17,
+     "breakdown_pct": {
+      "map_strength": 10.34,
+      "synergy": 0.54,
+      "counters": 0.0,
+      "risk_countered": 0.24
+     },
+     "strength_parts_pct": {
+      "global": 3.31,
+      "mode": 3.94,
+      "map": 1.16,
+      "class": 1.92
+     }
+    },
+    {
+     "name": "Bibi",
+     "brawler_id": 16000026,
+     "games": 468,
+     "pick_rate": 8.71,
+     "win_rate": 53.8,
+     "win_prob": 63.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.71,
+     "map_strength_centered": 6.33,
+     "breakdown_pct": {
+      "map_strength": 8.49,
+      "synergy": 0.2,
+      "counters": 0.0,
+      "risk_countered": 0.23
+     },
+     "strength_parts_pct": {
+      "global": 1.81,
+      "mode": 2.21,
+      "map": 1.18,
+      "class": 3.3
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 362,
+     "pick_rate": 6.74,
+     "win_rate": 61.9,
+     "win_prob": 63.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.57,
+     "map_strength_centered": 8.88,
+     "breakdown_pct": {
+      "map_strength": 11.05,
+      "synergy": 0.17,
+      "counters": 0.0,
+      "risk_countered": 0.44
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 2.92,
+      "map": 0.97,
+      "class": 3.3
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 15,
+     "pick_rate": 0.28,
+     "win_rate": 46.7,
+     "win_prob": 62.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.21,
+     "map_strength_centered": 6.61,
+     "breakdown_pct": {
+      "map_strength": 8.77,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": 0.04
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.27,
+      "map": -0.06,
+      "class": 0.12
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 22,
+     "pick_rate": 0.41,
+     "win_rate": 50.0,
+     "win_prob": 62.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.97,
+     "map_strength_centered": 6.51,
+     "breakdown_pct": {
+      "map_strength": 8.68,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": -0.59
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.83,
+      "map": -0.08,
+      "class": 3.3
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 16,
+     "pick_rate": 0.3,
+     "win_rate": 43.8,
+     "win_prob": 62.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.63,
+     "map_strength_centered": 6.49,
+     "breakdown_pct": {
+      "map_strength": 8.66,
+      "synergy": -0.15,
+      "counters": 0.0,
+      "risk_countered": -0.22
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -1.03,
+      "map": 0.1,
+      "class": 3.3
+     }
+    },
+    {
+     "name": "Starr Nova",
+     "brawler_id": 16000105,
+     "games": 244,
+     "pick_rate": 4.54,
+     "win_rate": 52.0,
+     "win_prob": 62.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.46,
+     "map_strength_centered": 6.16,
+     "breakdown_pct": {
+      "map_strength": 8.32,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.02
+     },
+     "strength_parts_pct": {
+      "global": 3.98,
+      "mode": 3.11,
+      "map": -0.25,
+      "class": 1.48
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 458,
+     "pick_rate": 8.52,
+     "win_rate": 56.3,
+     "win_prob": 61.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.32,
+     "map_strength_centered": 5.2,
+     "breakdown_pct": {
+      "map_strength": 7.36,
+      "synergy": 0.16,
+      "counters": 0.0,
+      "risk_countered": -0.19
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 1.85,
+      "map": -0.35,
+      "class": 0.42
+     }
+    },
+    {
+     "name": "Melodie",
+     "brawler_id": 16000078,
+     "games": 1009,
+     "pick_rate": 18.78,
+     "win_rate": 56.3,
+     "win_prob": 61.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.36,
+     "map_strength_centered": 5.35,
+     "breakdown_pct": {
+      "map_strength": 7.51,
+      "synergy": -0.41,
+      "counters": 0.0,
+      "risk_countered": -1.05
+     },
+     "strength_parts_pct": {
+      "global": 3.96,
+      "mode": 0.16,
+      "map": 1.91,
+      "class": 1.48
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 813,
+     "pick_rate": 15.13,
+     "win_rate": 54.5,
+     "win_prob": 60.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.74,
+     "map_strength_centered": 5.13,
+     "breakdown_pct": {
+      "map_strength": 7.29,
+      "synergy": 0.44,
+      "counters": 0.0,
+      "risk_countered": -1.96
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": -1.35,
+      "map": 0.49,
+      "class": 0.42
+     }
+    }
+   ]
+  },
+  {
+   "mode": "hotZone",
+   "map": "Ring of Fire",
+   "games": 5393,
+   "baseline_win_prob": 65.5,
+   "overlap_top15": 1,
+   "overlap_picked_winning": 2,
+   "n_picked_winning": 15,
+   "flags": [
+    "low_data_top5: Hank (26 games)",
+    "zero_game_map: Jacky (+5.4%)",
+    "low_overlap: 1/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 1958,
+     "pick_rate": 36.31,
+     "win_rate": 60.2,
+     "win_prob": 71.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 5.89,
+     "map_strength_centered": 10.49,
+     "breakdown_pct": {
+      "map_strength": 11.82,
+      "synergy": 0.54,
+      "counters": 0.0,
+      "risk_countered": 0.59
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": 2.45,
+      "map": 1.69,
+      "class": 3.74
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 26,
+     "pick_rate": 0.48,
+     "win_rate": 42.3,
+     "win_prob": 64.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.81,
+     "map_strength_centered": 9.53,
+     "breakdown_pct": {
+      "map_strength": 10.86,
+      "synergy": 0.09,
+      "counters": 0.0,
+      "risk_countered": 0.18
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 2.92,
+      "map": -0.56,
+      "class": 4.64
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 264,
+     "pick_rate": 4.9,
+     "win_rate": 60.6,
+     "win_prob": 64.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.82,
+     "map_strength_centered": 10.41,
+     "breakdown_pct": {
+      "map_strength": 11.74,
+      "synergy": 0.29,
+      "counters": 0.0,
+      "risk_countered": 0.28
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 1.85,
+      "map": 0.7,
+      "class": 3.74
+     }
+    },
+    {
+     "name": "Emz",
+     "brawler_id": 16000030,
+     "games": 441,
+     "pick_rate": 8.18,
+     "win_rate": 53.5,
+     "win_prob": 64.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.18,
+     "map_strength_centered": 6.28,
+     "breakdown_pct": {
+      "map_strength": 7.61,
+      "synergy": 0.93,
+      "counters": 0.0,
+      "risk_countered": 0.69
+     },
+     "strength_parts_pct": {
+      "global": 3.01,
+      "mode": 1.61,
+      "map": -0.74,
+      "class": 3.74
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 32,
+     "pick_rate": 0.59,
+     "win_rate": 56.2,
+     "win_prob": 64.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.2,
+     "map_strength_centered": 8.8,
+     "breakdown_pct": {
+      "map_strength": 10.13,
+      "synergy": 0.05,
+      "counters": 0.0,
+      "risk_countered": -0.21
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.83,
+      "map": 0.04,
+      "class": 4.64
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 13,
+     "pick_rate": 0.24,
+     "win_rate": 53.8,
+     "win_prob": 64.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.23,
+     "map_strength_centered": 8.38,
+     "breakdown_pct": {
+      "map_strength": 9.71,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": -0.08
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.27,
+      "map": 0.27,
+      "class": 0.72
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 13,
+     "pick_rate": 0.24,
+     "win_rate": 53.8,
+     "win_prob": 64.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.53,
+     "map_strength_centered": 8.27,
+     "breakdown_pct": {
+      "map_strength": 9.6,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": -0.14
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -1.03,
+      "map": -0.29,
+      "class": 4.64
+     }
+    },
+    {
+     "name": "Bibi",
+     "brawler_id": 16000026,
+     "games": 31,
+     "pick_rate": 0.57,
+     "win_rate": 35.5,
+     "win_prob": 63.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.78,
+     "map_strength_centered": 7.28,
+     "breakdown_pct": {
+      "map_strength": 8.61,
+      "synergy": -0.05,
+      "counters": 0.0,
+      "risk_countered": 0.06
+     },
+     "strength_parts_pct": {
+      "global": 1.81,
+      "mode": 2.21,
+      "map": -0.04,
+      "class": 4.64
+     }
+    },
+    {
+     "name": "Starr Nova",
+     "brawler_id": 16000105,
+     "games": 200,
+     "pick_rate": 3.71,
+     "win_rate": 60.5,
+     "win_prob": 62.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.77,
+     "map_strength_centered": 5.95,
+     "breakdown_pct": {
+      "map_strength": 7.28,
+      "synergy": 0.3,
+      "counters": 0.0,
+      "risk_countered": 0.56
+     },
+     "strength_parts_pct": {
+      "global": 3.98,
+      "mode": 3.11,
+      "map": 0.42,
+      "class": -0.23
+     }
+    },
+    {
+     "name": "Trunk",
+     "brawler_id": 16000096,
+     "games": 18,
+     "pick_rate": 0.33,
+     "win_rate": 61.1,
+     "win_prob": 62.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.03,
+     "map_strength_centered": 6.09,
+     "breakdown_pct": {
+      "map_strength": 7.42,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": 0.12
+     },
+     "strength_parts_pct": {
+      "global": 1.89,
+      "mode": 0.89,
+      "map": 0.0,
+      "class": 4.64
+     }
+    }
+   ]
+  },
+  {
+   "mode": "hotZone",
+   "map": "Open Business",
+   "games": 5363,
+   "baseline_win_prob": 64.4,
+   "overlap_top15": 3,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_overlap: 3/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 949,
+     "pick_rate": 17.7,
+     "win_rate": 58.5,
+     "win_prob": 68.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.42,
+     "map_strength_centered": 9.77,
+     "breakdown_pct": {
+      "map_strength": 10.38,
+      "synergy": 0.39,
+      "counters": 0.0,
+      "risk_countered": -0.67
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": -1.35,
+      "map": 2.15,
+      "class": 1.84
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 81,
+     "pick_rate": 1.51,
+     "win_rate": 63.0,
+     "win_prob": 66.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.18,
+     "map_strength_centered": 11.15,
+     "breakdown_pct": {
+      "map_strength": 11.75,
+      "synergy": 0.21,
+      "counters": 0.0,
+      "risk_countered": 0.33
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 2.92,
+      "map": 0.48,
+      "class": 4.49
+     }
+    },
+    {
+     "name": "Juju",
+     "brawler_id": 16000087,
+     "games": 31,
+     "pick_rate": 0.58,
+     "win_rate": 51.6,
+     "win_prob": 66.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.13,
+     "map_strength_centered": 10.93,
+     "breakdown_pct": {
+      "map_strength": 11.54,
+      "synergy": 0.8,
+      "counters": 0.0,
+      "risk_countered": 0.37
+     },
+     "strength_parts_pct": {
+      "global": 3.31,
+      "mode": 3.94,
+      "map": 0.1,
+      "class": 4.18
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 263,
+     "pick_rate": 4.9,
+     "win_rate": 62.4,
+     "win_prob": 66.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.66,
+     "map_strength_centered": 8.62,
+     "breakdown_pct": {
+      "map_strength": 9.23,
+      "synergy": 0.36,
+      "counters": 0.0,
+      "risk_countered": 0.64
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 1.85,
+      "map": 0.1,
+      "class": 1.84
+     }
+    },
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 2006,
+     "pick_rate": 37.4,
+     "win_rate": 59.5,
+     "win_prob": 65.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.46,
+     "map_strength_centered": 7.36,
+     "breakdown_pct": {
+      "map_strength": 7.97,
+      "synergy": -0.1,
+      "counters": 0.0,
+      "risk_countered": -0.36
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": 2.45,
+      "map": -0.26,
+      "class": 1.84
+     }
+    },
+    {
+     "name": "Bibi",
+     "brawler_id": 16000026,
+     "games": 88,
+     "pick_rate": 1.64,
+     "win_rate": 53.4,
+     "win_prob": 65.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.23,
+     "map_strength_centered": 8.06,
+     "breakdown_pct": {
+      "map_strength": 8.67,
+      "synergy": 0.5,
+      "counters": 0.0,
+      "risk_countered": 0.65
+     },
+     "strength_parts_pct": {
+      "global": 1.81,
+      "mode": 2.21,
+      "map": 0.16,
+      "class": 4.49
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 13,
+     "pick_rate": 0.24,
+     "win_rate": 53.8,
+     "win_prob": 65.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.88,
+     "map_strength_centered": 9.22,
+     "breakdown_pct": {
+      "map_strength": 9.83,
+      "synergy": -0.13,
+      "counters": 0.0,
+      "risk_countered": 0.05
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -1.03,
+      "map": 0.08,
+      "class": 4.49
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 12,
+     "pick_rate": 0.22,
+     "win_rate": 50.0,
+     "win_prob": 65.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.73,
+     "map_strength_centered": 9.24,
+     "breakdown_pct": {
+      "map_strength": 9.85,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": -0.31
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.83,
+      "map": -0.1,
+      "class": 4.49
+     }
+    },
+    {
+     "name": "Emz",
+     "brawler_id": 16000030,
+     "games": 1557,
+     "pick_rate": 29.03,
+     "win_rate": 55.6,
+     "win_prob": 65.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.73,
+     "map_strength_centered": 6.85,
+     "breakdown_pct": {
+      "map_strength": 7.45,
+      "synergy": 0.74,
+      "counters": 0.0,
+      "risk_countered": 0.03
+     },
+     "strength_parts_pct": {
+      "global": 3.01,
+      "mode": 1.61,
+      "map": 1.01,
+      "class": 1.84
+     }
+    },
+    {
+     "name": "Barley",
+     "brawler_id": 16000006,
+     "games": 426,
+     "pick_rate": 7.94,
+     "win_rate": 58.2,
+     "win_prob": 63.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.57,
+     "map_strength_centered": 6.74,
+     "breakdown_pct": {
+      "map_strength": 7.35,
+      "synergy": 0.04,
+      "counters": 0.0,
+      "risk_countered": 0.51
+     },
+     "strength_parts_pct": {
+      "global": 2.17,
+      "mode": 0.38,
+      "map": 0.62,
+      "class": 4.18
+     }
+    }
+   ]
+  },
+  {
+   "mode": "hotZone",
+   "map": "Dueling Beetles",
+   "games": 5193,
+   "baseline_win_prob": 64.4,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 2,
+   "n_picked_winning": 15,
+   "flags": [
+    "zero_game_map: Jacky (+4.7%)",
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Amber",
+     "brawler_id": 16000040,
+     "games": 2088,
+     "pick_rate": 40.21,
+     "win_rate": 58.5,
+     "win_prob": 69.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.87,
+     "map_strength_centered": 8.95,
+     "breakdown_pct": {
+      "map_strength": 10.69,
+      "synergy": 0.49,
+      "counters": 0.0,
+      "risk_countered": -0.11
+     },
+     "strength_parts_pct": {
+      "global": 3.93,
+      "mode": 2.45,
+      "map": 2.18,
+      "class": 2.12
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 297,
+     "pick_rate": 5.72,
+     "win_rate": 55.9,
+     "win_prob": 64.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.21,
+     "map_strength_centered": 7.98,
+     "breakdown_pct": {
+      "map_strength": 9.72,
+      "synergy": 0.41,
+      "counters": 0.0,
+      "risk_countered": 0.46
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": 1.85,
+      "map": 0.3,
+      "class": 2.12
+     }
+    },
+    {
+     "name": "Hank",
+     "brawler_id": 16000069,
+     "games": 74,
+     "pick_rate": 1.42,
+     "win_rate": 66.2,
+     "win_prob": 64.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.27,
+     "map_strength_centered": 9.69,
+     "breakdown_pct": {
+      "map_strength": 11.43,
+      "synergy": 0.15,
+      "counters": 0.0,
+      "risk_countered": 0.21
+     },
+     "strength_parts_pct": {
+      "global": 3.87,
+      "mode": 2.92,
+      "map": 0.28,
+      "class": 4.36
+     }
+    },
+    {
+     "name": "Juju",
+     "brawler_id": 16000087,
+     "games": 43,
+     "pick_rate": 0.83,
+     "win_rate": 51.2,
+     "win_prob": 63.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.73,
+     "map_strength_centered": 6.98,
+     "breakdown_pct": {
+      "map_strength": 8.72,
+      "synergy": 0.56,
+      "counters": 0.0,
+      "risk_countered": 0.49
+     },
+     "strength_parts_pct": {
+      "global": 3.31,
+      "mode": 3.94,
+      "map": 0.03,
+      "class": 1.43
+     }
+    },
+    {
+     "name": "Emz",
+     "brawler_id": 16000030,
+     "games": 1400,
+     "pick_rate": 26.96,
+     "win_rate": 55.1,
+     "win_prob": 63.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.81,
+     "map_strength_centered": 5.34,
+     "breakdown_pct": {
+      "map_strength": 7.08,
+      "synergy": 0.99,
+      "counters": 0.0,
+      "risk_countered": 0.19
+     },
+     "strength_parts_pct": {
+      "global": 3.01,
+      "mode": 1.61,
+      "map": 0.34,
+      "class": 2.12
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 25,
+     "pick_rate": 0.48,
+     "win_rate": 40.0,
+     "win_prob": 63.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.08,
+     "map_strength_centered": 7.53,
+     "breakdown_pct": {
+      "map_strength": 9.27,
+      "synergy": 0.12,
+      "counters": 0.0,
+      "risk_countered": -0.03
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.27,
+      "map": -0.32,
+      "class": 0.87
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 14,
+     "pick_rate": 0.27,
+     "win_rate": 35.7,
+     "win_prob": 63.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.13,
+     "map_strength_centered": 7.57,
+     "breakdown_pct": {
+      "map_strength": 9.31,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": -0.04
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -1.03,
+      "map": -0.31,
+      "class": 4.36
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 34,
+     "pick_rate": 0.65,
+     "win_rate": 50.0,
+     "win_prob": 63.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.32,
+     "map_strength_centered": 7.89,
+     "breakdown_pct": {
+      "map_strength": 9.63,
+      "synergy": 0.04,
+      "counters": 0.0,
+      "risk_countered": -0.47
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": -0.83,
+      "map": -0.19,
+      "class": 4.36
+     }
+    },
+    {
+     "name": "Bibi",
+     "brawler_id": 16000026,
+     "games": 97,
+     "pick_rate": 1.87,
+     "win_rate": 49.5,
+     "win_prob": 62.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.8,
+     "map_strength_centered": 6.22,
+     "breakdown_pct": {
+      "map_strength": 7.95,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": 0.3
+     },
+     "strength_parts_pct": {
+      "global": 1.81,
+      "mode": 2.21,
+      "map": -0.42,
+      "class": 4.36
+     }
+    },
+    {
+     "name": "Trunk",
+     "brawler_id": 16000096,
+     "games": 32,
+     "pick_rate": 0.62,
+     "win_rate": 71.9,
+     "win_prob": 62.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.37,
+     "map_strength_centered": 5.92,
+     "breakdown_pct": {
+      "map_strength": 7.65,
+      "synergy": 0.11,
+      "counters": 0.0,
+      "risk_countered": 0.17
+     },
+     "strength_parts_pct": {
+      "global": 1.89,
+      "mode": 0.89,
+      "map": 0.51,
+      "class": 4.36
+     }
+    }
+   ]
+  },
+  {
+   "mode": "knockout",
+   "map": "Belle's Rock",
+   "games": 6020,
+   "baseline_win_prob": 60.9,
+   "overlap_top15": 4,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 10,
+   "flags": [
+    "low_data_top5: Clancy (0 games)",
+    "low_data_top5: Janet (15 games)",
+    "zero_game_map: Clancy (+6.9%)"
+   ],
+   "top": [
+    {
+     "name": "Brock",
+     "brawler_id": 16000003,
+     "games": 3838,
+     "pick_rate": 63.75,
+     "win_rate": 55.1,
+     "win_prob": 65.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.07,
+     "map_strength_centered": 4.48,
+     "breakdown_pct": {
+      "map_strength": 6.28,
+      "synergy": 0.22,
+      "counters": 0.0,
+      "risk_countered": 0.29
+     },
+     "strength_parts_pct": {
+      "global": -1.44,
+      "mode": 3.86,
+      "map": 1.26,
+      "class": 2.59
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 974,
+     "pick_rate": 16.18,
+     "win_rate": 53.3,
+     "win_prob": 63.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.62,
+     "map_strength_centered": 4.95,
+     "breakdown_pct": {
+      "map_strength": 6.75,
+      "synergy": -0.86,
+      "counters": 0.0,
+      "risk_countered": 0.57
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": 3.2,
+      "map": -0.1,
+      "class": -0.7
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 63.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.15,
+     "map_strength_centered": 6.88,
+     "breakdown_pct": {
+      "map_strength": 8.69,
+      "synergy": 0.15,
+      "counters": 0.0,
+      "risk_countered": 0.27
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.32,
+      "map": 0.0,
+      "class": 0.02
+     }
+    },
+    {
+     "name": "Janet",
+     "brawler_id": 16000057,
+     "games": 15,
+     "pick_rate": 0.25,
+     "win_rate": 73.3,
+     "win_prob": 62.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.2,
+     "map_strength_centered": 4.84,
+     "breakdown_pct": {
+      "map_strength": 6.64,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": 0.29
+     },
+     "strength_parts_pct": {
+      "global": 3.92,
+      "mode": -0.0,
+      "map": 0.13,
+      "class": 2.59
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1018,
+     "pick_rate": 16.91,
+     "win_rate": 57.3,
+     "win_prob": 61.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.03,
+     "map_strength_centered": 6.72,
+     "breakdown_pct": {
+      "map_strength": 8.52,
+      "synergy": -0.24,
+      "counters": 0.0,
+      "risk_countered": -1.2
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.85,
+      "map": -0.13,
+      "class": -1.94
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 43,
+     "pick_rate": 0.71,
+     "win_rate": 55.8,
+     "win_prob": 60.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.53,
+     "map_strength_centered": 2.44,
+     "breakdown_pct": {
+      "map_strength": 4.24,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": 0.85
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.33,
+      "map": 0.14,
+      "class": -2.52
+     }
+    },
+    {
+     "name": "Alli",
+     "brawler_id": 16000095,
+     "games": 2,
+     "pick_rate": 0.03,
+     "win_rate": 100.0,
+     "win_prob": 59.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.14,
+     "map_strength_centered": 2.51,
+     "breakdown_pct": {
+      "map_strength": 4.31,
+      "synergy": 0.03,
+      "counters": 0.0,
+      "risk_countered": 0.47
+     },
+     "strength_parts_pct": {
+      "global": 1.8,
+      "mode": 3.09,
+      "map": 0.12,
+      "class": -0.7
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 259,
+     "pick_rate": 4.3,
+     "win_rate": 51.7,
+     "win_prob": 59.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.21,
+     "map_strength_centered": 2.28,
+     "breakdown_pct": {
+      "map_strength": 4.08,
+      "synergy": -0.09,
+      "counters": 0.0,
+      "risk_countered": 0.2
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.79,
+      "map": -0.47,
+      "class": -2.52
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 59.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.58,
+     "map_strength_centered": 2.2,
+     "breakdown_pct": {
+      "map_strength": 4.0,
+      "synergy": -0.06,
+      "counters": 0.0,
+      "risk_countered": -0.03
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": 0.34,
+      "map": 0.0,
+      "class": 0.02
+     }
+    },
+    {
+     "name": "Najia",
+     "brawler_id": 16000103,
+     "games": 1725,
+     "pick_rate": 28.65,
+     "win_rate": 56.4,
+     "win_prob": 58.0,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.93,
+     "map_strength_centered": 2.96,
+     "breakdown_pct": {
+      "map_strength": 4.76,
+      "synergy": 0.66,
+      "counters": 0.0,
+      "risk_countered": -1.3
+     },
+     "strength_parts_pct": {
+      "global": -1.72,
+      "mode": 4.68,
+      "map": 1.79,
+      "class": 0.02
+     }
+    }
+   ]
+  },
+  {
+   "mode": "knockout",
+   "map": "Flaring Phoenix",
+   "games": 5907,
+   "baseline_win_prob": 61.6,
+   "overlap_top15": 4,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 10,
+   "flags": [
+    "low_data_top5: Clancy (0 games)",
+    "low_data_top5: Janet (24 games)",
+    "zero_game_map: Clancy (+7.4%)"
+   ],
+   "top": [
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 1022,
+     "pick_rate": 17.3,
+     "win_rate": 59.5,
+     "win_prob": 66.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.61,
+     "map_strength_centered": 7.68,
+     "breakdown_pct": {
+      "map_strength": 8.36,
+      "synergy": -0.8,
+      "counters": 0.0,
+      "risk_countered": 1.67
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": 3.2,
+      "map": 1.34,
+      "class": -0.53
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 62.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.06,
+     "map_strength_centered": 7.39,
+     "breakdown_pct": {
+      "map_strength": 8.07,
+      "synergy": 0.09,
+      "counters": 0.0,
+      "risk_countered": 0.1
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.32,
+      "map": 0.0,
+      "class": -0.6
+     }
+    },
+    {
+     "name": "Brock",
+     "brawler_id": 16000003,
+     "games": 3533,
+     "pick_rate": 59.81,
+     "win_rate": 54.9,
+     "win_prob": 62.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.94,
+     "map_strength_centered": 3.28,
+     "breakdown_pct": {
+      "map_strength": 3.96,
+      "synergy": 0.38,
+      "counters": 0.0,
+      "risk_countered": 1.31
+     },
+     "strength_parts_pct": {
+      "global": -1.44,
+      "mode": 3.86,
+      "map": -0.49,
+      "class": 2.03
+     }
+    },
+    {
+     "name": "Janet",
+     "brawler_id": 16000057,
+     "games": 24,
+     "pick_rate": 0.41,
+     "win_rate": 54.2,
+     "win_prob": 62.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.59,
+     "map_strength_centered": 5.13,
+     "breakdown_pct": {
+      "map_strength": 5.81,
+      "synergy": 0.04,
+      "counters": 0.0,
+      "risk_countered": 0.0
+     },
+     "strength_parts_pct": {
+      "global": 3.92,
+      "mode": -0.0,
+      "map": -0.13,
+      "class": 2.03
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 262,
+     "pick_rate": 4.44,
+     "win_rate": 56.1,
+     "win_prob": 61.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.07,
+     "map_strength_centered": 5.93,
+     "breakdown_pct": {
+      "map_strength": 6.61,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": -0.21
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.79,
+      "map": 0.55,
+      "class": -1.01
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1118,
+     "pick_rate": 18.93,
+     "win_rate": 56.9,
+     "win_prob": 61.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.03,
+     "map_strength_centered": 8.49,
+     "breakdown_pct": {
+      "map_strength": 9.17,
+      "synergy": -0.27,
+      "counters": 0.0,
+      "risk_countered": -2.44
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.85,
+      "map": -0.04,
+      "class": -1.38
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 32,
+     "pick_rate": 0.54,
+     "win_rate": 53.1,
+     "win_prob": 61.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.17,
+     "map_strength_centered": 5.01,
+     "breakdown_pct": {
+      "map_strength": 5.69,
+      "synergy": 0.21,
+      "counters": 0.0,
+      "risk_countered": 0.56
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.33,
+      "map": 0.08,
+      "class": -1.01
+     }
+    },
+    {
+     "name": "Juju",
+     "brawler_id": 16000087,
+     "games": 148,
+     "pick_rate": 2.51,
+     "win_rate": 52.0,
+     "win_prob": 60.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.5,
+     "map_strength_centered": 4.23,
+     "breakdown_pct": {
+      "map_strength": 4.91,
+      "synergy": 0.14,
+      "counters": 0.0,
+      "risk_countered": -0.45
+     },
+     "strength_parts_pct": {
+      "global": 3.31,
+      "mode": -1.59,
+      "map": 0.31,
+      "class": 2.88
+     }
+    },
+    {
+     "name": "Mandy",
+     "brawler_id": 16000065,
+     "games": 1527,
+     "pick_rate": 25.85,
+     "win_rate": 51.7,
+     "win_prob": 59.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.06,
+     "map_strength_centered": 3.05,
+     "breakdown_pct": {
+      "map_strength": 3.73,
+      "synergy": 1.15,
+      "counters": 0.0,
+      "risk_countered": -2.42
+     },
+     "strength_parts_pct": {
+      "global": -2.57,
+      "mode": 2.83,
+      "map": 1.44,
+      "class": 2.03
+     }
+    },
+    {
+     "name": "Angelo",
+     "brawler_id": 16000079,
+     "games": 229,
+     "pick_rate": 3.88,
+     "win_rate": 54.6,
+     "win_prob": 59.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.11,
+     "map_strength_centered": 3.36,
+     "breakdown_pct": {
+      "map_strength": 4.04,
+      "synergy": 0.26,
+      "counters": 0.0,
+      "risk_countered": -0.1
+     },
+     "strength_parts_pct": {
+      "global": 0.49,
+      "mode": 1.41,
+      "map": 0.11,
+      "class": 2.03
+     }
+    }
+   ]
+  },
+  {
+   "mode": "knockout",
+   "map": "Goldarm Gulch",
+   "games": 5826,
+   "baseline_win_prob": 62.2,
+   "overlap_top15": 3,
+   "overlap_picked_winning": 5,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Clancy (3 games)",
+    "low_overlap: 3/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Brock",
+     "brawler_id": 16000003,
+     "games": 3709,
+     "pick_rate": 63.66,
+     "win_rate": 56.4,
+     "win_prob": 66.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.23,
+     "map_strength_centered": 6.55,
+     "breakdown_pct": {
+      "map_strength": 8.45,
+      "synergy": 0.18,
+      "counters": 0.0,
+      "risk_countered": 0.08
+     },
+     "strength_parts_pct": {
+      "global": -1.44,
+      "mode": 3.86,
+      "map": 1.28,
+      "class": 4.74
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 3,
+     "pick_rate": 0.05,
+     "win_rate": 33.3,
+     "win_prob": 62.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.69,
+     "map_strength_centered": 7.64,
+     "breakdown_pct": {
+      "map_strength": 9.54,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": 0.27
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.32,
+      "map": -0.02,
+      "class": 0.89
+     }
+    },
+    {
+     "name": "Janet",
+     "brawler_id": 16000057,
+     "games": 40,
+     "pick_rate": 0.69,
+     "win_rate": 55.0,
+     "win_prob": 62.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.45,
+     "map_strength_centered": 6.99,
+     "breakdown_pct": {
+      "map_strength": 8.89,
+      "synergy": 0.0,
+      "counters": 0.0,
+      "risk_countered": 0.21
+     },
+     "strength_parts_pct": {
+      "global": 3.92,
+      "mode": -0.0,
+      "map": 0.24,
+      "class": 4.74
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1080,
+     "pick_rate": 18.54,
+     "win_rate": 54.7,
+     "win_prob": 61.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.46,
+     "map_strength_centered": 6.56,
+     "breakdown_pct": {
+      "map_strength": 8.46,
+      "synergy": 0.29,
+      "counters": 0.0,
+      "risk_countered": -1.62
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.85,
+      "map": -1.66,
+      "class": -0.48
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 738,
+     "pick_rate": 12.67,
+     "win_rate": 56.1,
+     "win_prob": 61.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.51,
+     "map_strength_centered": 4.0,
+     "breakdown_pct": {
+      "map_strength": 5.9,
+      "synergy": 0.13,
+      "counters": 0.0,
+      "risk_countered": 0.92
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": 3.2,
+      "map": 1.06,
+      "class": -2.71
+     }
+    },
+    {
+     "name": "Angelo",
+     "brawler_id": 16000079,
+     "games": 482,
+     "pick_rate": 8.27,
+     "win_rate": 51.9,
+     "win_prob": 60.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.5,
+     "map_strength_centered": 3.35,
+     "breakdown_pct": {
+      "map_strength": 5.24,
+      "synergy": 0.25,
+      "counters": 0.0,
+      "risk_countered": 0.54
+     },
+     "strength_parts_pct": {
+      "global": 0.49,
+      "mode": 1.41,
+      "map": -1.4,
+      "class": 4.74
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 25,
+     "pick_rate": 0.43,
+     "win_rate": 52.0,
+     "win_prob": 59.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.94,
+     "map_strength_centered": 2.42,
+     "breakdown_pct": {
+      "map_strength": 4.32,
+      "synergy": 0.16,
+      "counters": 0.0,
+      "risk_countered": 0.7
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.33,
+      "map": 0.17,
+      "class": -2.47
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 255,
+     "pick_rate": 4.38,
+     "win_rate": 49.4,
+     "win_prob": 59.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.97,
+     "map_strength_centered": 3.21,
+     "breakdown_pct": {
+      "map_strength": 5.11,
+      "synergy": -0.14,
+      "counters": 0.0,
+      "risk_countered": 0.0
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.79,
+      "map": 0.51,
+      "class": -2.47
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 3,
+     "pick_rate": 0.05,
+     "win_rate": 66.7,
+     "win_prob": 58.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.39,
+     "map_strength_centered": 3.0,
+     "breakdown_pct": {
+      "map_strength": 4.9,
+      "synergy": 0.01,
+      "counters": 0.0,
+      "risk_countered": -0.09
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": 0.34,
+      "map": 0.03,
+      "class": 0.89
+     }
+    },
+    {
+     "name": "Squeak",
+     "brawler_id": 16000047,
+     "games": 1504,
+     "pick_rate": 25.82,
+     "win_rate": 52.3,
+     "win_prob": 58.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.87,
+     "map_strength_centered": 2.56,
+     "breakdown_pct": {
+      "map_strength": 4.46,
+      "synergy": 0.1,
+      "counters": 0.0,
+      "risk_countered": -0.19
+     },
+     "strength_parts_pct": {
+      "global": -2.01,
+      "mode": 5.88,
+      "map": 1.07,
+      "class": -0.48
+     }
+    }
+   ]
+  },
+  {
+   "mode": "knockout",
+   "map": "New Horizons",
+   "games": 5888,
+   "baseline_win_prob": 61.4,
+   "overlap_top15": 2,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 9,
+   "flags": [
+    "low_data_top5: Clancy (0 games)",
+    "zero_game_map: Clancy (+7.8%)",
+    "zero_game_map: Tara (+3.1%)",
+    "low_overlap: 2/10 in the 15 most picked"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1057,
+     "pick_rate": 17.95,
+     "win_rate": 60.8,
+     "win_prob": 65.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.22,
+     "map_strength_centered": 9.85,
+     "breakdown_pct": {
+      "map_strength": 10.64,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": -1.42
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.85,
+      "map": 1.92,
+      "class": -1.87
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 652,
+     "pick_rate": 11.07,
+     "win_rate": 54.0,
+     "win_prob": 64.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.46,
+     "map_strength_centered": 5.75,
+     "breakdown_pct": {
+      "map_strength": 6.54,
+      "synergy": -0.83,
+      "counters": 0.0,
+      "risk_countered": 1.78
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": 3.2,
+      "map": -0.33,
+      "class": -0.68
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 64.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.43,
+     "map_strength_centered": 7.82,
+     "breakdown_pct": {
+      "map_strength": 8.61,
+      "synergy": 0.16,
+      "counters": 0.0,
+      "risk_countered": 0.16
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.32,
+      "map": 0.0,
+      "class": -0.06
+     }
+    },
+    {
+     "name": "Janet",
+     "brawler_id": 16000057,
+     "games": 32,
+     "pick_rate": 0.54,
+     "win_rate": 59.4,
+     "win_prob": 64.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.25,
+     "map_strength_centered": 7.1,
+     "breakdown_pct": {
+      "map_strength": 7.89,
+      "synergy": 0.06,
+      "counters": 0.0,
+      "risk_countered": 0.09
+     },
+     "strength_parts_pct": {
+      "global": 3.92,
+      "mode": -0.0,
+      "map": 0.35,
+      "class": 3.63
+     }
+    },
+    {
+     "name": "Angelo",
+     "brawler_id": 16000079,
+     "games": 520,
+     "pick_rate": 8.83,
+     "win_rate": 54.4,
+     "win_prob": 63.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 2.16,
+     "map_strength_centered": 5.16,
+     "breakdown_pct": {
+      "map_strength": 5.95,
+      "synergy": 0.29,
+      "counters": 0.0,
+      "risk_countered": 0.45
+     },
+     "strength_parts_pct": {
+      "global": 0.49,
+      "mode": 1.41,
+      "map": 0.42,
+      "class": 3.63
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 52,
+     "pick_rate": 0.88,
+     "win_rate": 61.5,
+     "win_prob": 62.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.75,
+     "map_strength_centered": 4.1,
+     "breakdown_pct": {
+      "map_strength": 4.89,
+      "synergy": -0.4,
+      "counters": 0.0,
+      "risk_countered": 0.68
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.33,
+      "map": -0.11,
+      "class": -1.61
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 198,
+     "pick_rate": 3.36,
+     "win_rate": 54.0,
+     "win_prob": 61.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.45,
+     "map_strength_centered": 4.23,
+     "breakdown_pct": {
+      "map_strength": 5.02,
+      "synergy": -0.01,
+      "counters": 0.0,
+      "risk_countered": 0.02
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.79,
+      "map": -0.44,
+      "class": -1.61
+     }
+    },
+    {
+     "name": "Brock",
+     "brawler_id": 16000003,
+     "games": 3554,
+     "pick_rate": 60.36,
+     "win_rate": 53.5,
+     "win_prob": 61.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.16,
+     "map_strength_centered": 3.48,
+     "breakdown_pct": {
+      "map_strength": 4.27,
+      "synergy": 0.23,
+      "counters": 0.0,
+      "risk_countered": -0.43
+     },
+     "strength_parts_pct": {
+      "global": -1.44,
+      "mode": 3.86,
+      "map": -1.78,
+      "class": 3.63
+     }
+    },
+    {
+     "name": "Alli",
+     "brawler_id": 16000095,
+     "games": 2,
+     "pick_rate": 0.03,
+     "win_rate": 100.0,
+     "win_prob": 61.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.24,
+     "map_strength_centered": 3.42,
+     "breakdown_pct": {
+      "map_strength": 4.21,
+      "synergy": 0.06,
+      "counters": 0.0,
+      "risk_countered": 0.51
+     },
+     "strength_parts_pct": {
+      "global": 1.8,
+      "mode": 3.09,
+      "map": 0.0,
+      "class": -0.68
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 60.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.89,
+     "map_strength_centered": 3.14,
+     "breakdown_pct": {
+      "map_strength": 3.92,
+      "synergy": -0.03,
+      "counters": 0.0,
+      "risk_countered": -0.09
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": 0.34,
+      "map": 0.0,
+      "class": -0.06
+     }
+    }
+   ]
+  },
+  {
+   "mode": "knockout",
+   "map": "Flowing Springs",
+   "games": 5754,
+   "baseline_win_prob": 60.5,
+   "overlap_top15": 4,
+   "overlap_picked_winning": 5,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Clancy (2 games)"
+   ],
+   "top": [
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1271,
+     "pick_rate": 22.09,
+     "win_rate": 59.2,
+     "win_prob": 64.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 4.03,
+     "map_strength_centered": 8.85,
+     "breakdown_pct": {
+      "map_strength": 11.08,
+      "synergy": 0.22,
+      "counters": 0.0,
+      "risk_countered": 0.24
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.85,
+      "map": 2.56,
+      "class": -2.07
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 2,
+     "pick_rate": 0.03,
+     "win_rate": 0.0,
+     "win_prob": 61.4,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.83,
+     "map_strength_centered": 7.05,
+     "breakdown_pct": {
+      "map_strength": 9.28,
+      "synergy": 0.22,
+      "counters": 0.0,
+      "risk_countered": 0.18
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.32,
+      "map": -0.11,
+      "class": 0.72
+     }
+    },
+    {
+     "name": "Angelo",
+     "brawler_id": 16000079,
+     "games": 2318,
+     "pick_rate": 40.29,
+     "win_rate": 55.5,
+     "win_prob": 61.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.77,
+     "map_strength_centered": 4.04,
+     "breakdown_pct": {
+      "map_strength": 6.27,
+      "synergy": 0.3,
+      "counters": 0.0,
+      "risk_countered": 0.62
+     },
+     "strength_parts_pct": {
+      "global": 0.49,
+      "mode": 1.41,
+      "map": 0.73,
+      "class": 3.65
+     }
+    },
+    {
+     "name": "Janet",
+     "brawler_id": 16000057,
+     "games": 30,
+     "pick_rate": 0.52,
+     "win_rate": 43.3,
+     "win_prob": 60.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.28,
+     "map_strength_centered": 5.14,
+     "breakdown_pct": {
+      "map_strength": 7.37,
+      "synergy": 0.06,
+      "counters": 0.0,
+      "risk_countered": -0.05
+     },
+     "strength_parts_pct": {
+      "global": 3.92,
+      "mode": -0.0,
+      "map": -0.19,
+      "class": 3.65
+     }
+    },
+    {
+     "name": "Brock",
+     "brawler_id": 16000003,
+     "games": 3927,
+     "pick_rate": 68.25,
+     "win_rate": 53.3,
+     "win_prob": 60.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.2,
+     "map_strength_centered": 4.05,
+     "breakdown_pct": {
+      "map_strength": 6.28,
+      "synergy": 0.18,
+      "counters": 0.0,
+      "risk_countered": -1.3
+     },
+     "strength_parts_pct": {
+      "global": -1.44,
+      "mode": 3.86,
+      "map": 0.2,
+      "class": 3.65
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 413,
+     "pick_rate": 7.18,
+     "win_rate": 51.8,
+     "win_prob": 60.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.33,
+     "map_strength_centered": 2.83,
+     "breakdown_pct": {
+      "map_strength": 5.06,
+      "synergy": -0.86,
+      "counters": 0.0,
+      "risk_countered": 1.97
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": 3.2,
+      "map": -0.37,
+      "class": -2.12
+     }
+    },
+    {
+     "name": "Ollie",
+     "brawler_id": 16000090,
+     "games": 68,
+     "pick_rate": 1.18,
+     "win_rate": 60.3,
+     "win_prob": 60.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.36,
+     "map_strength_centered": 4.53,
+     "breakdown_pct": {
+      "map_strength": 6.76,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": 0.37
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.79,
+      "map": 0.82,
+      "class": -1.13
+     }
+    },
+    {
+     "name": "Bolt",
+     "brawler_id": 16000106,
+     "games": 10,
+     "pick_rate": 0.17,
+     "win_rate": 50.0,
+     "win_prob": 59.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.22,
+     "map_strength_centered": 3.3,
+     "breakdown_pct": {
+      "map_strength": 5.53,
+      "synergy": -0.42,
+      "counters": 0.0,
+      "risk_countered": 0.79
+     },
+     "strength_parts_pct": {
+      "global": 6.28,
+      "mode": 0.33,
+      "map": 0.04,
+      "class": -1.13
+     }
+    },
+    {
+     "name": "Najia",
+     "brawler_id": 16000103,
+     "games": 2279,
+     "pick_rate": 39.61,
+     "win_rate": 55.6,
+     "win_prob": 58.8,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.7,
+     "map_strength_centered": 4.01,
+     "breakdown_pct": {
+      "map_strength": 6.24,
+      "synergy": 0.28,
+      "counters": 0.0,
+      "risk_countered": -0.38
+     },
+     "strength_parts_pct": {
+      "global": -1.72,
+      "mode": 4.68,
+      "map": 2.56,
+      "class": 0.72
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 2,
+     "pick_rate": 0.03,
+     "win_rate": 0.0,
+     "win_prob": 57.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.81,
+     "map_strength_centered": 2.48,
+     "breakdown_pct": {
+      "map_strength": 4.7,
+      "synergy": -0.02,
+      "counters": 0.0,
+      "risk_countered": -0.09
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": 0.34,
+      "map": 0.0,
+      "class": 0.72
+     }
+    }
+   ]
+  },
+  {
+   "mode": "knockout",
+   "map": "Out in the Open",
+   "games": 5838,
+   "baseline_win_prob": 60.6,
+   "overlap_top15": 4,
+   "overlap_picked_winning": 4,
+   "n_picked_winning": 12,
+   "flags": [
+    "low_data_top5: Clancy (0 games)",
+    "zero_game_map: Clancy (+7.3%)"
+   ],
+   "top": [
+    {
+     "name": "Angelo",
+     "brawler_id": 16000079,
+     "games": 2171,
+     "pick_rate": 37.19,
+     "win_rate": 57.4,
+     "win_prob": 63.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 3.23,
+     "map_strength_centered": 5.68,
+     "breakdown_pct": {
+      "map_strength": 7.58,
+      "synergy": 0.3,
+      "counters": 0.0,
+      "risk_countered": 1.36
+     },
+     "strength_parts_pct": {
+      "global": 0.49,
+      "mode": 1.41,
+      "map": 2.08,
+      "class": 3.6
+     }
+    },
+    {
+     "name": "Mr. P",
+     "brawler_id": 16000031,
+     "games": 1128,
+     "pick_rate": 19.32,
+     "win_rate": 56.4,
+     "win_prob": 62.3,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 1.71,
+     "map_strength_centered": 6.59,
+     "breakdown_pct": {
+      "map_strength": 8.49,
+      "synergy": 0.26,
+      "counters": 0.0,
+      "risk_countered": -0.34
+     },
+     "strength_parts_pct": {
+      "global": 7.74,
+      "mode": 2.85,
+      "map": -1.52,
+      "class": -0.59
+     }
+    },
+    {
+     "name": "Clancy",
+     "brawler_id": 16000083,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 61.2,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": 0.54,
+     "map_strength_centered": 7.32,
+     "breakdown_pct": {
+      "map_strength": 9.22,
+      "synergy": 0.23,
+      "counters": 0.0,
+      "risk_countered": 0.24
+     },
+     "strength_parts_pct": {
+      "global": 8.98,
+      "mode": -0.32,
+      "map": 0.0,
+      "class": 0.55
+     }
+    },
+    {
+     "name": "Brock",
+     "brawler_id": 16000003,
+     "games": 2858,
+     "pick_rate": 48.96,
+     "win_rate": 56.4,
+     "win_prob": 60.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.15,
+     "map_strength_centered": 5.21,
+     "breakdown_pct": {
+      "map_strength": 7.11,
+      "synergy": 0.28,
+      "counters": 0.0,
+      "risk_countered": -1.42
+     },
+     "strength_parts_pct": {
+      "global": -1.44,
+      "mode": 3.86,
+      "map": 1.09,
+      "class": 3.6
+     }
+    },
+    {
+     "name": "Janet",
+     "brawler_id": 16000057,
+     "games": 31,
+     "pick_rate": 0.53,
+     "win_rate": 41.9,
+     "win_prob": 59.9,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -0.69,
+     "map_strength_centered": 5.21,
+     "breakdown_pct": {
+      "map_strength": 7.11,
+      "synergy": -0.04,
+      "counters": 0.0,
+      "risk_countered": -0.27
+     },
+     "strength_parts_pct": {
+      "global": 3.92,
+      "mode": -0.0,
+      "map": -0.4,
+      "class": 3.6
+     }
+    },
+    {
+     "name": "Edgar",
+     "brawler_id": 16000043,
+     "games": 257,
+     "pick_rate": 4.4,
+     "win_rate": 47.5,
+     "win_prob": 59.5,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -1.09,
+     "map_strength_centered": 3.09,
+     "breakdown_pct": {
+      "map_strength": 4.99,
+      "synergy": -0.12,
+      "counters": 0.0,
+      "risk_countered": 0.74
+     },
+     "strength_parts_pct": {
+      "global": 4.36,
+      "mode": 3.2,
+      "map": -0.31,
+      "class": -2.25
+     }
+    },
+    {
+     "name": "Juju",
+     "brawler_id": 16000087,
+     "games": 16,
+     "pick_rate": 0.27,
+     "win_rate": 68.8,
+     "win_prob": 57.7,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -2.95,
+     "map_strength_centered": 2.94,
+     "breakdown_pct": {
+      "map_strength": 4.85,
+      "synergy": 0.45,
+      "counters": 0.0,
+      "risk_countered": -0.56
+     },
+     "strength_parts_pct": {
+      "global": 3.31,
+      "mode": -1.59,
+      "map": 0.28,
+      "class": 2.84
+     }
+    },
+    {
+     "name": "Tara",
+     "brawler_id": 16000017,
+     "games": 0,
+     "pick_rate": 0.0,
+     "win_rate": null,
+     "win_prob": 57.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.05,
+     "map_strength_centered": 2.63,
+     "breakdown_pct": {
+      "map_strength": 4.53,
+      "synergy": 0.02,
+      "counters": 0.0,
+      "risk_countered": 0.01
+     },
+     "strength_parts_pct": {
+      "global": 3.64,
+      "mode": 0.34,
+      "map": 0.0,
+      "class": 0.55
+     }
+    },
+    {
+     "name": "Squeak",
+     "brawler_id": 16000047,
+     "games": 1794,
+     "pick_rate": 30.73,
+     "win_rate": 52.7,
+     "win_prob": 57.6,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.07,
+     "map_strength_centered": 2.43,
+     "breakdown_pct": {
+      "map_strength": 4.33,
+      "synergy": 0.32,
+      "counters": 0.0,
+      "risk_countered": 0.02
+     },
+     "strength_parts_pct": {
+      "global": -2.01,
+      "mode": 5.88,
+      "map": 1.05,
+      "class": -0.59
+     }
+    },
+    {
+     "name": "Chuck",
+     "brawler_id": 16000073,
+     "games": 13,
+     "pick_rate": 0.22,
+     "win_rate": 46.2,
+     "win_prob": 57.1,
+     "win_prob_p25": null,
+     "confidence": null,
+     "delta_vs_typical": -3.52,
+     "map_strength_centered": 2.32,
+     "breakdown_pct": {
+      "map_strength": 4.22,
+      "synergy": -0.16,
+      "counters": 0.0,
+      "risk_countered": -0.18
+     },
+     "strength_parts_pct": {
+      "global": 5.45,
+      "mode": -0.69,
+      "map": 0.05,
+      "class": -0.59
+     }
+    }
+   ]
+  }
+ ]
+}

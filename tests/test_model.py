@@ -33,7 +33,10 @@ def synth(n=4000, strong=16000000, counter=(16000001, 16000002), maps=("M1", "M2
 
 PARAMS = {"lam_g": 2.0, "lam_mode": 8.0, "lam_map": 20.0, "lam_cmode": 4.0, "lam_cmap": 10.0,
           "lam_syn": 30.0, "lam_cnt": 30.0, "half_life_days": 0, "bracket_min_tier": 0,
-          "use_patch": False}
+          "use_patch": False,
+          # With only 12 brawlers, role-level matchup terms are effectively brawler-level and
+          # just fit noise; they're tested separately (test_role_counter_is_learned).
+          "use_role_pairs": False}
 
 
 @pytest.fixture(scope="module")
@@ -180,13 +183,24 @@ def test_patch_changed_brawler_adapts_faster(monkeypatch):
     monkeypatch.setattr(model_mod, "load_patch_config",
                         lambda: {"patch_ts": patch_ts, "changed_ids": [16000005]})
     from model import DEFAULT_PARAMS
+    # Role / latent matchup terms are target-only (post-patch) by design; with 12 brawlers they'd
+    # act as unpenalized post-patch brawler effects, so they're off for this brawler-level test.
     p = dict(DEFAULT_PARAMS, half_life_days=0, use_rank=False, use_patch=True,
-             bracket_min_tier=16, lam_dev_scale=10.0, changed_prior_share=0.1, pre_patch_weight=0.3)
+             bracket_min_tier=16, lam_dev_scale=10.0, changed_prior_share=0.1, pre_patch_weight=0.3,
+             use_role_pairs=False, lat_k=0)
     md = DraftModel(p).fit(m)
     mm = md.map_model("M", "gemGrab")
-    s5, s6 = mm.S[mm.id_to_idx[16000005]], mm.S[mm.id_to_idx[16000006]]
+    # Strength is only identified relative to other brawlers (the absolute level cancels in
+    # 3v3 and S is centered for display), so measure it against the neutral brawlers.
+    neutral = np.median([mm.S[mm.id_to_idx[b]] for b in IDS if b not in (16000005, 16000006)])
+    s5 = mm.S[mm.id_to_idx[16000005]] - neutral
+    s6 = mm.S[mm.id_to_idx[16000006]] - neutral
     assert s5 < s6 - 0.04         # changed brawler sheds its stale pre-patch strength
-    assert abs(s5) < 0.05
+    # ...and lands near what post-patch games alone say about it
+    post = m.subset(np.arange(5000, 6000))
+    mp = DraftModel(p).fit(post).map_model("M", "gemGrab")
+    neutral_p = np.median([mp.S[mp.id_to_idx[b]] for b in IDS if b not in (16000005, 16000006)])
+    assert abs(s5 - (mp.S[mp.id_to_idx[16000005]] - neutral_p)) < 0.08
     assert md.n_in_bracket == 1000
 
 

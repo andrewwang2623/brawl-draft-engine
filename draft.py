@@ -4,12 +4,23 @@ Ranked pick order is 1-2-2-1: with F = first-pick team and S = second,
     slot:  0  1  2  3  4  5
     team:  F  S  S  F  F  S
 
-Our picks are max nodes (we play the rest of the draft well); opponent picks are
-chance nodes drawn from a *realistic* distribution:
+The pick being recommended is a max node. Everyone else's picks are chance nodes drawn
+from a *realistic* distribution:
 
-    P(c) ∝ prior_map(c)^alpha * exp(beta * marginal_gain_for_them(c))
+    P(c) ∝ prior_map(c)^alpha * exp(beta * marginal_gain(c))
 
-i.e., pick-rate weighted and leaning toward strong picks, but not perfect play. Leaves are
+i.e., pick-rate weighted and leaning toward strong picks, but not perfect play. That holds
+for the opponent AND (by default, `our_policy="realistic"`) for our own later picks: in solo
+ranked the user controls one slot, and modelling teammates as perfect argmax players while the
+opponent is merely realistic inflated every win% by ~10 points (winner's curse + asymmetry;
+see DECISIONS.md). Teammates use their own pick-rate weight (alpha_us) and the conservative
+gain (S - z_cons * sd(S)). `our_policy="max"` keeps max nodes for our later picks (a
+coordinated team), choosing them by the conservative, prior-regularized value.
+
+Uncertainty: each candidate also gets win_prob_p25, the win probability with the candidate's
+own contribution at the 25th percentile of its posterior (Laplace sd of S plus its current
+pair terms). Picks are ranked by win_prob_p25, so low-data brawlers can't top the list on a
+noisy point estimate. Leaves are
 full 3v3 comps scored by the comp model. Because each pick's value accounts for what
 the opponent can still answer with, early picks come out "safe" and the final pick
 (nothing left to answer it) comes out a pure counter.
@@ -43,6 +54,13 @@ class SearchConfig:
     ban_root_width: int = 6
     ban_max_width: int = 4
     ban_chance_width: int = 4
+    z_cons: float = 0.674     # 25th percentile of a normal posterior
+    our_policy: str = "realistic"   # "realistic" teammates (chance nodes) or "max"
+    alpha_us: float = 1.0     # teammates' pick-rate weight (realistic policy)
+    beta_us: float = 4.0      # teammates' greed per logit (realistic policy)
+    prior_us: float = 0.05    # "max" policy: logit bonus per nat of log pick rate (selection only)
+    conf_high: float = 1.5    # confidence: sd of the pick's contribution in win-% points
+    conf_med: float = 3.0
 
 
 def pct(z: float) -> float:
@@ -102,6 +120,12 @@ class DraftEngine:
         self.cfg = cfg or SearchConfig()
         self.n = len(mm.S)
         self.log_prior = np.log(np.maximum(mm.prior, 1e-9))
+        sd = mm.S_sd if getattr(mm, "S_sd", None) is not None else np.zeros(self.n)
+        self.S_sd = sd
+        # selection offset for OUR future picks: conservative strength (+ pick-rate prior in max mode)
+        self.sel_off = -self.cfg.z_cons * sd
+        if self.cfg.our_policy == "max":
+            self.sel_off = self.sel_off + self.cfg.prior_us * (self.log_prior - float(np.dot(mm.prior, self.log_prior)))
 
     # ---------------------------------------------------------------- helpers
     def _avail(self, used) -> np.ndarray:
@@ -114,6 +138,16 @@ class DraftEngine:
         """Realistic probability of each brawler being the opponent's next pick."""
         gain = self.mm.marginal(opp, our)
         s = self.cfg.alpha * self.log_prior + self.cfg.beta * gain
+        s = np.where(avail, s, -np.inf)
+        s = s - s[avail].max()
+        p = np.exp(s)
+        return p / p.sum()
+
+    def teammate_dist(self, our, opp, avail) -> np.ndarray:
+        """Realistic distribution of our own later picks (solo-queue teammates): pick-rate
+        weighted, leaning toward picks that are good with conservative (p25-ish) strength."""
+        gain = self.mm.marginal(our, opp) + self.sel_off
+        s = self.cfg.alpha_us * self.log_prior + self.cfg.beta_us * gain
         s = np.where(avail, s, -np.inf)
         s = s - s[avail].max()
         p = np.exp(s)
@@ -134,16 +168,19 @@ class DraftEngine:
         ])
 
     # ---------------------------------------------------------------- expectimax
-    def _value(self, our, opp, z, used, we_first, widths, ctx):
-        """Expected P(we win) from this state, plus the tracked component vector.
+    def _value(self, our, opp, z, used, we_first, widths, ctx, zs=0.0):
+        """Expected outcome from this state, plus the tracked component vector.
 
-        our/opp: tuples of indices; z: current logit (our perspective) of partial comps.
+        our/opp: tuples of indices; z: current logit (our perspective) of partial comps;
+        zs: selection offset accumulated over our future max-node picks. Returns
+        (vals, vec) with vals = [P(win), P(win | root pick at its p25), selection value].
         """
         step = len(our) + len(opp)
-        x, our_root, opp_root, bonus = ctx
+        x, our_root, opp_root, bonus, delta = ctx
         if step >= 6:
             vec = self._track(x, our_root, opp_root, our, opp) if x is not None else None
-            return float(sigmoid(z + bonus)), vec
+            zz = z + bonus
+            return np.array([sigmoid(zz), sigmoid(zz - delta), sigmoid(zz + zs)]), vec
         key = (tuple(sorted(our)), tuple(sorted(opp)))
         memo = widths["memo"]
         if key in memo:
@@ -152,54 +189,70 @@ class DraftEngine:
         avail = self._avail(used)
         mm = self.mm
         last = step == 5
-
-        if ours_turn:
+        if ours_turn and self.cfg.our_policy == "max":
             gain = mm.marginal(our, opp)
-            gain = np.where(avail, gain, -np.inf)
+            score = np.where(avail, gain + self.sel_off, -np.inf)
             if last:
-                # Leaf level vectorized: pick the single best completion.
-                c = int(np.argmax(gain))
-                res = self._value(our + (c,), opp, z + gain[c], used | {c}, we_first, widths, ctx)
+                c = int(np.argmax(score))
+                res = self._value(our + (c,), opp, z + gain[c], used | {c}, we_first, widths, ctx,
+                                  zs + self.sel_off[c])
             else:
-                cands = np.argsort(-gain)[: widths["max"]]
                 best = None
-                for c in cands:
+                for c in np.argsort(-score)[: widths["max"]]:
                     c = int(c)
-                    r = self._value(our + (c,), opp, z + gain[c], used | {c}, we_first,
-                                    widths, ctx)
-                    if best is None or r[0] > best[0]:
+                    r = self._value(our + (c,), opp, z + gain[c], used | {c}, we_first, widths, ctx,
+                                    zs + self.sel_off[c])
+                    if best is None or r[0][2] > best[0][2]:
                         best = r
                 res = best
         else:
-            p = self.opponent_dist(opp, our, avail)
-            gain_opp = mm.marginal(opp, our)
+            if ours_turn:
+                p = self.teammate_dist(our, opp, avail)
+                dz = mm.marginal(our, opp)          # our logit change per pick
+            else:
+                p = self.opponent_dist(opp, our, avail)
+                dz = -mm.marginal(opp, our)
             if last:
-                # Leaf level vectorized over every available brawler.
                 idx = np.flatnonzero(avail)
                 pv = p[idx]
-                vals = sigmoid(z - gain_opp[idx] + bonus)
-                v = float(np.dot(pv, vals))
+                zz = z + dz[idx] + bonus
+                vals = np.array([np.dot(pv, sigmoid(zz)), np.dot(pv, sigmoid(zz - delta)),
+                                 np.dot(pv, sigmoid(zz + zs))])
                 vec = None
                 if x is not None:
                     base = self._track(x, our_root, opp_root, our, opp)
-                    base[4] += float(np.dot(pv, mm.C[x, idx]))
+                    if ours_turn:
+                        base[2] += float(np.dot(pv, mm.Syn[x, idx]))
+                    else:
+                        base[4] += float(np.dot(pv, mm.C[x, idx]))
                     vec = base
-                res = (v, vec)
+                res = (vals, vec)
             else:
                 cands = np.argsort(-p)[: widths["chance"]]
                 w = p[cands] / p[cands].sum()
-                v = 0.0
+                vals = np.zeros(3)
                 vec = np.zeros(len(COMP_NAMES)) if x is not None else None
                 for c, wc in zip(cands, w):
                     c = int(c)
-                    r = self._value(our, opp + (c,), z - gain_opp[c], used | {c}, we_first,
-                                    widths, ctx)
-                    v += wc * r[0]
+                    nxt = (our + (c,), opp) if ours_turn else (our, opp + (c,))
+                    r = self._value(nxt[0], nxt[1], z + dz[c], used | {c}, we_first, widths, ctx, zs)
+                    vals += wc * r[0]
                     if vec is not None:
                         vec += wc * r[1]
-                res = (v, vec)
+                res = (vals, vec)
         memo[key] = res
         return res
+
+    def pick_sd(self, c, our, opp) -> float:
+        """Posterior sd (logit) of candidate c's contribution given the current picks."""
+        mm = self.mm
+        v = float(self.S_sd[c]) ** 2
+        tm = [t for t in our if t != c]
+        if tm:
+            v += float(np.sum(mm.Syn_sd[c, tm] ** 2))
+        if opp:
+            v += float(np.sum(mm.C_sd[c, list(opp)] ** 2))
+        return float(np.sqrt(v))
 
     def _root_children(self, st: DraftState, cands, widths_cfg, bonus_vec=None):
         """Search each candidate pick for us at the root. Returns {c: (value, vec)}."""
@@ -213,7 +266,8 @@ class DraftEngine:
             c = int(c)
             bonus = float(bonus_vec[c]) if bonus_vec is not None else 0.0
             widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step)
-            ctx = (c, our, opp, bonus)
+            delta = self.cfg.z_cons * self.pick_sd(c, our, opp)
+            ctx = (c, our, opp, bonus, delta)
             out[c] = self._value(our + (c,), opp, z0 + gain[c], used | {c}, st.we_first,
                                  widths, ctx)
         return out
@@ -229,7 +283,8 @@ class DraftEngine:
         mm, cfg = self.mm, self.cfg
         avail = self._avail(used)
         gain = mm.marginal(st.our, st.opp)
-        order_score = gain + (bonus_vec if bonus_vec is not None else 0.0)
+        # candidate pre-selection on the conservative gain
+        order_score = gain - cfg.z_cons * self.S_sd + (bonus_vec if bonus_vec is not None else 0.0)
         cand_mask = avail & (pool_mask if pool_mask is not None else True)
         order_score = np.where(cand_mask, order_score, -np.inf)
         k = min(cfg.root_width, int(cand_mask.sum()))
@@ -241,13 +296,15 @@ class DraftEngine:
         widths = {"max": cfg.max_width, "chance": cfg.chance_width}
         children = self._root_children(st, set(cands) | set(real_c), widths, bonus_vec)
         w = p_real[real_c] / p_real[real_c].sum()
-        baseline = float(sum(wc * children[int(c)][0] for c, wc in zip(real_c, w)))
+        baseline = float(sum(wc * children[int(c)][0][0] for c, wc in zip(real_c, w)))
 
-        ranked = sorted(cands, key=lambda c: -children[int(c)][0])[:top]
+        ranked = sorted(cands, key=lambda c: -children[int(c)][0][1])[:top]
         recs = []
         for c in ranked:
             c = int(c)
-            v, vec = children[c]
+            vals, vec = children[c]
+            v, v25 = float(vals[0]), float(vals[1])
+            sd_pct = pct(self.pick_sd(c, st.our, st.opp))
             comps = {name: round(float(pct(val)), 2) for name, val in zip(COMP_NAMES, vec)}
             rec = {
                 "brawler_id": int(mm.brawler_ids[c]),
@@ -262,6 +319,11 @@ class DraftEngine:
                 "strength_parts_pct": {k2: round(pct(mm.S_parts[k2][c]), 2) for k2 in mm.S_parts},
                 "games_on_map": int(mm.brawler_games[c]) if mm.brawler_games is not None else 0,
                 "pick_rate": round(100 * float(mm.prior[c]) * 6, 1),
+                "win_prob_p25": round(100 * v25, 1),
+                "confidence": ("high" if sd_pct <= cfg.conf_high else
+                               "medium" if sd_pct <= cfg.conf_med else "low"),
+                "uncertainty_pct": round(sd_pct, 2),
+                "comp_notes": mm.comp_notes(list(st.our) + [c], list(st.opp)) if hasattr(mm, "comp_notes") else [],
             }
             if bonus_vec is not None:
                 rec["breakdown_pct"]["you"] = round(pct(float(bonus_vec[c])), 2)
@@ -284,8 +346,8 @@ class DraftEngine:
         used = set(st.validate())
         z0 = self.mm.team_logit(st.our, st.opp)
         widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step)
-        return self._value(tuple(st.our), tuple(st.opp), z0, used, st.we_first, widths,
-                           (None, (), (), 0.0))[0]
+        return float(self._value(tuple(st.our), tuple(st.opp), z0, used, st.we_first, widths,
+                                 (None, (), (), 0.0, 0.0))[0][0])
 
     def recommend_bans(self, st: DraftState, top: int = 5) -> dict:
         """Bans that most improve our expected draft outcome (i.e. most reduce the
@@ -302,7 +364,7 @@ class DraftEngine:
         # plus the strongest on the map regardless of pick rate.
         threat = self.cfg.alpha * self.log_prior + self.cfg.beta * mm.S
         threat = np.where(avail, threat, -np.inf)
-        strong = np.where(avail, mm.S, -np.inf)
+        strong = np.where(avail, mm.S - cfg.z_cons * self.S_sd, -np.inf)
         cands = list(dict.fromkeys(
             [int(c) for c in np.argsort(-threat)[: cfg.ban_candidates]]
             + [int(c) for c in np.argsort(-strong)[:4]]))
@@ -361,8 +423,13 @@ def explain_pick(rec: dict, st: DraftState, eng: DraftEngine) -> str:
     role = ("Safe blind pick" if step == 0 else
             "Last pick: pure counter" if remaining_enemy == 0 else
             "Mid-draft pick")
-    conf = "" if rec["games_on_map"] >= 30 else " Low data on this map; leaning on mode/class priors."
-    return f"{role}. " + ", ".join(parts) + "." + conf
+    notes = rec.get("comp_notes") or []
+    extra = (" " + notes[0] + ".") if notes else ""
+    conf = ""
+    if rec.get("confidence") == "low" or rec["games_on_map"] < 30:
+        conf = (f" Low confidence ({rec['games_on_map']} games on this map): leaning on similar maps "
+                "and pick-rate priors.")
+    return f"{role}. " + ", ".join(parts) + "." + extra + conf
 
 
 def explain_ban(rec: dict, st: DraftState) -> str:

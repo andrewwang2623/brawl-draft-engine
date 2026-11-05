@@ -133,3 +133,163 @@ Judgment calls made while building autonomously. Newest at the bottom of each se
   six brawlers the patch notes give new Buffies (all rainbow). Arrows correlate with the patch but also
   mark unchanged brawlers, so they look like tier movement rather than a buff/nerf legend. `patch.json`
   keeps the official notes as the source of truth.
+
+## Recommendation fix (Nov 4 2026): inflated "+10%" picks, winner's curse, roles
+
+### Diagnosis: where the +10% came from (measured on the pre-fix model)
+
+Bridge Too Far top 4 were Clancy (7 games on the map), Bolt (8), Bull (24), Ollie (0), each at about
++10–12% "map strength". `audit.py` on the pre-fix model flagged **26/26 maps**, so this happened everywhere.
+Causes, biggest first (Bridge Too Far numbers):
+
+1. **Global terms for rare brawlers were barely shrunk, and absorbed specialist bias.** Clancy's +12.7% is
+   +9.0% `global`, from 158 Legendary+ games at a 58.9% raw win rate. `lam_g = 20` is a prior sd of 0.22 logit
+   (±5.6 win-% points) per brawler, wider than the real spread of brawler strengths. With no skill control
+   beyond the tier difference, the "mains" who play niche brawlers made those brawlers look strong.
+2. **Class priors spread that bias to brawlers with no data.** `class×mode + class×map` for Tank on Bridge Too
+   Far was +4.6%. It was fit on the few tanks actually played in Heist (specialists who win), then handed to
+   every tank: Ollie (0 games) got +6.3% global + 4.6% class = +10.6%, and Hank (0) and Trunk (0) got the
+   same class boost. Damage Dealer got +2.7%.
+3. **Wrong zero point.** "Map strength" was raw S, centered on an average over all 108 brawlers, including
+   never-picked ones. The pick-weighted typical pick on Bridge Too Far was already +1.9%, so every number read
+   ~2 points high against what people actually pick. Nothing used pick rate as evidence, so a brawler nobody
+   picks started neutral.
+4. **Ranking by the posterior mean.** Taking the top of 108 noisy estimates selects the noisiest ones
+   (optimizer's curse). Nothing in the engine knew a 7-game estimate is less certain than a 3,000-game one.
+5. **Why the "typical pick" baseline was ~63% (mean over maps 63.1%).** If both sides draft realistically
+   (Monte Carlo, both drawn from the realistic pick distribution), the expected win% is **50.0%** on every
+   map. The engine's baseline put a realistic pick in our slot, then made our *later* picks argmax max
+   nodes, while opponents stayed realistic chance nodes. Restricting our later picks to brawlers with ≥ 30
+   games on the map drops it to 60.2%. So ~3 points came from inflated low-data picks, and ~10 points were
+   structural: perfect teammates vs a merely realistic opponent, plus the winner's curse at every max node,
+   plus the model believing popular picks are weak (no pick-rate prior). In solo ranked the user controls
+   one slot, so "perfect teammates" was simply the wrong model.
+
+### What changed (model-wide, no map-specific code)
+
+- **(a) Skill controls, zeroed at draft time:** rank-tier difference (as before), a per-player skill effect
+  (player tag, L2 `lam_player`), `rankedElo` and the player's `highestTrophies` on the brawler they played
+  (profiles from `/players/{tag}`, cached by `profiles.py` in `data/profiles.db`, with a coverage
+  indicator), and a "main" feature = leave-one-out log share of the player's games on that brawler. All are
+  zeroed in the draft-only metric and in the engine. Low-pick-rate cells get extra L2:
+  penalty × (1 + `rare_shrink` · n0 / (n + n0)), with n0 = 2% pick rate × games in scope. This applies to
+  global, mode, map and similar-map terms, and to pairs (`pair_rare_shrink`, n0 = 0.5% of games).
+- **(b) Pick-rate prior:** covariate lpr = log(smoothed Legendary+ map pick rate + 1%), centered per map,
+  with a learned slope (global + per mode). It came out clearly positive: at Legendary+, being picked is
+  evidence. A brawler almost nobody picks on a map starts several points down instead of neutral. The 1%
+  floor caps how negative it can get.
+- **(c) Map similarity replaces class priors.** Each map is represented by its Legendary+ log pick-rate
+  vector. Kernel K = exp(3·(cos − 1)) between maps, factorized as E·Eᵀ (top 5 components), and per-brawler
+  coefficients on E: a GP prior, so sparse cells shrink toward how the brawler does on *similar* maps
+  (Bridge Too Far's nearest maps are Kaboom Canyon 0.89 and Safe Zone 0.87). **Range × openness:** Brawlify's
+  API has no range stats (checked `meta/brawlers_raw.json` and the brawlapi mirror), so both are learned
+  from pick patterns. They're the leading component of the double-centered brawler × map log pick-rate
+  matrix. The learned "range" ranks Piper, Brock, Angelo, Belle, Byron, Nani, Mandy, Pierce on top and
+  Buzz, Shade, El Primo, Ash, Stu, Emz at the bottom; "openness" ranks Knockout/Bounty maps open and Brawl
+  Ball/Gem Grab closed. Class × mode / class × map terms are off (`use_class: false`, kept only for the
+  legacy comparison).
+- **(d) Conservative ranking.** A block-diagonal Laplace approximation gives a posterior sd for S per
+  brawler and map: per brawler, all its strength columns (global, mode, map, similar-map and their
+  bracket deviations) are handled jointly, using curvature aggregated per (brawler, map). Pairs get their
+  own sd. Each pick rec gets `win_prob_p25`: win% with the candidate's own contribution at its 25th
+  percentile (S sd plus its current pair terms). Recs are **ranked by `win_prob_p25`**.
+  `confidence` = high / medium / low when that sd is ≤ 1.5 / ≤ 3 / > 3 win-% points (also
+  `uncertainty_pct`). Our later picks are chosen on the conservative gain too.
+- **(e) Pairs.** Per-pair counter/synergy terms keep their L2 plus the rare-pair multiplier, so sparse pairs
+  shrink to ~0. They now shrink toward role-level and latent matchups (next section), not toward 0.
+- **S is re-centered on the typical pick** (pick-weighted mean on the map). Average pair effects are folded
+  into S as well: C' = C − g(x) + g(y), Syn' = Syn − h(x) − h(y), S' = S + 3g + 2h, where g = expected edge
+  vs a typical opponent and h = expected synergy with a typical teammate. Both are exact for 3v3, so no
+  prediction changes. "Map strength" now means "vs typical opponents with typical teammates on this map",
+  and counters/synergy mean "what this specific enemy/teammate changes".
+
+### Winner's curse, teammates and calibration (addendum 1 and 3)
+
+- **Teammates are realistic chance nodes** (`SearchConfig.our_policy = "realistic"`, default):
+  P ∝ prior^alpha_us · exp(beta_us · conservative gain), with their own pick-rate weight `alpha_us`. Only
+  the pick being recommended is a max node. This removes the asymmetry at the source: the typical-pick
+  baseline is ~50% + the current comp's edge, and a recommended pick shows a few points above it.
+  `our_policy = "max"` is still available for a coordinated team. It picks our later picks by the
+  conservative value plus a pick-rate prior (`prior_us` logit per nat) and propagates that lower-bound
+  value at interior max nodes.
+- `delta_vs_typical` keeps its meaning (vs a realistic pick in this slot, same search). It's no longer
+  inflated, because neither side is assumed to draft perfectly after this pick.
+
+### Matchups: roles + latent embeddings instead of class-vs-class (addenda 2 and 3)
+
+- In-game classes are unreliable for matchups and are now **UI-only**. Class-vs-class counters/synergy
+  were built and tested, and were worse on the holdout than latent embeddings (EXPERIMENTS.md), so they're
+  off (`use_class_pairs: false`). `meta/class_overrides.json` (addendum 2, item 4) was superseded by
+  `roles.yaml` and not created; the loader ignores a missing file.
+- **`roles.yaml`** (repo root): 8 role tags, several allowed per brawler, each with a confidence
+  (low = please check). Pre-filled from Brawlify classes, the learned range/pick patterns, and common game
+  knowledge. Main judgment calls: Shelly = tank/frontline + wall-breaker (short-range anti-diver), Willow
+  and Squeak = thrower (lobbed attacks), Berry = thrower + support, Bonnie and Janet = sniper + diver, Chuck
+  = diver + controller (low confidence). Tags are split evenly (a brawler with 2 tags is 0.5 of each).
+- **Model:** C(x, y) = role-vs-role (Tx M Tyᵀ, M antisymmetric, global + per mode)
+  + latent (u_x·v_y − u_y·v_x, k = 4) + per-pair deviation. Syn(x, y) = role+role + latent (w_x·w_y) +
+  per-pair deviation. Fit jointly by L-BFGS (the bilinear part is non-convex; small random init, since 0 is
+  a saddle point). Role and latent terms learn from target games only (post-patch, in bracket), because
+  they're not patch-aware per brawler. Everything folds into the per-map Syn/C matrices, so expectimax
+  stays additive and fast.
+- **Comp-level features:** class/role counts are per-brawler (already in S). "#divers(enemy) ×
+  #throwers(us)" and every other count interaction is a sum of cross pairs, so it *is* the role-vs-role term.
+  "No frontline" = (1−t1)(1−t2)(1−t3) expands into per-brawler terms + pairwise tank–tank synergy + a
+  triple term that never occurs in data (3 tanks), so it's covered by the role-synergy terms without a
+  non-additive leaf feature. Wall-break presence on walled maps wasn't added: we have no map geometry. The
+  similar-map and openness terms carry the map-style signal instead.
+- **Explanations:** `comp_notes` (role-level parts of the comp logit, e.g. "Their 3 divers hard-counter
+  your 3 throwers (−40%)") per pick rec, at the response top level, and in `final`. The pick explanation
+  text appends the top note. Shown as a win-% change from an even game (sigmoid scale).
+- **Matchup sanity checks:** `checks/matchups.yaml` (domain knowledge; never training data). `audit.py`
+  reports model effect vs raw head-to-head samples in `reference/MATCHUP_CHECKS.md`. A lower pass rate fails
+  an experiment. When ≥ 200 raw games point the other way (z ≤ −2) and the model fails, it's labelled
+  "data disagrees" rather than forced.
+
+### Process
+
+- **Snapshots:** `load_matches(max_inserted=...)` freezes the data by crawler insertion time. Filtering on
+  game time doesn't freeze anything, because battlelogs keep delivering older games.
+- **Draft-only log loss vs debiasing:** the skill controls *cost* a little holdout draft-only log loss
+  (≈ +0.001 with `lam_player` 10). In the holdout, rare picks are still played by the mains who win with
+  them, so a biased model "predicts" better. They were kept (with `lam_player` 40) because they're the point
+  of fix (a), and the full v2 model still beats the pre-fix model on the same snapshot.
+- **Profiles fetch:** `profiles.py` at ≤ 1 req/s, separate SQLite file, resumable, prioritized by recent
+  Legendary+ games covered, with a 3× boost for players seen on < 2%-pick-rate brawlers (where specialist
+  bias lives). Coverage is partial (see EXPERIMENTS.md). Rows without a profile get 0 + a coverage
+  indicator. On 403 it stops; after 10 consecutive errors it backs off 5 minutes.
+- **Running server:** the pickled model format changed (v2), so a server process started before this change
+  can't use the new pickle with its old in-memory code. It was restarted once after retraining.
+
+### Results (same frozen snapshot, 214,091 games; holdout 30,802 post-patch Legendary+ games)
+
+- Holdout draft-only log loss **0.6722 → 0.6709** (Δ −0.00125 ± 0.0005, paired bootstrap), Brier 0.2398 →
+  0.2391, accuracy 57.9% → 58.6% (map-WR baseline 0.6767). With rank: 0.6633 → 0.6621.
+- Calibration (draft-only, both orientations; predicted / observed): 0.26/0.28, 0.36/0.38, 0.43/0.43,
+  0.48/0.47, 0.53/0.53, 0.57/0.57, 0.64/0.63, 0.74/0.72. Very slightly overconfident in the tails (≤ 2
+  points). No extra temperature scaling added.
+- Audit: **26/26 → 0/26 maps flagged** (75 → 0 flags). Mean top-10 overlap with the 15 most picked went
+  2.5 → 6.6, and with picked-and-winning 3.4 → 8.0. Matchup checks 17/17 (the pre-fix model with the new
+  engine: 11/17).
+- Displayed win%: the typical-pick baseline averages 53.0% (was 63.1%), and the top rec is ~+3.5–4 points
+  above it at every stage of the draft. First picks average 57.6% with the current comp at 50%. The
+  remaining gap vs the *partial* comp (`current_win_prob`) comes from the value of the picks still to be made
+  (e.g. the last-pick counter). It's not inflation, so the API now also returns **`expected_win_prob`**: what
+  the draft is worth from here if every remaining pick is realistic. That's the apples-to-apples reference
+  for `win_prob`.
+- First-pick side: after the opponent's most likely first pick, our typical pick sits at ~46% and the top
+  rec at ~50%. The model sees a real first-pick edge, because the best brawler on a map, e.g. 8-Bit on Bridge
+  Too Far (59.6% raw over 3,168 games), goes first.
+- Spearman with AshBS tiers: **0.00 → 0.32** (p = 0.0008); pick rate alone is 0.79.
+- **Bridge Too Far:** before, 8-Bit, Clancy (12 games), Bolt (15), Ollie (0), Bull (64). After: 8-Bit, Colt,
+  Nori, Melodie, Colette, all with 1,900–4,800 games, picked in 24–59% of games, and winning (except
+  Colette, 50%). The user expected "mostly long-range"; the data disagrees in part. Post-patch, the
+  long-range snipers *lose* on this map (Brock 46%, Piper 48%, Pierce 43%, Mandy 42%, Byron 41%, several
+  of them nerfed in the patch), while Melodie and Nori win ~56% over thousands of games. The engine follows
+  that rather than a hardcoded preference. The test checks "mostly ranged (sniper / thrower / mid-range DPS
+  or learned range above median), no tanks, none of Ollie/Bull/Clancy/Bolt".
+- Skill-control coefficients: rank tier +1.96 per 3 tiers, Elo +0.15 logit per sd (sd 856), profile coverage
+  indicator +0.12, "main" share +0.057 per log-unit, player-effect sd 0.044 (81k players). Brawler
+  highestTrophies came out ≈ 0 (+0.005/sd) with only ~2,200 profiles fetched (~15–20% of player slots).
+  The fetch keeps running and the feature becomes more useful as coverage grows. Retrain to pick it up.
+- Fit time ~65 s on 218k games (was ~5 s). `/api/recommend` first pick ~240–300 ms, mid-draft 3–40 ms.

@@ -32,6 +32,17 @@ def metrics(p: np.ndarray, y: np.ndarray) -> dict:
     }
 
 
+def calibration(p: np.ndarray, y: np.ndarray, edges=(0, .3, .4, .45, .5, .55, .6, .7, 1.0)) -> list:
+    """Reliability table: predicted vs observed win rate per probability bin."""
+    out = []
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        sel = (p >= lo) & (p < hi) if hi < 1 else (p >= lo)
+        if sel.sum():
+            out.append({"bin": f"{lo:.2f}-{hi:.2f}", "n": int(sel.sum()),
+                        "pred": round(float(p[sel].mean()), 3), "obs": round(float(y[sel].mean()), 3)})
+    return out
+
+
 def baseline_coin(train: Matches, test: Matches) -> np.ndarray:
     return np.full(len(test), 0.5)
 
@@ -99,6 +110,10 @@ def run(params: dict | None = None, matches: Matches | None = None, test_frac: f
         "model_draft_only": metrics(model.predict_proba(test, rank_zero=True), test.y),
         "model_with_rank": metrics(model.predict_proba(test, rank_zero=False), test.y),
     }
+    # Reliability of the draft-only model, both orientations (team A is arbitrary)
+    pd = model.predict_proba(test, rank_zero=True)
+    res["calibration_draft_only"] = calibration(np.concatenate([pd, 1 - pd]),
+                                                np.concatenate([test.y, 1 - test.y]))
     if verbose:
         print(f"matches={res['n_matches']} train={res['n_train']} test={res['n_test']} "
               f"(holdout tier>={hmt}) maps={res['n_maps']} fit={fit_s:.1f}s")
@@ -106,6 +121,9 @@ def run(params: dict | None = None, matches: Matches | None = None, test_frac: f
         for k in ("coin_flip", "map_winrate", "model_draft_only", "model_with_rank"):
             r = res[k]
             print(f"{k:<20}{r['log_loss']:>10.4f}{r['brier']:>10.4f}{r['accuracy']:>8.3f}")
+        print("calibration (draft-only, both orientations): bin  n  predicted  observed")
+        for c in res["calibration_draft_only"]:
+            print(f"  {c['bin']:<10}{c['n']:>7}{c['pred']:>9.3f}{c['obs']:>9.3f}")
     return res
 
 
@@ -125,6 +143,7 @@ def main():
     ap.add_argument("--set", action="append", help="param override key=value")
     ap.add_argument("--params-file", default=str(ROOT / "params.json"))
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--snapshot", type=int, default=None, help="max inserted_at (unix s)")
     ap.add_argument("--holdout-tier", type=int, default=None,
                     help="restrict holdout to games with lowest tier >= this (default: model bracket)")
     args = ap.parse_args()
@@ -133,7 +152,8 @@ def main():
     if pf.exists():
         params.update(json.loads(pf.read_text()))
     params.update(parse_sets(args.set))
-    res = run(params, verbose=not args.json, holdout_min_tier=args.holdout_tier)
+    m = load_matches(max_inserted=args.snapshot) if args.snapshot else None
+    res = run(params, matches=m, verbose=not args.json, holdout_min_tier=args.holdout_tier)
     if args.json:
         print(json.dumps(res, indent=1))
     (ROOT / "models").mkdir(exist_ok=True)
