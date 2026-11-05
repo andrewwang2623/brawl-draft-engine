@@ -12,6 +12,9 @@ K = ME_PRIOR_GAMES pseudo-games, so 5 games barely move it. Ranked games weigh 1
 
 comfort: small bonus growing with log(#recent games on the brawler), capped.
 power: brawlers below power 11 get POWER_PENALTY per missing level; unowned are excluded.
+buffies: missing buffies (API + my_brawlers.yaml overrides) cost buffie_penalty_pct x the
+fraction of the brawler's buffies you lack. Applied only to YOUR pick; teammates and enemies
+are assumed fully built.
 """
 from __future__ import annotations
 
@@ -23,6 +26,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
+import yaml
 from dotenv import load_dotenv
 
 from model import sigmoid
@@ -30,6 +34,9 @@ from model import sigmoid
 ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "data" / "matches.db"
 PLAYER_CACHE = ROOT / "data" / "my_player.json"
+MY_BRAWLERS = ROOT / "my_brawlers.yaml"
+BUFFIES_AVAILABLE = ROOT / "meta" / "buffies_available.json"
+BUFFIE_TYPES = ("gadget", "starPower", "hyperCharge")
 
 ME_PRIOR_GAMES = 25.0
 OTHER_MODE_WEIGHT = 0.35
@@ -68,6 +75,38 @@ def load_player_profile(tag: str, refresh: bool = True) -> dict | None:
         return cached
 
 
+def load_my_brawlers(path: Path = MY_BRAWLERS) -> dict:
+    cfg = {"use_api_buffies": True, "missing_buffies": [], "assume_full": [],
+           "buffie_penalty_pct": 3.0}
+    if path.exists():
+        cfg.update(yaml.safe_load(path.read_text()) or {})
+    return cfg
+
+
+def buffie_gaps(prof: dict | None, cfg: dict, name_to_id: dict) -> dict:
+    """brawler_id -> (fraction missing, [missing buffie types], source)."""
+    avail = {}
+    if BUFFIES_AVAILABLE.exists():
+        avail = {k.upper(): set(v) for k, v in json.loads(BUFFIES_AVAILABLE.read_text()).items()}
+    gaps = {}
+    if prof and cfg.get("use_api_buffies", True):
+        for b in prof.get("brawlers", []):
+            have = {k for k, v in (b.get("buffies") or {}).items() if v}
+            exists = avail.get(b["name"].upper(), set()) | have
+            if not exists:
+                continue            # brawler has no buffies in the game
+            miss = sorted(exists - have)
+            if miss:
+                gaps[int(b["id"])] = (len(miss) / len(exists), miss, "api")
+    for n in cfg.get("missing_buffies") or []:
+        bid = name_to_id.get(str(n).upper())
+        if bid:
+            gaps[bid] = (1.0, list(BUFFIE_TYPES), "my_brawlers.yaml")
+    for n in cfg.get("assume_full") or []:
+        gaps.pop(name_to_id.get(str(n).upper()), None)
+    return gaps
+
+
 @dataclass
 class BrawlerStat:
     games: int = 0
@@ -98,15 +137,24 @@ class Profile:
     n_scored: int = 0
     n_ranked: int = 0
     rank_name: str | None = None
+    buffies: dict = field(default_factory=dict)     # brawler_id -> (frac, types, source)
+    buffie_penalty: float = 0.12                    # logit for missing all buffies
     built_at: float = field(default_factory=time.time)
 
-    def bonus(self, bid: int) -> float:
+    def parts(self, bid: int) -> dict:
+        """Logit adjustments for the owner playing this brawler."""
         st = self.stats_by.get(bid)
-        b = (st.me + st.comfort) if st else 0.0
         power = self.owned.get(bid)
-        if power is not None and power < 11:
-            b -= POWER_PENALTY * (11 - power)
-        return b
+        gap = self.buffies.get(bid)
+        return {
+            "me": st.me if st else 0.0,
+            "comfort": st.comfort if st else 0.0,
+            "power": -POWER_PENALTY * (11 - power) if power is not None and power < 11 else 0.0,
+            "buffies": -self.buffie_penalty * gap[0] if gap else 0.0,
+        }
+
+    def bonus(self, bid: int) -> float:
+        return float(sum(self.parts(bid).values()))
 
     def vectors(self, mm):
         """(pool_mask, bonus_vec, info) aligned with a MapModel's brawler index."""
@@ -120,13 +168,18 @@ class Profile:
             mask[i] = owned
             bonus[i] = self.bonus(b)
             st = self.stats_by.get(b)
+            parts = self.parts(b)
+            gap = self.buffies.get(b)
             info[b] = {
                 "games": st.games if st else 0,
                 "ranked_games": st.ranked_games if st else 0,
                 "wr": 100.0 * st.wins / st.games if st and st.games else 0.0,
-                "me_pct": round(25 * st.me, 2) if st else 0.0,
-                "comfort_pct": round(25 * st.comfort, 2) if st else 0.0,
+                "me_pct": round(25 * parts["me"], 2),
+                "comfort_pct": round(25 * parts["comfort"], 2),
                 "power": self.owned.get(b),
+                "power_pct": round(25 * parts["power"], 2),
+                "buffie_pct": round(25 * parts["buffies"], 2),
+                "missing_buffies": gap[1] if gap else [],
             }
         return mask, bonus, info
 
@@ -145,11 +198,14 @@ class Profile:
         most = sorted(rows, key=lambda r: -r["games"])[:k]
         low_power = [{"brawler_id": b, "name": self.names.get(b, str(b)), "power": p}
                      for b, p in self.owned.items() if p < 11]
+        missing_buffies = [{"brawler_id": b, "name": self.names.get(b, str(b)), "missing": g[1],
+                            "penalty_pct": round(-25 * self.buffie_penalty * g[0], 2), "source": g[2]}
+                           for b, g in sorted(self.buffies.items(), key=lambda kv: -kv[1][0])]
         return {"available": self.available, "rank": self.rank_name,
                 "n_games": self.n_games, "n_scored": self.n_scored, "n_ranked": self.n_ranked,
                 "n_owned": len(self.owned),
                 "top": rows[:k], "bottom": rows[::-1][:k] if len(rows) > k else [],
-                "most_played": most, "low_power": low_power}
+                "most_played": most, "low_power": low_power, "missing_buffies": missing_buffies}
 
 
 def build_profile(md, db_path: Path = DB_PATH, refresh_api: bool = True) -> Profile:
@@ -213,5 +269,8 @@ def build_profile(md, db_path: Path = DB_PATH, refresh_api: bool = True) -> Prof
         st.exp_wins += p
         n_scored += 1
         n_ranked += int(ranked)
+    cfg = load_my_brawlers()
+    gaps = buffie_gaps(prof, cfg, name_to_id)
     return Profile(available=True, tag=tag, owned=owned, stats_by=stats, names=names,
-                   n_games=len(rows), n_scored=n_scored, n_ranked=n_ranked, rank_name=rank_name)
+                   n_games=len(rows), n_scored=n_scored, n_ranked=n_ranked, rank_name=rank_name,
+                   buffies=gaps, buffie_penalty=float(cfg["buffie_penalty_pct"]) / 25.0)

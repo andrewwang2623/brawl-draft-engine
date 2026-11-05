@@ -336,11 +336,14 @@ def explain_pick(rec: dict, st: DraftState, eng: DraftEngine) -> str:
         parts.append("no enemy picks left, so it can't be countered")
     if "you" in b:
         info = rec.get("you_info") or {}
+        form = info.get("me_pct", 0.0) + info.get("comfort_pct", 0.0)
         if info.get("games"):
-            parts.append(f"you {_sgn(b['you'])} ({info['games']} games on it, "
-                         f"{info['wr']:.0f}% WR)")
-        else:
-            parts.append(f"you {_sgn(b['you'])}")
+            parts.append(f"you {_sgn(form)} ({info['games']} games on it, {info['wr']:.0f}% WR)")
+        if info.get("buffie_pct"):
+            parts.append(f"{_sgn(info['buffie_pct'])}: you're missing buffies "
+                         f"({', '.join(info.get('missing_buffies', []))})")
+        if info.get("power_pct"):
+            parts.append(f"{_sgn(info['power_pct'])}: power {info.get('power')}")
     role = ("Safe blind pick" if step == 0 else
             "Last pick: pure counter" if remaining_enemy == 0 else
             "Mid-draft pick")

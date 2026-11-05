@@ -188,3 +188,30 @@ def test_patch_changed_brawler_adapts_faster(monkeypatch):
     assert s5 < s6 - 0.04         # changed brawler sheds its stale pre-patch strength
     assert abs(s5) < 0.05
     assert md.n_in_bracket == 1000
+
+
+def test_buffie_gaps_api_and_overrides(tmp_path, monkeypatch):
+    import json as _json
+    import personal
+    avail = tmp_path / "avail.json"
+    avail.write_text(_json.dumps({"SHELLY": ["gadget", "hyperCharge", "starPower"],
+                                  "COLT": ["gadget", "hyperCharge", "starPower"]}))
+    monkeypatch.setattr(personal, "BUFFIES_AVAILABLE", avail)
+    prof = {"brawlers": [
+        {"id": 1, "name": "SHELLY", "buffies": {"gadget": True, "starPower": False, "hyperCharge": False}},
+        {"id": 2, "name": "COLT", "buffies": {"gadget": True, "starPower": True, "hyperCharge": True}},
+        {"id": 3, "name": "PIPER", "buffies": {"gadget": False, "starPower": False, "hyperCharge": False}},
+        {"id": 4, "name": "GALE", "buffies": {"gadget": False, "starPower": False, "hyperCharge": False}},
+    ]}
+    names = {"SHELLY": 1, "COLT": 2, "PIPER": 3, "GALE": 4}
+    cfg = {"use_api_buffies": True, "missing_buffies": ["Gale"], "assume_full": [], "buffie_penalty_pct": 3}
+    g = personal.buffie_gaps(prof, cfg, names)
+    assert g[1][0] == pytest.approx(2 / 3)          # Shelly missing 2 of 3
+    assert 2 not in g                               # Colt fully built
+    assert 3 not in g                               # Piper has no buffies in the game -> not "missing"
+    assert g[4][0] == 1.0 and g[4][2] == "my_brawlers.yaml"
+    g2 = personal.buffie_gaps(prof, dict(cfg, assume_full=["Shelly"]), names)
+    assert 1 not in g2
+    p = personal.Profile(available=True, buffies=g, buffie_penalty=3 / 25)
+    assert 25 * p.parts(4)["buffies"] == pytest.approx(-3.0)
+    assert 25 * p.parts(1)["buffies"] == pytest.approx(-2.0)

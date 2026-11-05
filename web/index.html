@@ -729,7 +729,14 @@ function renderStats(d){
     .map(([k,v]) => titleCase(k) + ": " + v).join(" · ");
   body.innerHTML = (extras ? '<div class="muted" style="margin-bottom:6px">' + esc(extras) + '</div>' : '') +
     '<div class="cols"><div><h4>Top (vs expected)</h4>' + statTable(d.top) + '</div><div><h4>Bottom (vs expected)</h4>' + statTable(d.bottom) + '</div></div>' +
-    (Array.isArray(d.most_played) && d.most_played.length ? '<div class="cols"><div><h4>Most played</h4>' + statTable(d.most_played) + '</div><div></div></div>' : '');
+    (Array.isArray(d.most_played) && d.most_played.length ? '<div class="cols"><div><h4>Most played</h4>' + statTable(d.most_played) + '</div><div>' + gapTable(d) + '</div></div>' : '');
+}
+function gapTable(d){
+  const rows = (d.missing_buffies || []).map(g => '<tr><td>' + esc(g.name) + '</td><td class="muted">' + esc((g.missing || []).join(", ")) +
+    '</td><td class="neg">' + sgn(g.penalty_pct) + '%</td><td class="muted">' + esc(g.source) + '</td></tr>');
+  for(const p of (d.low_power || [])) rows.push('<tr><td>' + esc(p.name) + '</td><td class="muted">power ' + p.power + '</td><td></td><td class="muted">api</td></tr>');
+  if(!rows.length) return '';
+  return '<h4>Your penalties (your picks only)</h4><table class="t"><tr><th>Brawler</th><th>Missing</th><th>Penalty</th><th>Source</th></tr>' + rows.join("") + '</table>';
 }
 
 // ---------------------------------------------------------------- meta

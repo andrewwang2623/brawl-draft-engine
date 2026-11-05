@@ -92,3 +92,24 @@ Judgment calls made while building autonomously. Newest at the bottom of each se
   data that loosened regularization and overfit (EXPERIMENTS.md), so it was replaced.
 - Pre-patch games get weight 0.3 (`pre_patch_weight`), on top of recency weighting.
 - Holdout = post-patch (and Legendary+) games only.
+
+## Personal mode: buffies (user request)
+
+- **The API exposes buffies**: `/players/{tag}` → `brawlers[].buffies = {gadget, starPower, hyperCharge}`
+  (booleans). Battlelogs do **not** include buffies or gears for anyone, so the penalty can't be
+  estimated from match data. It's a configured, moderate value (`buffie_penalty_pct: 3.0` in
+  `my_brawlers.yaml`, i.e. −3 win-% for missing all buffies), scaled by the fraction missing.
+- **"All false" usually means the brawler has no buffies in the game**, not that they're missing. Even a
+  Pro player's profile shows exactly 33 fully-buffied brawlers and 75 with none. Which brawlers (and
+  which buffie types) exist is inferred from the union over 10 Masters III+/Pro profiles + the owner
+  (`meta/buffies_available.json`). A brawler counts as missing buffies only if it has them in the game.
+- Auto-detection from the owner's profile reproduces all 6 brawlers the user named (Gale, Mr. P, Lou,
+  Berry, Mandy, Chester; all reworked or given new Buffies in the Nov update). It also flags 6 more
+  partial gaps: El Primo, Poco, Amber, Gus, Chuck, Shade. Per the instruction to read buffies
+  automatically when the API has them, these are penalized too. The user's 6 are also forced in
+  `my_brawlers.yaml`, and anything can be exempted via `assume_full`.
+- Applied only to the user's own recommended pick (personal mode on). Teammates' and enemies' picks,
+  the opponent model, and personal-mode-off recommendations all assume fully built brawlers.
+- Ranked requires power 11 (confirmed by the Nov 2026 release notes; every observed ranked brawler is
+  power 11). The owner's two power-9 brawlers (Ziggy, Vince) get −3%/level in personal mode. In
+  practice they're probably not even eligible.
