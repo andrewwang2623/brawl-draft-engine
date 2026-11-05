@@ -52,6 +52,8 @@ power, `rank` = ranked tier, tag), `players` (crawl queue), `my_games`, `type_co
 ```
 
 Hyperparameter overrides live in `params.json` (defaults in `model.DEFAULT_PARAMS`).
+**New balance patch?** Edit `patch_time_utc` (and `changed_brawlers`) in `patch.json` and retrain.
+Games before that time become a weak prior, and changed brawlers lean on it even less.
 Experiment history: `EXPERIMENTS.md`. Design decisions: `DECISIONS.md`.
 
 ## Web UI
@@ -65,7 +67,17 @@ every click. The server hot-reloads the model whenever `train.py` writes a new o
 **Personal mode** (toggle) restricts the recommended pick to brawlers you own, penalizes power < 11,
 and adds your per-brawler "me factor" + comfort bonus as a separate "you" line.
 
-API: `GET /api/meta`, `POST /api/recommend`, `GET /api/my_stats` (see `server.py`).
+Personal-mode inputs: `BRAWL_PLAYER_TAG` (owned brawlers, power, buffie flags, and your battle
+history from the crawler), `reference/my_buffies.txt` (brawlers you're missing buffies on; also
+editable in the UI's "My stats" panel), and `my_brawlers.yaml` (penalty size).
+
+API: `GET /api/meta`, `POST /api/recommend`, `GET /api/my_stats`, `GET/PUT /api/my_buffies` (see `server.py`).
+
+## Reference data
+
+`reference/` holds AshBS's Nov 2026 tier list (image + `ashbs_tiers.csv`, normalized and
+cross-checked against the image by `match_tierlist.py`). `sanity_check.py` compares it with the
+model and writes `SANITY_CHECK.md`. It's a sanity check only, never training data.
 
 ## How it works
 
