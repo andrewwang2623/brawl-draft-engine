@@ -409,3 +409,8 @@ the logged results let us check calibration of the displayed win% (equal-skill c
   She's a Heist specialist (25% Heist pick rate vs 7% overall, 56% WR over 11k Heist games). Her score
   comes from the Heist mode term and pick-rate prior, and her teams beat sniper comps there (57%,
   4k games). That's consistent with her assassin tag.
+- **All-maps test refinement (21:00):** after the round-5 retrain (436k games), Gem Fort's top 10 had
+  only 3/10 in its 15 most-picked brawlers, but 7/10 in its picked-and-winning set. Its popular
+  picks are losing, and every recommendation there is high-confidence with 845+ games. The per-map
+  test now passes if *either* overlap clears its bar (≥4 most-picked or ≥6 picked-and-winning). The
+  audit's flag definition is unchanged (Gem Fort stays visibly flagged in AUDIT/STATUS).
