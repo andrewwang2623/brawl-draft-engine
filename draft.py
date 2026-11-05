@@ -25,6 +25,15 @@ full 3v3 comps scored by the comp model. Because each pick's value accounts for 
 the opponent can still answer with, early picks come out "safe" and the final pick
 (nothing left to answer it) comes out a pure counter.
 
+Ban intent: the enemy's known bans hint at their plan (banning three divers -> they're likely
+on throwers). Their opponent model gets an extra factor exp(gamma * intent(c)), with
+    intent(c) = min(cap, sum_b w(b) * max(C[b, c], 0) / sigma_C)
+    w(b) = 1 / (1 + odds * n * P_ban(b)),  P_ban(b) ∝ prior(b)^ban_alpha * exp(ban_beta * S[b])
+w(b) is the posterior that ban b is a "plan" ban rather than a "meta" ban (a 50/50 mixture of
+P_ban and a uniform plan ban at odds = 1), so meta bans count little. sigma_C is the
+pick-weighted RMS of C on the map, so intent is in "typical counters" and gamma means the
+same on every map. gamma = 0 (or no known enemy bans) is exactly the old model.
+
 Explanations follow the expected final comp: for a candidate x we track the
 expectation (under the search policy) of
     strength(x) | synergy with current teammates | synergy with future teammates |
@@ -41,6 +50,12 @@ from model import MapModel, sigmoid
 
 PICK_ORDER = (0, 1, 1, 0, 0, 1)   # 0 = first-pick team, 1 = second-pick team
 COMP_NAMES = ("strength", "synergy_now", "synergy_future", "counters_now", "countered_future")
+# gamma per "read enemy bans" level (per unit of normalized intent; see DECISIONS.md). "low" moves
+# P(next enemy pick is a thrower) on Flaring Phoenix from 13% to 17% after 3 diver bans; "medium"
+# to 22%. Three meta bans move the whole distribution by < 1% (total variation).
+BAN_INTENT_PRESETS = {"off": 0.0, "low": 0.10, "medium": 0.20}
+BAN_READ_MIN_TV = 0.04      # show the ban read if the enemy's next-pick distribution moves >= this (TV)
+BAN_READ_MIN_PCT = 1.0      # ... or a top pick rec's win% moves >= this many points
 
 
 @dataclass
@@ -61,6 +76,12 @@ class SearchConfig:
     prior_us: float = 0.05    # "max" policy: logit bonus per nat of log pick rate (selection only)
     conf_high: float = 1.5    # confidence: sd of the pick's contribution in win-% points
     conf_med: float = 3.0
+    # ban intent (enemy's known bans -> their likely plan); gamma 0 = off
+    gamma: float = BAN_INTENT_PRESETS["low"]
+    ban_alpha: float = 1.0    # ban-worthiness P_ban ∝ prior^ban_alpha * exp(ban_beta * S)
+    ban_beta: float = 4.0     # (same shape as the opponent's "threat" score used for ban recs)
+    ban_meta_odds: float = 1.0   # prior odds that a ban is a meta ban rather than a plan ban
+    intent_cap: float = 8.0   # cap on a brawler's normalized intent (bounds exp(gamma * intent))
 
 
 def pct(z: float) -> float:
@@ -78,6 +99,9 @@ class DraftState:
     # `step`. Set it when picks were entered out of order (e.g. the UI's free slot entry):
     # then it's the teams of the still-empty slots, in draft order.
     seq: tuple | None = None
+    # The enemy's known bans (subset of `bans`; drives ban intent). Bans of unknown team go
+    # only in `bans`.
+    opp_bans: list = field(default_factory=list)
 
     @property
     def step(self) -> int:
@@ -111,6 +135,8 @@ class DraftState:
             raise ValueError("a brawler was picked twice")
         if set(self.our + self.opp) & set(self.bans):
             raise ValueError("a banned brawler was picked")
+        if set(self.opp_bans) - set(self.bans):
+            raise ValueError("opp_bans must be a subset of bans")
         return used
 
 
@@ -126,6 +152,43 @@ class DraftEngine:
         self.sel_off = -self.cfg.z_cons * sd
         if self.cfg.our_policy == "max":
             self.sel_off = self.sel_off + self.cfg.prior_us * (self.log_prior - float(np.dot(mm.prior, self.log_prior)))
+        # ban intent: how ban-worthy each brawler is (null "meta" ban model) -> surprise weight
+        s = self.cfg.ban_alpha * self.log_prior + self.cfg.ban_beta * mm.S
+        pb = np.exp(s - s.max())
+        self.p_ban = pb / pb.sum()
+        self.ban_surprise = 1.0 / (1.0 + self.cfg.ban_meta_odds * self.n * self.p_ban)
+        # typical |counter| on this map (pick-weighted RMS of C): intent is in these units
+        c_scale = float(np.sqrt(max(mm.prior @ (mm.C ** 2) @ mm.prior, 0.0)))
+        self.c_scale = c_scale if c_scale > 1e-9 else 1.0
+
+    def with_gamma(self, gamma: float) -> "DraftEngine":
+        """A shallow copy that reads enemy bans with a different gamma (per request; the cached
+        engine is shared between threads, so it's never mutated)."""
+        import copy
+        from dataclasses import replace
+        if gamma == self.cfg.gamma:
+            return self
+        e = copy.copy(self)
+        e.cfg = replace(self.cfg, gamma=float(gamma))
+        return e
+
+    # ---------------------------------------------------------------- ban intent
+    def ban_intent(self, opp_bans) -> np.ndarray | None:
+        """Normalized intent per brawler from the enemy's bans (None if no bans):
+        sum_b w(b) * max(C[b, c], 0) / sigma_C, capped. High = what the bans protect."""
+        B = list(dict.fromkeys(int(b) for b in opp_bans or []))
+        if not B:
+            return None
+        w = self.ban_surprise[B]
+        intent = (w[:, None] * np.maximum(self.mm.C[B], 0.0)).sum(axis=0) / self.c_scale
+        return np.minimum(intent, self.cfg.intent_cap)
+
+    def opp_bias(self, st: "DraftState") -> np.ndarray | None:
+        """gamma * intent for the enemy's pick model, or None when off (exact old behaviour)."""
+        if not self.cfg.gamma or not st.opp_bans:
+            return None
+        intent = self.ban_intent(st.opp_bans)
+        return None if intent is None else self.cfg.gamma * intent
 
     # ---------------------------------------------------------------- helpers
     def _avail(self, used) -> np.ndarray:
@@ -134,10 +197,13 @@ class DraftEngine:
             mask[list(used)] = False
         return mask
 
-    def opponent_dist(self, opp, our, avail) -> np.ndarray:
-        """Realistic probability of each brawler being the opponent's next pick."""
+    def opponent_dist(self, opp, our, avail, bias=None) -> np.ndarray:
+        """Realistic probability of each brawler being the opponent's next pick.
+        bias: optional per-brawler log-weight (gamma * ban intent)."""
         gain = self.mm.marginal(opp, our)
         s = self.cfg.alpha * self.log_prior + self.cfg.beta * gain
+        if bias is not None:
+            s = s + bias
         s = np.where(avail, s, -np.inf)
         s = s - s[avail].max()
         p = np.exp(s)
@@ -210,7 +276,7 @@ class DraftEngine:
                 p = self.teammate_dist(our, opp, avail)
                 dz = mm.marginal(our, opp)          # our logit change per pick
             else:
-                p = self.opponent_dist(opp, our, avail)
+                p = self.opponent_dist(opp, our, avail, widths.get("bias"))
                 dz = -mm.marginal(opp, our)
             if last:
                 idx = np.flatnonzero(avail)
@@ -254,18 +320,20 @@ class DraftEngine:
             v += float(np.sum(mm.C_sd[c, list(opp)] ** 2))
         return float(np.sqrt(v))
 
-    def _root_children(self, st: DraftState, cands, widths_cfg, bonus_vec=None):
-        """Search each candidate pick for us at the root. Returns {c: (value, vec)}."""
+    def _root_children(self, st: DraftState, cands, widths_cfg, bonus_vec=None, intent=True):
+        """Search each candidate pick for us at the root. Returns {c: (value, vec)}.
+        intent=False ignores the enemy's ban intent (for the with/without comparison)."""
         mm = self.mm
         used = set(st.validate())
         our, opp = tuple(st.our), tuple(st.opp)
         z0 = mm.team_logit(st.our, st.opp)
         gain = mm.marginal(our, opp)
+        bias = self.opp_bias(st) if intent else None
         out = {}
         for c in cands:
             c = int(c)
             bonus = float(bonus_vec[c]) if bonus_vec is not None else 0.0
-            widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step)
+            widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step, bias=bias)
             delta = self.cfg.z_cons * self.pick_sd(c, our, opp)
             ctx = (c, our, opp, bonus, delta)
             out[c] = self._value(our + (c,), opp, z0 + gain[c], used | {c}, st.we_first,
@@ -274,9 +342,11 @@ class DraftEngine:
 
     # ---------------------------------------------------------------- public API
     def recommend_picks(self, st: DraftState, top: int = 5, pool_mask=None,
-                        bonus_vec=None, bonus_info=None) -> dict:
+                        bonus_vec=None, bonus_info=None, compare_intent: int = 0) -> dict:
         """Top picks for us. pool_mask restricts *our next* pick (e.g. owned brawlers);
-        bonus_vec adds a per-brawler logit bonus for that pick (personal mode)."""
+        bonus_vec adds a per-brawler logit bonus for that pick (personal mode).
+        compare_intent=k: when the enemy's ban intent is active, also search the top k recs
+        without it and report the difference as `ban_intent_pct` (win-% points)."""
         used = st.validate()
         if st.team_to_move() != 0:
             raise ValueError("not our turn to pick")
@@ -299,6 +369,10 @@ class DraftEngine:
         baseline = float(sum(wc * children[int(c)][0][0] for c, wc in zip(real_c, w)))
 
         ranked = sorted(cands, key=lambda c: -children[int(c)][0][1])[:top]
+        no_intent = {}
+        if compare_intent and self.opp_bias(st) is not None:
+            no_intent = self._root_children(st, [int(c) for c in ranked[:compare_intent]], widths,
+                                            bonus_vec, intent=False)
         recs = []
         for c in ranked:
             c = int(c)
@@ -325,6 +399,8 @@ class DraftEngine:
                 "uncertainty_pct": round(sd_pct, 2),
                 "comp_notes": mm.comp_notes(list(st.our) + [c], list(st.opp)) if hasattr(mm, "comp_notes") else [],
             }
+            if c in no_intent:
+                rec["ban_intent_pct"] = round(100 * (v - float(no_intent[c][0][0])), 2)
             if bonus_vec is not None:
                 rec["breakdown_pct"]["you"] = round(pct(float(bonus_vec[c])), 2)
                 if bonus_info:
@@ -336,42 +412,55 @@ class DraftEngine:
     def predict_opponent(self, st: DraftState, top: int = 5) -> list:
         used = st.validate()
         avail = self._avail(used)
-        p = self.opponent_dist(st.opp, st.our, avail)
+        bias = self.opp_bias(st)
+        p = self.opponent_dist(st.opp, st.our, avail, bias)
+        p0 = self.opponent_dist(st.opp, st.our, avail) if bias is not None else p
         idx = np.argsort(-p)[:top]
-        return [{"brawler_id": int(self.mm.brawler_ids[i]), "prob": round(100 * float(p[i]), 1)}
-                for i in idx]
+        out = []
+        for i in idx:
+            r = {"brawler_id": int(self.mm.brawler_ids[i]), "prob": round(100 * float(p[i]), 1)}
+            if bias is not None:
+                r["prob_without_bans"] = round(100 * float(p0[i]), 1)
+            out.append(r)
+        return out
 
-    def draft_value(self, st: DraftState, widths_cfg) -> float:
+    def draft_value(self, st: DraftState, widths_cfg, intent: bool = True) -> float:
         """Expected P(we win) of the remaining draft (no candidate tracking)."""
         used = set(st.validate())
         z0 = self.mm.team_logit(st.our, st.opp)
-        widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step)
+        widths = dict(widths_cfg, memo={}, seq=st.remaining(), root=st.step,
+                      bias=self.opp_bias(st) if intent else None)
         return float(self._value(tuple(st.our), tuple(st.opp), z0, used, st.we_first, widths,
                                  (None, (), (), 0.0, 0.0))[0][0])
 
     def recommend_bans(self, st: DraftState, top: int = 5) -> dict:
         """Bans that most improve our expected draft outcome (i.e. most reduce the
         opponent's best expected comp), given which side picks first. Bans are
-        simultaneous and hidden in ranked, so the opponent's bans are unknown;
-        already-entered bans are respected."""
+        simultaneous and hidden in ranked, so the opponent's bans are usually unknown;
+        already-entered bans are respected, and the enemy's known bans (st.opp_bans) shift
+        their pick model through ban intent."""
         cfg = self.cfg
         used = st.validate()
         avail = self._avail(used)
         mm = self.mm
         widths = {"max": cfg.ban_max_width, "chance": cfg.ban_chance_width}
         base = self.draft_value(st, widths)
-        # Candidates: brawlers the opponent would realistically want (prior x strength),
-        # plus the strongest on the map regardless of pick rate.
+        bias = self.opp_bias(st)
+        # Candidates: brawlers the opponent would realistically want (prior x strength [x ban
+        # intent]), plus the strongest on the map regardless of pick rate.
         threat = self.cfg.alpha * self.log_prior + self.cfg.beta * mm.S
+        if bias is not None:
+            threat = threat + bias
         threat = np.where(avail, threat, -np.inf)
         strong = np.where(avail, mm.S - cfg.z_cons * self.S_sd, -np.inf)
-        cands = list(dict.fromkeys(
+        cands = [c for c in dict.fromkeys(
             [int(c) for c in np.argsort(-threat)[: cfg.ban_candidates]]
-            + [int(c) for c in np.argsort(-strong)[:4]]))
-        p_open = self.opponent_dist(st.opp, st.our, avail)
+            + [int(c) for c in np.argsort(-strong)[:4]]) if avail[c]]   # (tiny pools: skip -inf)
+        p_open = self.opponent_dist(st.opp, st.our, avail, bias)
         out = []
         for c in cands:
-            st2 = DraftState(list(st.our), list(st.opp), list(st.bans) + [c], st.we_first, st.seq)
+            st2 = DraftState(list(st.our), list(st.opp), list(st.bans) + [c], st.we_first, st.seq,
+                             opp_bans=list(st.opp_bans))
             v = self.draft_value(st2, widths)
             out.append((v - base, c))
         out.sort(reverse=True)
@@ -389,6 +478,91 @@ class DraftEngine:
             rec["explanation"] = explain_ban(rec, st)
             recs.append(rec)
         return {"baseline_win_prob": round(100 * base, 1), "bans": recs}
+
+    def read_bans(self, st: DraftState, pick_recs: list | None = None, name_of=None) -> dict | None:
+        """What the enemy's bans say about their plan, in plain words, and how much it matters.
+
+        None when intent is off, no enemy bans are known, or they have no picks left. Otherwise
+        a dict with `text`, `meaningful` (the enemy's next-pick distribution moves by >=
+        BAN_READ_MIN_TV in total variation, or a top pick rec's win% by >= BAN_READ_MIN_PCT
+        points) and the numbers behind it. pick_recs: recs from recommend_picks(...,
+        compare_intent=k), whose `ban_intent_pct` are exact with/without differences."""
+        from model import ROLE_LABEL
+        bias = self.opp_bias(st)
+        if bias is None or len(st.opp) >= 3:
+            return None
+        name_of = name_of or (lambda bid: str(bid))
+        mm = self.mm
+        avail = self._avail(st.validate())
+        p1 = self.opponent_dist(st.opp, st.our, avail, bias)
+        p0 = self.opponent_dist(st.opp, st.our, avail)
+        dp = p1 - p0
+        tv = 0.5 * float(np.abs(dp).sum())
+        B = list(dict.fromkeys(st.opp_bans))
+        bid = lambda i: int(mm.brawler_ids[i])
+        bans = [{"brawler_id": bid(b), "name": name_of(bid(b)),
+                 "surprise": round(float(self.ban_surprise[b]), 2)} for b in B]
+        rn = list(mm.role_names or [])
+        R = mm.roles if mm.roles is not None and rn else None
+        plural = lambda r: ROLE_LABEL.get(rn[r], (rn[r], rn[r]))[1]
+        # likely plan: role mix of their next pick, with vs without reading the bans
+        roles = []
+        if R is not None:
+            r0, r1 = p0 @ R, p1 @ R
+            for r in np.argsort(-(r1 - r0)):
+                if r1[r] - r0[r] >= 0.02 and len(roles) < 2:
+                    roles.append({"role": rn[r], "label": plural(r),
+                                  "prob_before": round(100 * float(r0[r]), 1),
+                                  "prob": round(100 * float(r1[r]), 1)})
+        more = [i for i in np.argsort(-dp) if dp[i] >= 0.01][:3]     # >= 1 point more likely
+        more_likely = [{"brawler_id": bid(i), "name": name_of(bid(i)),
+                        "prob_before": round(100 * float(p0[i]), 1), "prob": round(100 * float(p1[i]), 1)}
+                       for i in more]
+        # who profits: our edge vs the shifted enemy picks, per remaining enemy pick (approx.)
+        k_rem = sum(1 for t in st.remaining() if not t)
+        dgain = pct(1.0) * k_rem * (mm.C @ dp)             # win-% points, per brawler (for us)
+        role_gain = None
+        if R is not None:
+            best = None
+            for r in range(len(rn)):
+                m = avail & (R[:, r] > 0)
+                if m.sum() >= 2 and mm.prior[m].sum() > 0:
+                    g = float(np.dot(mm.prior[m], dgain[m]) / mm.prior[m].sum())
+                    if best is None or g > best[1]:
+                        best = (r, g)
+            if best and best[1] >= 0.3:
+                role_gain = {"role": rn[best[0]], "label": plural(best[0]), "gain_pct": round(best[1], 1)}
+        rec_changes = [{"brawler_id": r["brawler_id"], "name": r.get("name") or name_of(r["brawler_id"]),
+                        "delta_win_prob": r["ban_intent_pct"]}
+                       for r in (pick_recs or []) if "ban_intent_pct" in r]
+        max_rec = max((abs(r["delta_win_prob"]) for r in rec_changes), default=0.0)
+        meaningful = tv >= BAN_READ_MIN_TV or max_rec >= BAN_READ_MIN_PCT
+
+        # text, e.g. "They banned Mortis/Edgar/Kenji → likely throwers (13% → 18% of their next
+        # pick); divers gain ≈+0.9%; Mico now +1.2%"
+        txt = "They banned " + "/".join(b["name"] for b in bans)
+        meta = [b["name"] for b in bans if b["surprise"] < 0.25]
+        if meta and len(meta) < len(bans):
+            txt += f" ({'/'.join(meta)}: meta ban{'s' if len(meta) > 1 else ''}, counted little)"
+        if roles:
+            r = roles[0]
+            txt += (f" → likely {r['label']} ({r['prob_before']:.0f}% → {r['prob']:.0f}% of their next pick)")
+        elif more_likely:
+            txt += " → more likely: " + ", ".join(f"{m['name']} ({m['prob_before']:.0f}% → {m['prob']:.0f}%)"
+                                                  for m in more_likely[:2])
+        else:
+            txt += " → no clear plan"
+        gains = []
+        if role_gain:
+            gains.append(f"{role_gain['label']} gain ≈{_sgn(role_gain['gain_pct'])}")
+        best_rec = max(rec_changes, key=lambda r: abs(r["delta_win_prob"]), default=None)
+        if best_rec and abs(best_rec["delta_win_prob"]) >= 0.5:
+            gains.append(f"{best_rec['name']} now {_sgn(best_rec['delta_win_prob'])}")
+        if gains:
+            txt += "; " + "; ".join(gains)
+        return {"text": txt + ".", "meaningful": bool(meaningful), "gamma": self.cfg.gamma,
+                "tv_next_pick": round(tv, 3), "bans": bans, "likely_roles": roles,
+                "more_likely": more_likely, "role_gain": role_gain, "rec_changes": rec_changes}
 
 
 # -------------------------------------------------------------------- text

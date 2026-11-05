@@ -90,6 +90,12 @@ select:hover{border-color:var(--line3)}
 .ban:hover{background:var(--sunk)}
 .ban.target{border-color:var(--gold)!important;border-style:solid;background:color-mix(in srgb,var(--gold) 12%,transparent);box-shadow:0 0 0 2px var(--sunk),0 0 0 4px var(--gold),0 0 14px 4px color-mix(in srgb,var(--gold) 35%,transparent)}
 .ban .x{width:17px;height:17px;font-size:12px;line-height:13px;top:-7px;right:-7px}
+.bg h4{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.mseg{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:999px;overflow:hidden;background:var(--panel2);text-transform:none;letter-spacing:0}
+.mseg i{font-style:normal;font-size:10.5px;font-weight:600;color:var(--muted);padding:0 3px 0 7px}
+.mseg button{border:0;background:transparent;color:var(--muted);font-size:10.5px;font-weight:700;line-height:16px;padding:0 6px;min-height:0}
+.mseg button:hover{color:var(--text);background:var(--panel3)}
+.mseg button.on{background:var(--them);color:var(--on-them)}
 
 /* main */
 .main{flex:1;min-height:0;display:grid;grid-template-columns:400px minmax(0,1fr);gap:10px}
@@ -109,6 +115,15 @@ select:hover{border-color:var(--line3)}
 .compnotes{margin:0 0 8px;padding:7px 11px;border-radius:12px;background:color-mix(in srgb,var(--gold) 12%,transparent);border:1px solid color-mix(in srgb,var(--gold) 55%,transparent);color:var(--gold-hi);font-size:14px;font-weight:600;line-height:1.35}
 .compnotes div + div{margin-top:4px}
 .compnotes b{color:var(--gold)}
+.banread{margin:0 0 8px;padding:7px 11px;border-radius:12px;background:color-mix(in srgb,var(--them) 12%,transparent);border:1px solid color-mix(in srgb,var(--them) 50%,transparent);color:var(--text);font-size:13.5px;font-weight:600;line-height:1.35}
+.banread b{color:var(--them)}
+.result{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:2px 0 8px}
+.result span{font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}
+.result small{flex:0 0 100%;font-size:12px;color:var(--faint)}
+.rbtn{white-space:nowrap;min-height:34px;padding:0 14px;border-radius:10px;border:1px solid var(--line2);background:var(--panel3);font-weight:700;font-size:13.5px}
+.rbtn:hover{background:var(--hover);border-color:var(--line3)}
+.rbtn.win.on{background:var(--good);border-color:var(--good);color:var(--sunk)}
+.rbtn.loss.on{background:var(--bad);border-color:var(--bad);color:var(--on-them)}
 .note{font-size:13px;color:var(--muted);margin:0 0 7px}
 .note.warn{color:var(--gold);font-weight:600}
 .rec{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:7px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);cursor:pointer;margin-bottom:6px;transition:.12s;position:relative}
@@ -259,7 +274,7 @@ html[data-detail="detailed"] .b .pr{display:block}
       <div class="odds" id="odds"><div class="bar" id="bar" hidden><div></div></div></div>
       <div class="bangrps">
         <div class="bg us"><h4>Your bans</h4><div class="bans" id="bansU"></div></div>
-        <div class="bg them"><h4>Their bans</h4><div class="bans" id="bansT"></div></div>
+        <div class="bg them"><h4>Their bans<span class="mseg" id="readBans" title="Read enemy bans: their bans hint at their plan (e.g. banning divers suggests throwers), which shifts the predicted enemy picks. Off ignores it."><i>read</i><button data-v="off">off</button><button data-v="low">low</button><button data-v="medium">med</button></span></h4><div class="bans" id="bansT"></div></div>
       </div>
     </div>
     <div class="team them"><h3>Enemy team</h3><div class="slots" id="themSlots"></div></div>
@@ -303,10 +318,14 @@ const LS = "draft-v3";
 const S = {
   meta: null, byId: {}, brawlers: [], maps: [], bracket: "legendary", personalAvail: false,
   d: load() || fresh(), resp: null, respKey: "", err: null, open: {}, ctl: null, timer: null,
-  rates: {}, tiles: {}, loading: false, msg: ""
+  rates: {}, tiles: {}, loading: false, msg: "", banIntent: loadBanIntent(), logTimer: null, lastLog: ""
 };
+// Client-generated draft id: the draft log (data/drafts.db) updates one row per draft.
+function newId(){ return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12); }
 function fresh(){ return {mapKey: null, weFirst: true, personal: false, bans: {u: [null,null,null], t: [null,null,null]},
-                          slots: [null,null,null,null,null,null], me: null, target: "bu0", hist: []}; }
+                          slots: [null,null,null,null,null,null], me: null, target: "bu0", hist: [],
+                          id: newId(), result: null, logged: false}; }
+function loadBanIntent(){ try{ const v = localStorage.getItem("draft-ban-intent"); return ["off","low","medium"].includes(v) ? v : "low"; }catch(e){ return "low"; } }
 function load(){
   try{
     const d = JSON.parse(localStorage.getItem(LS));
@@ -327,6 +346,7 @@ function getVal(k){ return k[0] === "p" ? D().slots[+k.slice(1)] : D().bans[k[1]
 function setVal(k, v){ if(k[0] === "p") D().slots[+k.slice(1)] = v; else D().bans[k[1]][+k[2]] = v; }
 function pickIdx(k){ return k[0] === "p" ? +k.slice(1) : -1; }
 function allBans(){ return [...D().bans.u, ...D().bans.t].filter(x => x != null); }
+const teamBans = t => D().bans[t].filter(x => x != null);
 function nextEmptyAfter(k){                           // next empty key in auto order after k (wraps)
   const s = KEYS.indexOf(k);
   for(let j = 1; j <= KEYS.length; j++){ const kk = KEYS[(s + j) % KEYS.length]; if(getVal(kk) == null) return kk; }
@@ -373,7 +393,7 @@ function undo(){
   const h = D().hist.pop(); if(!h) return;
   const s = JSON.parse(h); Object.assign(D(), s); changed();
 }
-function reset(){ const k = D(); S.d = Object.assign(fresh(), {mapKey: k.mapKey, weFirst: k.weFirst, personal: k.personal, me: k.me}); S.msg = ""; changed(); }
+function reset(){ flushLog(); const k = D(); S.d = Object.assign(fresh(), {mapKey: k.mapKey, weFirst: k.weFirst, personal: k.personal, me: k.me}); S.msg = ""; changed(); }
 function flipSide(wf){
   const d = D(), oldU = teamIdx(true), oldT = teamIdx(false);
   const uv = oldU.map(i => d.slots[i]), tv = oldT.map(i => d.slots[i]);
@@ -402,6 +422,7 @@ function changed(){ save(); renderBoard(); renderGrid(); renderAdvice(); schedul
 
 // ---------------------------------------------------------------- data
 async function init(){
+  save();                                              // persist the draft id (older saved states had none)
   let r;
   try{ r = await fetch("/api/meta?bracket=" + S.bracket); }catch(e){ r = {ok: false}; }
   if(!r.ok){ $("#advice").innerHTML = '<div class="err">The model isn\'t ready. Run <code>.venv/bin/python train.py</code>, then reload.</div>'; return; }
@@ -431,7 +452,7 @@ function schedule(){ clearTimeout(S.timer); S.timer = setTimeout(fetchRecs, 60);
 function reqFor(){
   const a = advice(), d = D();
   const [mode, map] = d.mapKey.split("|");
-  const body = {map, mode, we_first: d.weFirst, bans: allBans(), slots: d.slots.slice(), my_slot: d.me,
+  const body = {map, mode, we_first: d.weFirst, our_bans: teamBans("u"), their_bans: teamBans("t"), ban_intent: S.banIntent, slots: d.slots.slice(), my_slot: d.me,
                 target_slot: a.kind === "pick" ? a.slot : null, personal: !!(d.personal && S.personalAvail), bracket: S.bracket, top: 5};
   return body;
 }
@@ -448,11 +469,38 @@ async function fetchRecs(){
     else {
       S.err = null; S.resp = d; S.respKey = key;
       if(d.pick_rates && !S.rates[d.map + "|" + d.mode]) S.rates[d.map + "|" + d.mode] = d.pick_rates;
+      scheduleLog();
     }
   }catch(e){ if(e.name === "AbortError") return; S.err = "Can't reach the server. Is server.py running?"; S.resp = null; }
   S.loading = false; $("#advice").classList.remove("loading");
   renderAdvice(); renderOdds(); renderGrid();
 }
+// ---------------------------------------------------------------- draft log (POST /api/drafts)
+function logBody(){
+  const d = D(), r = S.resp, [mode, map] = d.mapKey.split("|");
+  const b = {id: d.id, map, mode, bracket: S.bracket, we_first: d.weFirst, our_bans: teamBans("u"), their_bans: teamBans("t"),
+             slots: d.slots.slice(), my_slot: d.me, ban_intent: S.banIntent, personal: !!(d.personal && S.personalAvail), result: d.result};
+  if(r && S.respKey === JSON.stringify(reqFor())){ b.win_prob = r.final ? r.final.win_prob : r.current_win_prob; b.expected_win_prob = r.expected_win_prob; }
+  return b;
+}
+function scheduleLog(){ clearTimeout(S.logTimer); S.logTimer = setTimeout(postLog, 700); }
+function flushLog(){ if(S.logTimer){ clearTimeout(S.logTimer); postLog(); } }
+async function postLog(){
+  S.logTimer = null;
+  const d = D();
+  if(!d.logged && !d.slots.some(x => x != null)) return;     // only drafts with at least one pick
+  const body = JSON.stringify(logBody());
+  if(body === S.lastLog) return;
+  S.lastLog = body;
+  try{
+    const r = await fetch("/api/drafts", {method: "POST", headers: {"Content-Type": "application/json"}, body});
+    if(r.ok){ const j = await r.json(); if(S.d === d){ d.logged = !!j.logged; save(); } }
+    else S.lastLog = "";
+  }catch(e){ S.lastLog = ""; }
+}
+function setResult(v){ const d = D(); d.result = d.result === v ? null : v; save(); renderAdvice(); clearTimeout(S.logTimer); postLog(); }
+function setBanIntent(v){ S.banIntent = v; try{ localStorage.setItem("draft-ban-intent", v); }catch(e){} renderBanIntent(); renderAdvice(); schedule(); }
+function renderBanIntent(){ document.querySelectorAll("#readBans button").forEach(b => b.classList.toggle("on", b.dataset.v === S.banIntent)); }
 const rates = () => S.rates[D().mapKey.split("|")[1] + "|" + D().mapKey.split("|")[0]] || {};
 
 // ---------------------------------------------------------------- board
@@ -647,6 +695,7 @@ function renderAdvice(){
   let h = "";
   const btnHead = (t, s, w, c) => head(t, s, w, c, true);
   if(S.msg) h += `<p class="note warn">${esc(S.msg)}</p>`;
+  if(r && r.ban_read && a.kind !== "final") h += `<div class="banread"><b>Ban read:</b> ${esc(r.ban_read)}</div>`;
   if(r && Array.isArray(r.comp_notes) && r.comp_notes.length) h += `<div class="compnotes">` + r.comp_notes.map(n => `<div><b>⚠</b> ${esc(n)}</div>`).join("") + `</div>`;
   if(S.err){ el.innerHTML = btnHead("Suggestions", "", "Something went wrong", "bn") + `<div class="err">${esc(S.err)}</div>` + footer(); return; }
   if(!r){ el.innerHTML = btnHead("Suggestions", "", "Thinking", "bn") + `<div class="empty">Thinking…</div>` + footer(); return; }
@@ -677,6 +726,8 @@ function renderAdvice(){
     if(r.final){
       const f = r.final;
       body += `<p class="note">Your comp's chance to win: <b style="color:var(--text);font-size:17px">${Math.round(f.win_prob)}%</b> (equal skill). Click any slot to change it.</p>`;
+      const res = D().result;
+      body += `<div class="result"><span>Result:</span><button class="rbtn win ${res === "win" ? "on" : ""}" data-result="win" title="${res === "win" ? "Click again to clear" : "Save the result to your draft log"}">We won</button><button class="rbtn loss ${res === "loss" ? "on" : ""}" data-result="loss" title="${res === "loss" ? "Click again to clear" : "Save the result to your draft log"}">We lost</button><small>${res ? "Saved to your draft log. Click it again to undo." : "Saved to your draft log (data/drafts.db) to tune the model later."}</small></div>`;
       const row = x => { const t = x.strength + x.synergy + x.counters;
         return `<div class="final-row"><img src="${esc(img(x.brawler_id))}" alt=""><span>${esc(nm(x.brawler_id))}</span><span class="v ${t >= 0 ? "pos" : "neg"}">${pct(t, 1)}</span></div>`; };
       body += `<div class="section-title">Your team's impact</div>` + f.ours.map(row).join("");
@@ -764,6 +815,8 @@ document.addEventListener("click", e => {
   const x = e.target.closest("[data-clear]"); if(x){ e.stopPropagation(); clearSlot(x.dataset.clear); return; }
   const m = e.target.closest("[data-me]"); if(m){ const i = +m.dataset.me; D().me = D().me === i ? null : i; S.msg = ""; save(); renderBoard(); renderAdvice(); schedule(); return; }
   if(e.target.closest("#sugme")){ suggestForMe(); return; }
+  const rb = e.target.closest("[data-result]"); if(rb){ setResult(rb.dataset.result); return; }
+  const bi = e.target.closest("#readBans button[data-v]"); if(bi){ e.stopPropagation(); setBanIntent(bi.dataset.v); return; }
   const s = e.target.closest("[data-slot]"); if(s){ setTarget(s.dataset.slot); return; }
   const c = e.target.closest("[data-choose]");
   if(c){ const a = advice(); choose(+c.dataset.choose, a.kind === "pick" ? a.key : D().target); return; }
@@ -771,6 +824,7 @@ document.addEventListener("click", e => {
 });
 if(window.ResizeObserver) new ResizeObserver(fitGrid).observe($("#gridwrap")); else window.addEventListener("resize", fitGrid);
 $("#brand").title = "Draft Helper";
+renderBanIntent();
 renderBoard();
 // ---------------------------------------------------------------- appearance
 const APPEAR_KEY = "draft-appearance";

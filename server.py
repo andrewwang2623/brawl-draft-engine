@@ -14,7 +14,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from draft import PICK_ORDER, DraftEngine, DraftState, pct
+import drafts
+from draft import BAN_INTENT_PRESETS, PICK_ORDER, DraftEngine, DraftState, pct
 from data import BRACKETS, tier_name
 from model import DraftModel, model_path
 
@@ -76,7 +77,13 @@ class DraftRequest(BaseModel):
     map: str
     mode: str
     we_first: bool = True
+    # Bans of unknown team (legacy; no ban intent). Prefer our_bans / their_bans: all three
+    # are unioned into the banned set, and their_bans also drive ban intent.
     bans: list[int] = Field(default_factory=list)
+    our_bans: list[int] = Field(default_factory=list)
+    their_bans: list[int] = Field(default_factory=list)
+    # How much the enemy's bans shift their predicted picks: off / low / medium
+    ban_intent: str = "low"
     our: list[int] = Field(default_factory=list)
     opp: list[int] = Field(default_factory=list)
     personal: bool = False
@@ -128,9 +135,14 @@ def recommend(req: DraftRequest):
     md = get_model(req.bracket)
     eng = get_engine(req.map, req.mode, req.bracket)
     mm = eng.mm
+    if req.ban_intent not in BAN_INTENT_PRESETS:
+        raise HTTPException(400, f"ban_intent must be one of {', '.join(BAN_INTENT_PRESETS)}")
+    eng = eng.with_gamma(BAN_INTENT_PRESETS[req.ban_intent])
     try:
         to_idx = lambda ids: [mm.id_to_idx[int(b)] for b in ids]
-        bans = to_idx(dict.fromkeys(req.bans))          # both teams may ban the same brawler
+        # both teams may ban the same brawler
+        bans = to_idx(dict.fromkeys(list(req.bans) + list(req.our_bans) + list(req.their_bans)))
+        opp_bans = to_idx(dict.fromkeys(req.their_bans))
         next_slot = None
         if req.slots is not None:
             if len(req.slots) != 6:
@@ -144,10 +156,10 @@ def recommend(req: DraftRequest):
                 next_slot = req.target_slot
             order = ([next_slot] + [i for i in empty if i != next_slot]) if empty else []
             st = DraftState(to_idx(our), to_idx(opp), bans, req.we_first,
-                            seq=tuple(is_us[i] for i in order))
+                            seq=tuple(is_us[i] for i in order), opp_bans=opp_bans)
             unknown_before = sum(1 for i in empty if i < (next_slot if next_slot is not None else 6))
         else:
-            st = DraftState(to_idx(req.our), to_idx(req.opp), bans, req.we_first)
+            st = DraftState(to_idx(req.our), to_idx(req.opp), bans, req.we_first, opp_bans=opp_bans)
         st.validate()
     except KeyError as e:
         raise HTTPException(400, f"unknown brawler id {e}")
@@ -175,7 +187,7 @@ def recommend(req: DraftRequest):
         out["ban_recs"] = eng.recommend_bans(st, top=req.top)
     if turn == 0:
         out["pick_recs"] = eng.recommend_picks(st, top=req.top, pool_mask=pool_mask,
-                                               bonus_vec=bonus, bonus_info=info)
+                                               bonus_vec=bonus, bonus_info=info, compare_intent=3)
     elif turn == 1:
         out["opponent_prediction"] = eng.predict_opponent(st, top=req.top)
     else:
@@ -213,9 +225,54 @@ def recommend(req: DraftRequest):
                 r["name"] = _name(md, r["brawler_id"])
     for r in out.get("opponent_prediction", []):
         r["name"] = _name(md, r["brawler_id"])
+    # Ban intent: what the enemy's bans say about their plan. `ban_read` is a plain-words note,
+    # only when it matters (moves their next-pick distribution or a top rec noticeably).
+    out["ban_intent"] = {"level": req.ban_intent, "gamma": eng.cfg.gamma}
+    br = eng.read_bans(st, (out.get("pick_recs") or {}).get("picks"), lambda b: _name(md, b))
+    out["ban_read_info"] = br
+    out["ban_read"] = br["text"] if br and br["meaningful"] else None
     out["pick_rates"] = {int(b): round(600 * float(p), 1) for b, p in zip(mm.brawler_ids, mm.prior)}
     out["ms"] = round(1000 * (time.time() - t0))
     return out
+
+
+class DraftLog(BaseModel):
+    """A draft as the UI ran it. Only fields that are sent get updated (so {id, result} alone
+    changes just the result; result null clears it)."""
+    id: str
+    map: str | None = None
+    mode: str | None = None
+    bracket: str | None = None
+    we_first: bool | None = None
+    our_bans: list[int | None] | None = None
+    their_bans: list[int | None] | None = None
+    slots: list[int | None] | None = None
+    my_slot: int | None = None
+    win_prob: float | None = None
+    expected_win_prob: float | None = None
+    ban_intent: str | None = None
+    personal: bool | None = None
+    result: str | None = None
+
+
+@app.post("/api/drafts")
+def log_draft(d: DraftLog):
+    """Create/update the draft log row for a client-generated draft id (data/drafts.db)."""
+    rec = d.model_dump(exclude_unset=True)
+    if "slots" in rec and "model_trained_through" not in rec:
+        try:
+            rec["model_trained_through"] = float(get_model(d.bracket or DEFAULT_BRACKET).t_max)
+        except Exception:
+            pass
+    try:
+        return drafts.upsert(rec)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.get("/api/drafts")
+def list_logged_drafts(limit: int = 50):
+    return {"drafts": drafts.list_drafts(limit)}
 
 
 class BuffiesUpdate(BaseModel):

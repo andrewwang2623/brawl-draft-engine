@@ -293,3 +293,104 @@ Causes, biggest first (Bridge Too Far numbers):
   highestTrophies came out ≈ 0 (+0.005/sd) with only ~2,200 profiles fetched (~15–20% of player slots).
   The fetch keeps running and the feature becomes more useful as coverage grows. Retrain to pick it up.
 - Fit time ~65 s on 218k games (was ~5 s). `/api/recommend` first pick ~240–300 ms, mid-draft 3–40 ms.
+
+## Ban intent + draft log (Nov 4 2026)
+
+Battlelogs carry no ban data, so the enemy's bans are read through the model itself (`draft.py`,
+`DraftEngine.ban_intent` / `opp_bias` / `read_bans`).
+
+### Formulas and defaults
+
+- **Intent score.** For the enemy's known bans B and each brawler c:
+  `intent(c) = min(cap, Σ_b w(b) · max(C[b, c], 0) / σ_C)`. C is the per-map MapModel counter matrix
+  (role-vs-role + latent + per-pair terms, already re-centred on the typical opponent), so "b beats c" is
+  what the model knows. Only positive counters count: a ban protects what b would punish. That b is weak
+  into c says nothing about the plan.
+- **Surprise weight.** Null model of a "meta" ban: `P_ban(b) ∝ prior_map(b)^1 · exp(4 · S[b])`. That's the
+  same shape (and alpha/beta) as the opponent "threat" score the ban recommender already uses. A ban is a
+  50/50 mixture of a meta ban (drawn from P_ban) and a plan ban (uniform over the n brawlers).
+  `w(b) = P(plan | b) = 1 / (1 + odds · n · P_ban(b))`, with odds = 1. A brawler exactly as ban-worthy
+  as average gets 0.5, one 10× as ban-worthy ~0.09, and an off-meta one ~0.9+. I chose this over
+  `−log P_ban`, because −log only spans ~2.3 (meta) to ~7 (rare), so meta bans would still count about a
+  third as much. It also beat `1 − normalized ban-worthiness`, which gives the top ban exactly 0 and
+  depends on a single max. Flaring Phoenix examples: Brock 0.04, Mr. P 0.07, Edgar 0.11, Mortis 0.58,
+  Shade 0.85, Kenji 0.98.
+- **Normalization.** σ_C = pick-weighted RMS of C on the map, `sqrt(priorᵀ C² prior)` (0.067–0.089
+  logit across maps), so intent is measured in "typical counters". A raw-logit or max-normalized intent
+  would make gamma mean different things on different maps, or throw away how strong the evidence is
+  (three coherent diver bans would look like three random ones). `intent_cap = 8` bounds the multiplier
+  at exp(8·gamma) when one pair has a large C (Bridge Too Far reaches 13 without it).
+- **Opponent pick model:** `P(c) ∝ prior^alpha · exp(beta · gain) · exp(gamma · intent_opp(c))`, with
+  intent from THEIR bans only. Teammates' realistic distribution is unchanged. Our own bans are often the
+  user following our ban recs, so they aren't a plan signal for our solo-queue teammates.
+- **Presets** (`draft.BAN_INTENT_PRESETS`, `SearchConfig.gamma`): off = 0, **low = 0.10 (default)**,
+  medium = 0.20. On Flaring Phoenix (highest thrower share of picks), banning Mortis/Shade/Leon moves
+  P(their next pick is a thrower) 12% → 17% (low) → 23% (medium), TV 0.06 / 0.13. Banning the 3 most
+  ban-worthy brawlers moves the distribution by < 2% TV on every map at low (< 4% at medium). "Low" stays
+  deliberately small until gamma is fitted (below). gamma lives in SearchConfig, not params.json:
+  params.json is passed into DraftModel training and stored in the model pickles, and this is a draft-time
+  setting.
+- **Where it acts:** the enemy chance nodes of the expectimax (next-pick recs), `predict_opponent` (the
+  likely-enemy-picks panel; each row also gets `prob_without_bans`), and ban recs (draft value plus
+  candidate threat) when their bans are entered. The typical-pick baseline in `recommend_picks` is our own
+  realistic pick, so it keeps no intent. With gamma = 0 or no known enemy bans, `opp_bias` returns None
+  and every code path is the old one. Verified: 57/57 identical outputs vs the previous draft.py on random
+  states over all 26 maps, plus the tests and an unchanged audit.
+- **Cost:** `recommend_picks(..., compare_intent=3)` re-searches the top 3 recs without intent to get
+  exact `ban_intent_pct` (win-% change). That adds ~20–30 ms. `/api/recommend` first pick with ban recs
+  is 306 ms median / 355 ms max over all maps, mid-draft ~45 ms.
+
+### Plain-words read (`ban_read`)
+
+- `read_bans` compares the enemy's next-pick distribution with vs without intent. Likely plan = the
+  roles.yaml role whose share of their next pick rises most (≥ 2 points). "X gain" = the role whose
+  members' prior-weighted edge vs the shifted distribution rises most (approximate:
+  `25 · k_remaining_enemy_picks · C @ Δp`, shown only if ≥ +0.3%). It also names the top rec's exact
+  change when ≥ 0.5 points. Bans with w < 0.25 are labelled "meta ban, counted little".
+- **Shown only when it matters:** TV of their next-pick distribution ≥ 0.04, or a top-3 pick rec's
+  win% moves ≥ 1 point. I lowered 0.05 to 0.04 because three diver bans that include one meta ban
+  (Mortis/Edgar/Kenji on Flaring Phoenix) land at 0.049 at "low". Random off-meta triples pass ~25% of the
+  time at "low". Meta-only bans never do (tested on every map).
+- API: `ban_read` (string or null), `ban_read_info` (numbers behind it, present whenever intent is active
+  with known enemy bans, including when it's not shown), `ban_intent` {level, gamma}. The note isn't
+  added to `comp_notes`, which stay pure comp-matchup notes. The UI shows it in its own box.
+- Request: `our_bans`, `their_bans`, `ban_intent` ("off" | "low" | "medium", default "low"). The legacy
+  `bans` field is unioned in and carries no intent.
+
+### UI
+
+- "read off/low/med" mini toggle inline in the "Their bans" header, persisted in localStorage
+  (`draft-ban-intent`). I put it there rather than in the Appearance popover, because it's a model
+  setting tied to those bans, not an appearance option, and it adds no height to the board. Checked
+  headless at 1400×900 and 1280×800 (dark, midnight, light): no page scroll. The advice card's internal
+  scroll in "Detailed" mode is pre-existing.
+
+### Draft log (`drafts.py`, `data/drafts.db`)
+
+- A separate SQLite file (the crawler owns matches.db). One row per client-generated draft id, upserted
+  as the draft evolves, debounced 0.7 s after each successful recommendation. Partial updates: only fields
+  that are sent change, so `{id, result: null}` undoes a mis-clicked result. Drafts with no picks aren't
+  logged, and a logged draft whose picks are all undone (and has no result) is deleted. "New draft"
+  flushes the pending write, then starts a new id. Stored: map, mode, bracket, side, bans by team, the 6
+  slots in draft order, my_slot, last win% shown (final if complete, else "so far"), expected win%,
+  ban-intent level, personal flag, model `trained_through`, result and timestamps.
+- "We won" / "We lost" appear in the final view. Click the other one to change the result, or the same
+  one again to clear it.
+- `DRAFTS_DB` env var overrides the path (tests use a temp file; my test server used one in the scratch
+  dir, so `data/drafts.db` has no test rows).
+
+### Fitting gamma later
+
+From logged drafts: for every enemy pick in slot i, rebuild the state from slots < i (draft order),
+the bans by team, and the model snapshot. Then maximize
+`Σ log P(actual enemy pick | state, their bans; gamma)` over gamma: a 1-D search, since the opponent
+model is closed-form, with alpha/beta held fixed (or refit jointly as a check). Compare against gamma = 0
+with a likelihood-ratio test or a held-out log loss. Only drafts with their bans entered are informative,
+so expect ~100+ drafts before the estimate means much. The same likelihood can refit `ban_meta_odds`, and
+the logged results let us check calibration of the displayed win% (equal-skill caveat applies).
+
+### Also fixed
+
+- `recommend_bans` could pick unavailable brawlers as candidates when the pool has ≤ `ban_candidates`
+  (12) brawlers (`argsort` includes −inf scores). It never happens on real maps (108 brawlers), but it hit
+  the synthetic tests. Candidates are now filtered by availability. Real outputs are unchanged.

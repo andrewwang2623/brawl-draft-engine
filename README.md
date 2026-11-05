@@ -90,11 +90,25 @@ Personal-mode inputs: `BRAWL_PLAYER_TAG` (owned brawlers, power, buffie flags, a
 history from the crawler), `reference/my_buffies.txt` (brawlers you're missing buffies on; also
 editable in the UI's "My stats" panel), and `my_brawlers.yaml` (penalty size).
 
-API: `GET /api/meta`, `POST /api/recommend`, `GET /api/my_stats`, `GET/PUT /api/my_buffies` (see `server.py`).
+API: `GET /api/meta`, `POST /api/recommend`, `GET /api/my_stats`, `GET/PUT /api/my_buffies`,
+`POST /api/drafts`, `GET /api/drafts?limit=` (see `server.py`).
 Pick recs carry `win_prob`, `win_prob_p25` (same 0–100 scale; ranking key), `confidence`
 (low/medium/high) and `comp_notes`. The response has `comp_notes` for the current comps and
 `expected_win_prob` (the draft's value if all remaining picks are realistic, which is the fair
 reference for a pick's `win_prob`).
+
+### Reading enemy bans + draft log
+
+Bans hint at a team's plan (banning three divers → likely throwers). Enter bans per team (`our_bans` /
+`their_bans`; the old `bans` field still works, without intent). The enemy's pick model gets
+`exp(gamma · intent(c))`, where intent = surprise-weighted positive counters of their bans on c,
+normalized per map. Meta bans count little. The "read off/low/med" toggle next to "Their bans" (API:
+`ban_intent`, default low = 0.10, medium = 0.20) affects next-pick recs, likely enemy picks and ban
+recs. When the effect is noticeable, the response has a plain-words `ban_read`, e.g. "They banned
+Mortis/Shade/Leon → likely throwers (15% → 22% of their next pick); divers gain ≈+0.8%; Pearl now
++1.4%". Every draft with ≥ 1 pick is logged to `data/drafts.db` (separate from the crawler's DB), with
+"We won / We lost" buttons once all picks are in. That log is for fitting gamma later
+(`.venv/bin/python drafts.py` lists recent drafts). Details: DECISIONS.md ("Ban intent + draft log").
 
 ## Reference data
 
