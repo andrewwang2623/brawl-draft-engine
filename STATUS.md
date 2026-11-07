@@ -76,3 +76,6 @@ Regularization is at a plateau. Further gains need new information or better dra
 - **Some learned matchup magnitudes are large** (e.g. Edgar vs Sprout +12%). Directionally right.
 - **No map geometry from the API**, so there's no wall-break feature.
 - **The bracket mix is drifting** (~91% Legendary+ in recent crawls). Out-of-bracket games only act as a weak prior.
+
+## Crawler blocked (2026-11-04T22:26)
+API returned `accessDenied.invalidIp`. The key is IP-locked; the current network IP is probably not whitelisted. Crawler stopped; restart with `./run_crawler.sh` once fixed.

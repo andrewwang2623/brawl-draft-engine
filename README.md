@@ -1,18 +1,70 @@
 # Brawl Stars ranked draft engine
 
-Given map, mode, which side picks first, bans, and picks so far (ranked 1-2-2-1 order),
-recommends the best next pick and the best bans, with an explanation for each. Focus:
-**Legendary+** games.
+A data-driven draft assistant for Brawl Stars **ranked** (Legendary+). You give it the map, which
+side picks first, the bans, and the picks so far (ranked 1-2-2-1 order). It recommends the best
+next pick and the best bans, and explains each one: map strength, synergy, counters against current
+enemies, and counter-pick risk from enemy picks still to come.
 
 ```
 crawler.py  ──► data/matches.db ──► model.py (comp strength) ──► draft.py (expectimax) ──► server.py + web/
  (official API)     (SQLite)          train.py / evaluate.py                                (local UI)
 ```
 
+## Highlights
+
+- **Data pipeline:** a resumable crawler on the official Brawl Stars API. It has collected
+  ~456k decisive ranked games (~415k Legendary+, all after the latest patch) from ~174k players.
+- **Comp model:** regularized, team-antisymmetric logistic regression with per-brawler map, mode,
+  and global terms, pairwise synergy and counters, and controls for player skill. Every
+  recommendation breaks down exactly into per-brawler and per-pair contributions.
+- **Draft search:** expectimax over the remaining picks against a *realistic* (not perfect)
+  opponent. It accounts for counter-pick risk, the intent behind enemy bans, and a
+  safe/balanced/greedy risk setting.
+- **Web UI:** enter slots in any order, bans per team, a "Suggest for me" button, personal mode
+  (owned brawlers, power levels, buffies), themes and colorblind colors, and a We won / We lost
+  draft log.
+- **Evaluation discipline:** time-based holdout, paired bootstrap experiments, and a
+  recommendation audit on every map plus domain matchup checks. A change is reverted if the audit
+  regresses, even when log loss improves.
+
+### Results (post-patch Legendary+ holdout, newest 15% of games)
+
+| metric | value |
+|---|---|
+| holdout log loss | **0.6717** (coin flip 0.6931; per-map win-rate baseline 0.6753) |
+| accuracy / Brier | 58.4% / 0.2395 |
+| calibration | within ~2 pts in every bin |
+| recommendation audit | 0 / 26 maps flagged |
+| matchup sanity checks | 19 / 19 |
+
+Player skill dominates ranked outcomes, so draft-only accuracy realistically tops out around 55–60%.
+
+## Repository layout
+
+| path | what it is |
+|---|---|
+| `crawler.py`, `bsapi.py`, `run_crawler.sh` | API client + crawler → SQLite (`data/`, not committed) |
+| `model.py`, `train.py`, `evaluate.py` | comp-strength model, training, holdout evaluation |
+| `draft.py` | expectimax draft engine, ban scoring, enemy-pick prediction |
+| `server.py`, `web/index.html` | FastAPI backend + single-page UI |
+| `personal.py`, `profiles.py`, `my_brawlers.yaml` | personal mode + player-skill profiles |
+| `audit.py`, `experiment.py`, `checks/` | recommendation audit, tuning experiments, matchup checks |
+| `roles.yaml`, `patch.json`, `params.json` | role tags, patch config, hyperparameters |
+| `meta/`, `reference/`, `samples/` | brawler/map metadata, tier-list sanity data, sample API payloads |
+| `tests/` | pytest suite (model + draft search) |
+| `DECISIONS.md`, `EXPERIMENTS.md`, `STATUS.md` | design log, experiment history, current status |
+
+The match database (~1 GB) and trained models are gitignored. Run the crawler and `train.py` to
+rebuild them.
+
 ## Setup
 
+Requires Python 3 (developed on 3.13) and a Brawl Stars API key from
+[developer.brawlstars.com](https://developer.brawlstars.com) (keys are locked to an IP).
+
 ```bash
-cd ~/Documents/Claude/brawl-draft-engine
+git clone https://github.com/andrewwang2623/brawl-draft-engine.git
+cd brawl-draft-engine
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp .env.example .env     # then set BRAWL_API_KEY=... (IP-locked key from developer.brawlstars.com)
